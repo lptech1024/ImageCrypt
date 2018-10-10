@@ -36,7 +36,6 @@ Primary Developer Image Format Support Priority
 
 ## TODO
 * Code standards decisions and guide
-* Add license file containing MIT
 * Create project structure
 * Review GCC and Clang
 * Add makefile
