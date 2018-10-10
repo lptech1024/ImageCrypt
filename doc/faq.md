@@ -1,4 +1,4 @@
-## Q&A
+# Q&A
 *What is a good use case for ImageCrypt?*\
 Securely backing up image files where a valid image format is desired (secure obfuscation) and/or required.
 \
