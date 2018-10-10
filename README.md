@@ -33,11 +33,3 @@ Primary Developer Image Format Support Priority
 * [Endianness](https://en.wikipedia.org/wiki/Endianness)
 * [Format Preserving Encryption](https://en.wikipedia.org/wiki/Format-preserving_encryption)
 * Deep Image Format Knowledge
-
-## TODO
-* Code standards decisions and guide
-* Create project structure
-* Review GCC and Clang
-* Add makefile
-* Add build instructions
-* Provide test cases
