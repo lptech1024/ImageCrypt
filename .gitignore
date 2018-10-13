@@ -1,0 +1,5 @@
+# Don't check in object files
+obj/*
+
+# Keep the obj directory
+!obj/.keep
