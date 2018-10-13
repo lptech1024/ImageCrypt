@@ -1,8 +1,7 @@
 /*
  * gcc "../src/third_party/libpng/crc32.c" crc32_test.c -o crc32_test
  * 
- * TODO: Use a make file
- * TODO: Make at least one directory to put object files
+ * TODO: Use a make file and use the $/obj directory
  * TODO: What's the Clang equivalent?
  */
 
