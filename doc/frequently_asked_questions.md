@@ -4,8 +4,6 @@
 Securely backing up image files where a valid image format is desired (secure obfuscation) and/or required.\
 \
 \
-\
-\
 *Can this be used for compressible image formats?*\
 \
 At the current unfinished state, I would **expect** these format would work.\
