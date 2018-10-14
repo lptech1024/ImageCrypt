@@ -10,9 +10,10 @@ At the current unfinished state, I would **expect** these format would work.\
 Please review the next question.\
 \
 \
-*Will I be able to decrypt photos if the encrypted photos's encrypted portions are modified (including compression)?*\
+*If an encrypted image is modified, will I be able to unencrypt the image?*
 \
-No.\
+Certain parts of an image are not encrypted. Modifying these parts will not prevent unencryption.\
+Modifying the image parts that have been encrypted will result in degraded and/or effectively useless images (including post-encryption compression).\
 \
 \
 *Does the encrypted image have to be viewable?*\
