@@ -1,16 +1,20 @@
 [PNG](https://en.wikipedia.org/wiki/Portable_Network_Graphics)\
 \
 **File header (signature)**
-|0|1|2|3|4|5|6|7|7|
-|---|---|---|---|---|---|---|---|
-|89|50|E4|47|0D|0A|1A|0A|
-| |P|N|G| | | | |
+
+| 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 89 | 50 | E4 | 47 | 0D | 0A | 1A | 0A |
+| | P | N | G | | | | |
+
 \
 **Chunk Layout**
-|Length|Chunk Type (Name)|Chunk Data|CRC|
-|---|---|---|---|
-|n=4B|4B|nB|4B|
-|Big-endian|Little-endian|?|Big-endian|
+
+| Length | Chunk Type (Name) | Chunk Data | CRC |
+| --- | --- | --- | --- |
+| n=4B | 4B | nB | 4B |
+| Big-endian | Little-endian | ? | Big-endian |
+
 \
 **Critial Chunks**\
 \
