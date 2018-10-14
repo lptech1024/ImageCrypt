@@ -10,7 +10,7 @@ At the current unfinished state, I would **expect** these format would work.\
 Please review the next question.\
 \
 \
-*If an encrypted image is modified, will I be able to unencrypt the image?*
+*If an encrypted image is modified, will I be able to unencrypt the image?*\
 \
 Certain parts of an image are not encrypted. Modifying these parts will not prevent unencryption.\
 Modifying the image parts that have been encrypted will result in degraded and/or effectively useless images (including post-encryption compression).\
