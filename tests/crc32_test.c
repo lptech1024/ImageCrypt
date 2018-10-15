@@ -1,12 +1,5 @@
-/*
- * gcc "../src/third_party/libpng/crc32.c" crc32_test.c -o crc32_test
- * 
- * TODO: Use a make file and use the $/obj directory
- * TODO: What's the Clang equivalent?
- */
-
 #include <stdio.h> // puts, printf
-// TODO: #include "../src/third_party/libpng/crc32.h" to fix the undefined function warning (GCC)
+#include "../src/third_party/libpng/crc32.h" 
 
 // TODO: Determine whether to create here or in main
 union {
