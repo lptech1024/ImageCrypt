@@ -1,4 +1,4 @@
-#NB: gcc should work work
+#NB: gcc should also work
 CC=clang
 
 ODIR=obj
