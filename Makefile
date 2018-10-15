@@ -20,20 +20,29 @@ all: $(ODIR)/cryptography.o $(ODIR)/fpe.o $(ODIR)/crc32.o
 $(ODIR)/cryptography.o: $(SOURCE)/cryptography.h $(SOURCE)/cryptography.c
 	$(CC) -c $(SOURCE)/cryptography.c -o $@
 
-$(BDIR)/cryptography_test: $(ODIR)/cryptography.o $(TDIR)/cryptography_test.c
-	$(CC) $(ODIR)/cryptography.o $(TDIR)/cryptography_test.c $(LIB_CRYPTO) -o $@
+$(ODIR)/cryptography_test.o: $(SOURCE)/cryptography.h $(TDIR)/cryptography_test.c
+	$(CC) -c $(TDIR)/cryptography_test.c -o $@
+
+$(BDIR)/cryptography_test: $(ODIR)/cryptography.o $(ODIR)/cryptography_test.o
+	$(CC) $(ODIR)/cryptography.o $(ODIR)/cryptography_test.o $(LIB_CRYPTO) -o $@
 
 $(ODIR)/fpe.o: $(THIRD_PARTY)/format_preserving_encryption/fpe.h $(THIRD_PARTY)/format_preserving_encryption/fpe.c
 	$(CC) -c $(THIRD_PARTY)/format_preserving_encryption/fpe.c -o $@
 
-$(BDIR)/fpe_test: $(ODIR)/fpe.o $(TDIR)/fpe_test.c
-	$(CC) $(ODIR)/fpe.o $(TDIR)/fpe_test.c $(ALL_LIBS) -o $@
+$(ODIR)/fpe_test.o: $(THIRD_PARTY)/format_preserving_encryption/fpe.h $(TDIR)/fpe_test.c
+	$(CC) -c $(TDIR)/fpe_test.c -o $@
+
+$(BDIR)/fpe_test: $(ODIR)/fpe.o $(ODIR)/fpe_test.o
+	$(CC) $(ODIR)/fpe.o $(ODIR)/fpe_test.o $(ALL_LIBS) -o $@
 
 $(ODIR)/crc32.o: $(THIRD_PARTY)/libpng/crc32.h $(THIRD_PARTY)/libpng/crc32.c
 	$(CC) -c $(THIRD_PARTY)/libpng/crc32.c -o $@
 
-$(BDIR)/crc32_test: $(ODIR)/crc32.o $(TDIR)/crc32_test.c
-	$(CC) $(ODIR)/crc32.o $(TDIR)/crc32_test.c -o $@
+$(ODIR)/crc32_test.o: $(THIRD_PARTY)/libpng/crc32.h $(ODIR)/crc32.o
+	$(CC) -c $(TDIR)/crc32_test.c -o $@
+
+$(BDIR)/crc32_test: $(ODIR)/crc32.o $(ODIR)/crc32_test.o
+	$(CC) $(ODIR)/crc32.o $(ODIR)/crc32_test.o -o $@
 
 tests: $(BDIR)/cryptography_test $(BDIR)/fpe_test $(BDIR)/crc32_test
 
