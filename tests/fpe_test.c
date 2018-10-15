@@ -1,14 +1,6 @@
-/*
- * gcc "../src/third_party/format_preserving_encryption/fpe_locl.c" "../src/third_party/format_preserving_encryption/ff1.c" ff1_test.c -lm -lcrypto -o ff1_test
- *
- * TODO: Use a make file and use the $/obj directory
- * TODO: What's the Clang equivalent?
- */
-
 #include <stdio.h>
 #include <string.h>
 #include "../src/third_party/format_preserving_encryption/fpe.h"
-#include "../src/third_party/format_preserving_encryption/fpe_locl.h"
 
 #include <stdlib.h>
 #include <assert.h>
