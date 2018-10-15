@@ -1,5 +1,7 @@
-# Don't check in object files
+# Don't include object or binary files
 obj/*
+bin/*
 
-# Keep the obj directory
+# Keep the obj and bin directories
 !obj/.keep
+!bin/.keep
