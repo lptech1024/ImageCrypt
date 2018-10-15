@@ -1,5 +1,5 @@
-#TODO: Research how to do this with Clang
-CC=gcc
+#NB: gcc should also work
+CC=clang
 MAKE=make
 
 ROOT=..
@@ -19,13 +19,13 @@ source_clean:
 	$(MAKE) -C $(ROOT) -f Makefile clean
 
 cryptography_test: source $(ROOT)/obj/cryptography.o cryptography_test.c
-	gcc $(ROOT)/obj/cryptography.o cryptography_test.c $(LIB_CRYPTO) -o $@
+	$(CC) $(ROOT)/obj/cryptography.o cryptography_test.c $(LIB_CRYPTO) -o $@
 
 fpe_test: source $(ROOT)/obj/fpe.o fpe_test.c
-	gcc $(ROOT)/obj/fpe.o fpe_test.c $(ALL_LIBS) -o $@
+	$(CC) $(ROOT)/obj/fpe.o fpe_test.c $(ALL_LIBS) -o $@
 
 crc32_test: source $(ROOT)/obj/crc32.o crc32_test.c
-	gcc $(ROOT)/obj/crc32.o crc32_test.c -o $@
+	$(CC) $(ROOT)/obj/crc32.o crc32_test.c -o $@
 
 clean:
 	-rm cryptography_test fpe_test crc32_test

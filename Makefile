@@ -1,5 +1,5 @@
-#TODO: Research how to do this with Clang
-CC=gcc
+#NB: gcc should work work
+CC=clang
 
 ODIR=obj
 
