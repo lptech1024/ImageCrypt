@@ -1,7 +1,3 @@
-/*
- * gcc "../src/cryptography.c" cryptography_test.c -lcrypto -o cryptography_test
- */
-
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
