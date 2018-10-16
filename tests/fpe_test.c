@@ -20,7 +20,7 @@ int main()
 
 	unsigned int sample_data_length = sizeof(sample_data) - 1;
 
-	unsigned char sample_64bit_key[] = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+	const unsigned char sample_256bit_key[] = { 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61 };
 
 	unsigned int sample_data_ints[sample_data_length];
 	hex2ints(sample_data, sample_data_length, sample_data_ints);
@@ -34,7 +34,7 @@ int main()
 	printf("\n\n");
 
 	FPE_KEY ff1;
-	FPE_set_ff1_key(sample_64bit_key, 8 * strlen(sample_64bit_key) * sizeof(char), "", 0, 256, &ff1);
+	FPE_set_ff1_key(sample_256bit_key, 8 * sizeof(sample_256bit_key), NULL, 0, 256, &ff1);
 
 	unsigned int encrypted_data_ints[sample_data_length + 1];
 	FPE_ff1_encrypt(sample_data_ints, encrypted_data_ints, sample_data_length, &ff1, FPE_ENCRYPT);
