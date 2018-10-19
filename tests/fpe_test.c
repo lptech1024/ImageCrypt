@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <string.h>
-#include "../src/third_party/format_preserving_encryption/fpe.h"
-
 #include <stdlib.h>
 #include <assert.h>
 #include <stdbool.h>
+#include <limits.h>
+
+#include "../src/third_party/format_preserving_encryption/fpe.h"
 
 void hex2ints(unsigned char *hex, unsigned int hex_length, unsigned int *result)
 {
@@ -20,7 +21,7 @@ int main()
 
 	unsigned int sample_data_length = sizeof(sample_data) - 1;
 
-	const unsigned char sample_256bit_key[] = { 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61 };
+	const unsigned char sample_key[] = { 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61 };
 
 	unsigned int sample_data_ints[sample_data_length];
 	hex2ints(sample_data, sample_data_length, sample_data_ints);
@@ -33,8 +34,10 @@ int main()
 
 	printf("\n\n");
 
+	const int bits = CHAR_BIT * sizeof(sample_key);
+
 	FPE_KEY ff1;
-	FPE_set_ff1_key(sample_256bit_key, 8 * sizeof(sample_256bit_key), NULL, 0, 256, &ff1);
+	FPE_set_ff1_key(sample_key, bits, NULL, 0, bits, &ff1);
 
 	unsigned int encrypted_data_ints[sample_data_length + 1];
 	FPE_ff1_encrypt(sample_data_ints, encrypted_data_ints, sample_data_length, &ff1, FPE_ENCRYPT);
