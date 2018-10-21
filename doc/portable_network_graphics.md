@@ -16,7 +16,7 @@
 | Big-endian | Little-endian | ? | Big-endian |
 
 \
-**Critial Chunks**\
+**Critical Chunks**\
 \
 IHDR
 * Must be first
