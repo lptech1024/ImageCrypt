@@ -4,7 +4,7 @@
 #include <openssl/aes.h>
 #include <openssl/bn.h>
 
-#ifdef _cplusplus
+#ifdef __cplusplus
 extern "C" {
 #endif
 
