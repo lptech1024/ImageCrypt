@@ -6,10 +6,10 @@ void append_enhanced_char_pointer_array(enhanced_char_pointer_array *enhanced_ch
    // Change size to allow for one more char *
    // TODO: What if size is already large enough?
    if ((enhanced_char_pointer->size) < (enhanced_char_pointer->count + 1))
-   {   
+   {
       enhanced_char_pointer->char_pointer_array = realloc(enhanced_char_pointer->char_pointer_array, (enhanced_char_pointer->count + 1) * sizeof(char *));
       enhanced_char_pointer->size++;
-   }      
+   }
 
    enhanced_char_pointer->char_pointer_array[enhanced_char_pointer->count++] = strdup(string);
 }
@@ -26,16 +26,16 @@ enhanced_char_pointer_array* create_enhanced_char_pointer_array2(char **initial)
 {
    int initial_count = 0;
    for (int i = 0; initial[i]; i++)
-   {   
+   {
       initial_count++;
-   }      
+   }
 
    enhanced_char_pointer_array *ecpa = create_enhanced_char_pointer_array(initial_count);
-    
+
    for (int i = 0; initial[i]; i++)
-   {   
+   {
       append_enhanced_char_pointer_array(ecpa, initial[i]);
-   }      
+   } 
 
    return ecpa;
 }
