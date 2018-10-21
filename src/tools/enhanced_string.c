@@ -63,7 +63,7 @@ bool char_pointer_starts_with_enhanced_char_pointer_array(char *string, enhanced
 			{
 				j = prefix_null_index;
 				continue;
-         }
+			}
 			else if ((j + 1) == prefix_null_index)
 			{
 				starts_with_prefix = true;
