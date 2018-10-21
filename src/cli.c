@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 	const char *passphrase = NULL;
 	// User may pass password as argument
 	// This will be too large (inefficent) if we add additional arguments
-	enhanced_char_pointer_array *file_paths = create_enhanced_char_pointer_array(argc - 2);
+	enhanced_char_pointer_array *file_paths = create_enhanced_char_pointer_array(argc - (passphrase_arguments->count));
 
 	while (counter < argc)
 	{
@@ -57,7 +57,8 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	handle_user_inputs(passphrase, file_paths);
+	// TODO: Uncomment when implemented
+	//handle_user_inputs(passphrase, file_paths);
 
 	return 0;
 }

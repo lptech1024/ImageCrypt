@@ -1,6 +1,8 @@
 #ifndef IMAGECRYPT_ENHANCED_STRING
 #define IMAGECRYPT_ENHANCED_STRING
 
+#include <stdbool.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -19,7 +21,7 @@ enhanced_char_pointer_array* create_enhanced_char_pointer_array(int initial_size
 
 enhanced_char_pointer_array* create_enhanced_char_pointer_array2(char **initial);
 
-bool char_pointer_starts_with_enhanced_char_pointer_array(char *string, enhanced_char_pointer_array * prefixes)
+bool char_pointer_starts_with_enhanced_char_pointer_array(char *string, enhanced_char_pointer_array *prefixes);
 
 #ifdef __cplusplus
 }
