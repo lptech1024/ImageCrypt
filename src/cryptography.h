@@ -1,6 +1,14 @@
 #ifndef IMAGECRYPT_CRYPTOGRAPHY
 #define IMAGECRYPT_CRYPTOGRAPHY
 
-bool set_256_bit_key(const char *passphrase, unsigned char *key);
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+bool set_key(const char *passphrase, unsigned char *key, unsigned int key_length);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
