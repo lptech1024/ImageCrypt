@@ -7,7 +7,7 @@
 
 #include "../src/third_party/format_preserving_encryption/fpe.h"
 
-void hex2ints(unsigned char *hex, unsigned int hex_length, unsigned int *result)
+void hex_to_ints(unsigned char *hex, unsigned int hex_length, unsigned int *result)
 {
 	for (int i = 0; i < hex_length; i++)
 	{
@@ -24,7 +24,7 @@ int main()
 	const unsigned char sample_key[] = { 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61 };
 
 	unsigned int sample_data_ints[sample_data_length];
-	hex2ints(sample_data, sample_data_length, sample_data_ints);
+	hex_to_ints(sample_data, sample_data_length, sample_data_ints);
 
 	printf("Converted:\n");
 	for (int i = 0; i < sample_data_length; i++)
