@@ -4,6 +4,13 @@ In-place Image Encryption
 ## Goal
 Encrypt existing images while remaining a valid image file
 
+## Dependencies
+* libm
+* libcrypto
+
+## Build
+* make
+
 ## Image Format Support Priority
 Primary Developer Image Format Support Priority
 1. [PNG](https://en.wikipedia.org/wiki/Portable_Network_Graphics) (in progress)
