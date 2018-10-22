@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 	unsigned int counter = 1;
 
 	char *passphrase_aliases[] = { "-p", "--passphrase", NULL };
-	enhanced_char_pointer_array *passphrase_arguments = create_enhanced_char_pointer_array2(passphrase_aliases);
+	enhanced_char_pointer_array *passphrase_arguments = create_enhanced_char_pointer_array_initial(passphrase_aliases);
 
 	const char *passphrase = NULL;
 	// User may pass password as argument
@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 			if (!passphrase)
 			{
 				printf("No passphrase provided!\n");
-				return 1;
+				exit(1);
 			}
 		}
 		else
