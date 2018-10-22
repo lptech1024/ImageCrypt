@@ -10,14 +10,18 @@ Primary Developer Image Format Support Priority
 2. [NEF](https://www.nikonusa.com/en/learn-and-explore/a/products-and-innovation/nikon-electronic-format-nef.html), [TIFF/EP](https://en.wikipedia.org/wiki/TIFF/EP), and/or [TIFF](https://en.wikipedia.org/wiki/TIFF)
 
 ## Dependencies
+
+### Critical
 * clang (recommended) or gcc
 * make
 * libm
 * libcrypto
 * rm
 
-## Build
-* make
-
-## Recommended
+### Recommended
 * valgrind
+
+## Make
+* make
+* make tests
+* make clean
