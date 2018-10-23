@@ -1,5 +1,5 @@
 #include <stdio.h> // puts, printf
-#include "../src/third_party/libpng/crc32.h" 
+#include "../src/tools/crc32.h"
 
 // TODO: Determine whether to create here or in main
 union {

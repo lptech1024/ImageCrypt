@@ -1,7 +1,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "../src/cryptography.h"
+#include "../src/tools/cryptography.h"
 
 int main()
 {

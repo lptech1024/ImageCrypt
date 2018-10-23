@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #include <limits.h>
 
-#include "../src/third_party/format_preserving_encryption/fpe.h"
+#include "../src/tools/fpe.h"
 
 void hex_to_ints(unsigned char *hex, unsigned int hex_length, unsigned int *result)
 {
