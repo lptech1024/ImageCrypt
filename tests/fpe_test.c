@@ -37,10 +37,10 @@ int main()
 	const int bits = CHAR_BIT * sizeof(sample_key);
 
 	FPE_KEY ff1;
-	FPE_set_ff1_key(sample_key, bits, NULL, 0, bits, &ff1);
+	fpe_set_ff1_key(sample_key, bits, NULL, 0, bits, &ff1);
 
 	unsigned int encrypted_data_ints[sample_data_length + 1];
-	FPE_ff1_encrypt(sample_data_ints, encrypted_data_ints, sample_data_length, &ff1, FPE_ENCRYPT);
+	fpe_ff1_encrypt(sample_data_ints, encrypted_data_ints, sample_data_length, &ff1, FPE_ENCRYPT);
 
 	printf("Encrypted:\n");
 	for (int i = 0; i < sample_data_length; i++)
@@ -66,7 +66,7 @@ int main()
 	}
 
 	unsigned int decrypted_data_ints[sample_data_length + 1];
-	FPE_ff1_encrypt(encrypted_data_ints, decrypted_data_ints, sample_data_length, &ff1, FPE_DECRYPT);
+	fpe_ff1_encrypt(encrypted_data_ints, decrypted_data_ints, sample_data_length, &ff1, FPE_DECRYPT);
 
 	printf("Decrypted:\n");
 	for (int i = 0; i < sample_data_length; i++)
@@ -85,7 +85,7 @@ int main()
 		}
 	}
 
-	FPE_unset_ff1_key(&ff1);
+	fpe_unset_ff1_key(&ff1);
 
 	return 0;
 }

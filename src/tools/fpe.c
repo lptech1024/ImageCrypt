@@ -46,7 +46,7 @@ void pow_uv(BIGNUM *pow_u, BIGNUM *pow_v, unsigned int x, int u, int v, BN_CTX *
 }
 
 // convert numeral string to number
-void str2num(BIGNUM *Y, const unsigned int *X, unsigned long long radix, unsigned int len, BN_CTX *ctx)
+void str_to_num(BIGNUM *Y, const unsigned int *X, unsigned long long radix, unsigned int len, BN_CTX *ctx)
 {
 	BN_CTX_start(ctx);
 	BIGNUM *r = BN_CTX_get(ctx),
@@ -67,7 +67,7 @@ void str2num(BIGNUM *Y, const unsigned int *X, unsigned long long radix, unsigne
 }
 
 // convert number to numeral string
-void num2str(const BIGNUM *X, unsigned int *Y, unsigned int radix, int len, BN_CTX *ctx)
+void num_to_str(const BIGNUM *X, unsigned int *Y, unsigned int radix, int len, BN_CTX *ctx)
 {
 	BN_CTX_start(ctx);
 	BIGNUM *dv = BN_CTX_get(ctx),
@@ -93,7 +93,7 @@ void num2str(const BIGNUM *X, unsigned int *Y, unsigned int radix, int len, BN_C
 	return;
 }
 
-void FF1_encrypt(const unsigned int *in, unsigned int *out, AES_KEY *aes_enc_ctx, const unsigned char *tweak, const unsigned int radix, size_t inlen, size_t tweaklen)
+void ff1_encrypt(const unsigned int *in, unsigned int *out, AES_KEY *aes_enc_ctx, const unsigned char *tweak, const unsigned int radix, size_t inlen, size_t tweaklen)
 {
 	BIGNUM *bnum = BN_new(),
 	       *y = BN_new(),
@@ -168,7 +168,7 @@ void FF1_encrypt(const unsigned int *in, unsigned int *out, AES_KEY *aes_enc_ctx
 
 		// i
 		Q[tweaklen + pad] = i & 0xff;
-		str2num(bnum, B, radix, inlen - m, ctx);
+		str_to_num(bnum, B, radix, inlen - m, ctx);
 		int BytesLen = BN_bn2bin(bnum, Bytes);
 		memset(Q + Qlen - b, 0x00, b);
 
@@ -229,7 +229,7 @@ void FF1_encrypt(const unsigned int *in, unsigned int *out, AES_KEY *aes_enc_ctx
 		BN_bin2bn(S, d, y);
 		// vi
 		// (num(A, radix, m) + y) % qpow(radix, m);
-		str2num(anum, A, radix, m, ctx);
+		str_to_num(anum, A, radix, m, ctx);
 		// anum = (anum + y) mod qpow_uv
 		if (m == u)
 		{
@@ -245,7 +245,7 @@ void FF1_encrypt(const unsigned int *in, unsigned int *out, AES_KEY *aes_enc_ctx
 		A = (unsigned int *)((uintptr_t)A ^ (uintptr_t)B);
 		B = (unsigned int *)((uintptr_t)B ^ (uintptr_t)A);
 		A = (unsigned int *)((uintptr_t)A ^ (uintptr_t)B);
-		num2str(c, B, radix, m, ctx);
+		num_to_str(c, B, radix, m, ctx);
 	}
 
 	// free the space
@@ -262,7 +262,7 @@ void FF1_encrypt(const unsigned int *in, unsigned int *out, AES_KEY *aes_enc_ctx
 	return;
 }
 
-void FF1_decrypt(const unsigned int *in, unsigned int *out, AES_KEY *aes_enc_ctx, const unsigned char *tweak, const unsigned int radix, size_t inlen, size_t tweaklen)
+void ff1_decrypt(const unsigned int *in, unsigned int *out, AES_KEY *aes_enc_ctx, const unsigned char *tweak, const unsigned int radix, size_t inlen, size_t tweaklen)
 {
 	BIGNUM *bnum = BN_new(),
 	       *y = BN_new(),
@@ -335,7 +335,7 @@ void FF1_decrypt(const unsigned int *in, unsigned int *out, AES_KEY *aes_enc_ctx
 
 		// i
 		Q[tweaklen + pad] = i & 0xff;
-		str2num(anum, A, radix, inlen - m, ctx);
+		str_to_num(anum, A, radix, inlen - m, ctx);
 		memset(Q + Qlen - b, 0x00, b);
 		int BytesLen = BN_bn2bin(anum, Bytes);
 		int qtmp = Qlen - BytesLen;
@@ -395,7 +395,7 @@ void FF1_decrypt(const unsigned int *in, unsigned int *out, AES_KEY *aes_enc_ctx
 		BN_bin2bn(S, d, y);
 		// vi
 		// (num(B, radix, m) - y) % qpow(radix, m);
-		str2num(bnum, B, radix, m, ctx);
+		str_to_num(bnum, B, radix, m, ctx);
 		if (m == u)
 		{
 			BN_mod_sub(c, bnum, y, qpow_u, ctx);
@@ -410,7 +410,7 @@ void FF1_decrypt(const unsigned int *in, unsigned int *out, AES_KEY *aes_enc_ctx
 		A = (unsigned int *)((uintptr_t)A ^ (uintptr_t)B);
 		B = (unsigned int *)((uintptr_t)B ^ (uintptr_t)A);
 		A = (unsigned int *)((uintptr_t)A ^ (uintptr_t)B);
-		num2str(c, A, radix, m, ctx);
+		num_to_str(c, A, radix, m, ctx);
 	}
 
 	// free the space
@@ -427,7 +427,7 @@ void FF1_decrypt(const unsigned int *in, unsigned int *out, AES_KEY *aes_enc_ctx
 	return;
 }
 
-int FPE_set_ff1_key(const unsigned char *userKey, const int bits, const unsigned char *tweak, const unsigned int tweaklen, const int radix, FPE_KEY *key)
+int fpe_set_ff1_key(const unsigned char *userKey, const int bits, const unsigned char *tweak, const unsigned int tweaklen, const int radix, FPE_KEY *key)
 {
 	int ret;
 	if (bits != 128 && bits != 192 && bits != 256)
@@ -444,19 +444,19 @@ int FPE_set_ff1_key(const unsigned char *userKey, const int bits, const unsigned
 	return ret;
 }
 
-void FPE_unset_ff1_key(FPE_KEY *key)
+void fpe_unset_ff1_key(FPE_KEY *key)
 {
 	OPENSSL_free(key->tweak);
 }
 
-void FPE_ff1_encrypt(unsigned int *in, unsigned int *out, unsigned int inlen, FPE_KEY *key, const int enc)
+void fpe_ff1_encrypt(unsigned int *in, unsigned int *out, unsigned int inlen, FPE_KEY *key, const int enc)
 {
 	if (enc)
 	{
-		FF1_encrypt(in, out, &key->aes_enc_ctx, key->tweak,	key->radix, inlen, key->tweaklen);
+		ff1_encrypt(in, out, &key->aes_enc_ctx, key->tweak,	key->radix, inlen, key->tweaklen);
 	}
 	else
 	{
-		FF1_decrypt(in, out, &key->aes_enc_ctx, key->tweak,	key->radix, inlen, key->tweaklen);
+		ff1_decrypt(in, out, &key->aes_enc_ctx, key->tweak,	key->radix, inlen, key->tweaklen);
 	}
 }

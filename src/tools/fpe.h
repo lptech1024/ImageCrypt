@@ -19,11 +19,11 @@ typedef struct {
 } FPE_KEY;
 
 /*** FF1 ***/
-int FPE_set_ff1_key(const unsigned char *userKey, const int bits, const unsigned char *tweak, const unsigned int tweaklen, const int radix, FPE_KEY *key);
+int fpe_set_ff1_key(const unsigned char *userKey, const int bits, const unsigned char *tweak, const unsigned int tweaklen, const int radix, FPE_KEY *key);
 
-void FPE_unset_ff1_key(FPE_KEY *key);
+void fpe_unset_ff1_key(FPE_KEY *key);
 
-void FPE_ff1_encrypt(unsigned int *in, unsigned int *out, unsigned int inlen, FPE_KEY *key, const int enc);
+void fpe_ff1_encrypt(unsigned int *in, unsigned int *out, unsigned int inlen, FPE_KEY *key, const int enc);
 
 #ifdef __cplusplus
 }
