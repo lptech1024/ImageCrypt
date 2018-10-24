@@ -1,0 +1,43 @@
+get_supported_formats
+{
+	// If file extension matches known, check that format first
+	
+	if (!supported(valid_files[i])
+	{
+		printf("File unsupported!");
+	}
+}
+
+convert(FILE *input_file, FILE *output_file, FPE_KEY fpe_key, bool encrypt)
+{
+	loaded = load_file(input_file);
+	char *converted = convert_loaded(loaded, fpe_key, encrypt);
+	write_converted(converted, output_file);
+}
+
+convert_formats(passphrase, files_with_formats, encrypt)
+{
+	const *key = get_key(passphrase);
+	FPE_KEY ff1;
+	fpe_set_ff1_key(key ..., &ff1_key);
+	for each file_with_formats
+		// Convert is a function pointer
+		files_with_format->convert(files_with_format->input_file, files_with_format->output_file, FPE_KEY fpe_key, encrypt);
+}
+
+handle_user_inputs(const char *non_empty_passphrase, const **unverified_file_paths, bool encrypt)
+{
+	valid_files = get_files(unverified_file_paths);
+	if (count(valid_files) == 0)
+	{
+		printf("No valid files!");
+	}
+
+	files_with_formats = get_supported_formats(valid_files);
+	if (count(files_with_formats) == 0)
+	{
+		printf("No supported files!");
+	}
+
+	convert_formats(passphrase, files_with_formats, encrypt);
+}
