@@ -1,5 +1,5 @@
-#ifndef IMAGECRYPT_ENHANCED_STRING
-#define IMAGECRYPT_ENHANCED_STRING
+#ifndef IMAGECRYPT_STRING_COLLECTION
+#define IMAGECRYPT_STRING_COLLECTION
 
 #include <stdbool.h>
 
@@ -8,7 +8,7 @@ extern "C" {
 #endif
 
 typedef struct {
-   char **char_pointer_array;
+   char **strings;
    unsigned int count;
    unsigned int size;
 } string_collection;

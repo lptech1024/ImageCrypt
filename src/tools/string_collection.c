@@ -5,7 +5,7 @@
 string_collection* create_string_collection(int initial_size)
 {
 	string_collection *ecpa = malloc(sizeof(string_collection));
-	ecpa->char_pointer_array = malloc(initial_size * sizeof(char *));
+	ecpa->strings = malloc(initial_size * sizeof(char *));
 	ecpa->size = initial_size;
 	ecpa->count = 0;
 	return ecpa;
@@ -33,10 +33,10 @@ void destroy_string_collection(string_collection *ecpa)
 {
 	while (ecpa->count)
 	{
-		free(ecpa->char_pointer_array[--ecpa->count]);
+		free(ecpa->strings[--ecpa->count]);
 	}
 
-	free(ecpa->char_pointer_array);
+	free(ecpa->strings);
 	free(ecpa);
 }
 
@@ -46,10 +46,10 @@ void append_string_collection(string_collection *enhanced_char_pointer, char *st
 	// Change size to allow for one more char *
 	if ((enhanced_char_pointer->size) <= (enhanced_char_pointer->count))
 	{
-		enhanced_char_pointer->char_pointer_array = realloc(enhanced_char_pointer->char_pointer_array, (++enhanced_char_pointer->size) * sizeof(char *));
+		enhanced_char_pointer->strings = realloc(enhanced_char_pointer->strings, (++enhanced_char_pointer->size) * sizeof(char *));
 	}
 
-	enhanced_char_pointer->char_pointer_array[enhanced_char_pointer->count++] = strdup(string);
+	enhanced_char_pointer->strings[enhanced_char_pointer->count++] = strdup(string);
 }
 
 bool char_pointer_starts_with_string_collection(char *string, string_collection *prefixes)
@@ -60,7 +60,7 @@ bool char_pointer_starts_with_string_collection(char *string, string_collection 
 
 	for (int i = 0; i < prefixes->count; i++)
 	{
-		const int prefix_end_index = strlen(prefixes->char_pointer_array[i]) - 1;
+		const int prefix_end_index = strlen(prefixes->strings[i]) - 1;
 
 		if (prefix_end_index < string_end_index)
 		{
@@ -69,7 +69,7 @@ bool char_pointer_starts_with_string_collection(char *string, string_collection 
 
 		for (int j = 0; j < prefix_end_index; j++)
 		{
-			if (string[j] != prefixes->char_pointer_array[i][j])
+			if (string[j] != prefixes->strings[i][j])
 			{
 				j = prefix_end_index;
 				continue;
@@ -93,7 +93,7 @@ bool char_pointer_ends_with_string_collection(char *string, string_collection *s
 
 	for (int i = 0; i < suffixes->count; i++)
 	{
-		const int suffix_end_index = strlen(suffixes->char_pointer_array[i]) - 1;
+		const int suffix_end_index = strlen(suffixes->strings[i]) - 1;
 
 		const int string_match_index = string_end_index - suffix_end_index;
 
@@ -104,7 +104,7 @@ bool char_pointer_ends_with_string_collection(char *string, string_collection *s
 
 		for (int cursor = string_end_index; cursor >= string_match_index; cursor--)
 		{
-			if (string[cursor] != suffixes->char_pointer_array[i][cursor - string_match_index])
+			if (string[cursor] != suffixes->strings[i][cursor - string_match_index])
 			{
 				cursor = string_match_index - 1;
 				continue;
