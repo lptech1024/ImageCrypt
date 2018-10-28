@@ -1,17 +1,17 @@
 #include <string.h>
 #include <stdlib.h>
-#include "enhanced_string.h"
+#include "string_collection.h"
 
-enhanced_char_pointer_array* create_enhanced_char_pointer_array(int initial_size)
+string_collection* create_string_collection(int initial_size)
 {
-	enhanced_char_pointer_array *ecpa = malloc(sizeof(enhanced_char_pointer_array));
+	string_collection *ecpa = malloc(sizeof(string_collection));
 	ecpa->char_pointer_array = malloc(initial_size * sizeof(char *));
 	ecpa->size = initial_size;
 	ecpa->count = 0;
 	return ecpa;
 }
 
-enhanced_char_pointer_array* create_enhanced_char_pointer_array_initial(char **initial)
+string_collection* create_string_collection_initial(char **initial)
 {
 	int initial_count = 0;
 	for (int i = 0; initial[i]; i++)
@@ -19,17 +19,17 @@ enhanced_char_pointer_array* create_enhanced_char_pointer_array_initial(char **i
 		initial_count++;
 	}
 
-	enhanced_char_pointer_array *ecpa = create_enhanced_char_pointer_array(initial_count);
+	string_collection *ecpa = create_string_collection(initial_count);
 
 	for (int i = 0; initial[i]; i++)
 	{
-		append_enhanced_char_pointer_array(ecpa, initial[i]);
+		append_string_collection(ecpa, initial[i]);
 	}
 
 	return ecpa;
 }
 
-void destroy_enhanced_char_pointer_array(enhanced_char_pointer_array *ecpa)
+void destroy_string_collection(string_collection *ecpa)
 {
 	while (ecpa->count)
 	{
@@ -41,11 +41,10 @@ void destroy_enhanced_char_pointer_array(enhanced_char_pointer_array *ecpa)
 }
 
 // NB: string is const
-void append_enhanced_char_pointer_array(enhanced_char_pointer_array *enhanced_char_pointer, char *string)
+void append_string_collection(string_collection *enhanced_char_pointer, char *string)
 {
 	// Change size to allow for one more char *
-	// TODO: What if size is already large enough?
-	if ((enhanced_char_pointer->size) < (enhanced_char_pointer->count + 1))
+	if ((enhanced_char_pointer->size) <= (enhanced_char_pointer->count))
 	{
 		enhanced_char_pointer->char_pointer_array = realloc(enhanced_char_pointer->char_pointer_array, (++enhanced_char_pointer->size) * sizeof(char *));
 	}
@@ -53,7 +52,7 @@ void append_enhanced_char_pointer_array(enhanced_char_pointer_array *enhanced_ch
 	enhanced_char_pointer->char_pointer_array[enhanced_char_pointer->count++] = strdup(string);
 }
 
-bool char_pointer_starts_with_enhanced_char_pointer_array(char *string, enhanced_char_pointer_array *prefixes)
+bool char_pointer_starts_with_string_collection(char *string, string_collection *prefixes)
 {
 	bool starts_with_prefix = false;
 
@@ -86,7 +85,7 @@ bool char_pointer_starts_with_enhanced_char_pointer_array(char *string, enhanced
 	return starts_with_prefix;
 }
 
-bool char_pointer_ends_with_enhanced_char_pointer_array(char *string, enhanced_char_pointer_array *suffixes)
+bool char_pointer_ends_with_string_collection(char *string, string_collection *suffixes)
 {
 	bool ends_with_suffix = false;
 

@@ -46,22 +46,22 @@ $(ODIR)/crc32_test.o: $(TOOLS)/crc32.h $(ODIR)/crc32.o $(TDIR)/crc32_test.c
 $(BDIR)/crc32_test: $(ODIR)/crc32.o $(ODIR)/crc32_test.o
 	$(CCDEBUG) $^ -o $@
 
-$(ODIR)/enhanced_string.o: $(TOOLS)/enhanced_string.h $(TOOLS)/enhanced_string.c
-	$(CCCFLAGS) -c $(TOOLS)/enhanced_string.c -o $@
+$(ODIR)/string_collection.o: $(TOOLS)/string_collection.h $(TOOLS)/string_collection.c
+	$(CCCFLAGS) -c $(TOOLS)/string_collection.c -o $@
 
-$(ODIR)/enhanced_string_test.o: $(TOOLS)/enhanced_string.h $(ODIR)/enhanced_string.o $(TDIR)/enhanced_string_test.c
-	$(CCCFLAGS) -c $(TDIR)/enhanced_string_test.c -o $@
+$(ODIR)/string_collection_test.o: $(TOOLS)/string_collection.h $(ODIR)/string_collection.o $(TDIR)/string_collection_test.c
+	$(CCCFLAGS) -c $(TDIR)/string_collection_test.c -o $@
 
-$(BDIR)/enhanced_string_test: $(ODIR)/enhanced_string.o $(ODIR)/enhanced_string_test.o
+$(BDIR)/string_collection_test: $(ODIR)/string_collection.o $(ODIR)/string_collection_test.o
 	$(CCDEBUG) $^ -o $@
 
-$(ODIR)/cli.o: $(ODIR)/enhanced_string.o $(SOURCE)/cli.c
+$(ODIR)/cli.o: $(ODIR)/string_collection.o $(SOURCE)/cli.c
 	$(CCCFLAGS) -c $(SOURCE)/cli.c -o $@
 
-$(BDIR)/imagecrypt: $(ODIR)/enhanced_string.o $(ODIR)/cli.o
+$(BDIR)/imagecrypt: $(ODIR)/string_collection.o $(ODIR)/cli.o
 	$(CCCFLAGS) $^ -o $@
 
-tests: $(BDIR)/cryptography_test $(BDIR)/fpe_test $(BDIR)/crc32_test $(BDIR)/enhanced_string_test
+tests: $(BDIR)/cryptography_test $(BDIR)/fpe_test $(BDIR)/crc32_test $(BDIR)/string_collection_test
 
 clean:
 	-rm $(ODIR)/*.o $(BDIR)/*

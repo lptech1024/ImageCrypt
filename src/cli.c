@@ -2,25 +2,25 @@
 #include <string.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include "tools/enhanced_string.h"
+#include "tools/string_collection.h"
 
 int main(int argc, char *argv[])
 {
 	unsigned int counter = 1;
 
 	char *passphrase_aliases[] = { "-p", "--passphrase", NULL };
-	enhanced_char_pointer_array *passphrase_arguments = create_enhanced_char_pointer_array_initial(passphrase_aliases);
+	string_collection *passphrase_arguments = create_string_collection_initial(passphrase_aliases);
 
 	const char *passphrase = NULL;
 	// User may pass password as argument
 	// This will be too large (inefficent) if we add additional arguments
-	enhanced_char_pointer_array *file_paths = create_enhanced_char_pointer_array(argc - (passphrase_arguments->count));
+	string_collection *file_paths = create_string_collection(argc - (passphrase_arguments->count));
 
 	while (counter < argc)
 	{
 		char *current_parameter = argv[counter++];
 
-		if (char_pointer_starts_with_enhanced_char_pointer_array(current_parameter, passphrase_arguments))
+		if (char_pointer_starts_with_string_collection(current_parameter, passphrase_arguments))
 		{
 			if (passphrase)
 			{
@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
 		}
 		else
 		{
-			append_enhanced_char_pointer_array(file_paths, current_parameter);
+			append_string_collection(file_paths, current_parameter);
 		}
 	}
 
