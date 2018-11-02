@@ -21,9 +21,11 @@ void destroy_string_collection(string_collection *ecpa);
 
 void append_string_collection(string_collection *enhanced_char_pointer, char *string);
 
-bool char_pointer_starts_with_string_collection(char *string, string_collection *prefixes);
+bool string_collection_contains_string(string_collection *matches, char *string);
 
-bool char_pointer_ends_with_string_collection(char *string, string_collection *suffixes);
+bool string_starts_with_string_collection(char *string, string_collection *prefixes);
+
+bool string_ends_with_string_collection(char *string, string_collection *suffixes);
 
 #ifdef __cplusplus
 }

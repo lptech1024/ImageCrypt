@@ -55,10 +55,19 @@ $(ODIR)/string_collection_test.o: $(TOOLS)/string_collection.h $(ODIR)/string_co
 $(BDIR)/string_collection_test: $(ODIR)/string_collection.o $(ODIR)/string_collection_test.o
 	$(CCDEBUG) $^ -o $@
 
+$(ODIR)/transform_details.o: $(TOOLS)/transform_details.h $(TOOLS)/transform_details.c
+	$(CCCFLAGS) -c $(TOOLS)/transform_details.c -o $@
+
+#$(ODIR)/transform_details_test.o: $(TOOLS)/transform_details.h $(ODIR)/transform_details.o $(TDIR)/transform_details_test.c\
+	$(CCCFLAGS) -c $(TDIR)/transform_details_test.c -o $@
+
+#$(BDIR)/transform_details_test: $(ODIR)/transform_details.o $(ODIR)/transform_details_test.o\
+	$(CCDEBUG) $^ -o $@
+
 $(ODIR)/cli.o: $(ODIR)/string_collection.o $(SOURCE)/cli.c
 	$(CCCFLAGS) -c $(SOURCE)/cli.c -o $@
 
-$(BDIR)/imagecrypt: $(ODIR)/string_collection.o $(ODIR)/cli.o
+$(BDIR)/imagecrypt: $(ODIR)/string_collection.o $(ODIR)/cli.o $(ODIR)/transform_details.o
 	$(CCCFLAGS) $^ -o $@
 
 tests: $(BDIR)/cryptography_test $(BDIR)/fpe_test $(BDIR)/crc32_test $(BDIR)/string_collection_test
