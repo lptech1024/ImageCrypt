@@ -22,9 +22,7 @@ int main(int argc, char *argv[])
 	cryptography_mode cryptography_mode = NOCRYPT;
 
 	const char *passphrase = NULL;
-	// User may pass password as argument
-	// This will be too large (inefficent) if we add additional arguments
-	//string_collection *file_paths = create_string_collection(argc - (passphrase_arguments->count));
+
 	transform_details *first_transform_details = NULL;
 	transform_details *last_transform_details = NULL;
 
@@ -97,7 +95,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	transform_details_iterator *file_iterator= create_transform_details_iterator(first_transform_details);
+	//transform_details_iterator *file_iterator= create_transform_details_iterator(first_transform_details);
 
 	// TODO: Uncomment when implemented
 	//handle_user_inputs(file_iterator, passphrase, cryptography_mode);
