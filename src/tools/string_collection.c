@@ -2,6 +2,13 @@
 #include <stdlib.h>
 #include "string_collection.h"
 
+char* strdup(const char *string)
+{
+	char *copy = malloc(sizeof(string));
+	strcpy(copy, string);
+	return copy;
+}
+
 string_collection* create_string_collection(int initial_size)
 {
 	string_collection *new_string_collection = malloc(sizeof(string_collection));
