@@ -1,7 +1,7 @@
 CC=clang
 CFLAGS=-Wall
 CDEBUG=-g
-CSTD=-std=c17
+CSTD=-std=gnu17
 CCCFLAGS=$(CC) $(CSTD) $(CFLAGS)
 CCDEBUG=$(CCCFLAGS) $(CDEBUG)
 
