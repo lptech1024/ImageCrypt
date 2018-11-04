@@ -2,9 +2,44 @@
 #include <string.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <termios.h>
 #include "tools/string_collection.h"
 #include "tools/transform_details.h"
 #include "tools/cryptography.h"
+
+bool get_passphrase(char *buffer)
+{
+	struct termios visible, hidden;
+
+	if (tcgetattr(fileno(stdin), &visible))
+	{
+		fprintf(stderr, "%s", "Couldn't get stdin attributes.\n");
+		exit(1);
+	}
+
+	hidden = visible;
+	hidden.c_lflag &= ~(ECHO | ECHOE | ECHOK | ECHONL | ICANON);
+	if (tcsetattr(fileno(stdin), TCSAFLUSH, &hidden))
+	{
+		fprintf(stderr, "%s", "Could not protect passphrase echo.\n");
+		exit(1);
+	}
+
+	size_t buffer_length = 0;
+	// NB: Backspace does not work as expected
+	int chars_read = getline(&buffer, &buffer_length, stdin);
+	if (buffer[chars_read - 1] == '\n')
+	{
+		buffer[--chars_read] = '\0';
+	}
+
+	if (tcsetattr(fileno(stdin), TCSAFLUSH, &visible))
+	{
+		fprintf(stderr, "%s", "Could not restore normal echo. It is recommended to replace this terminal after completion.\n");
+	}
+
+	return ((bool) chars_read);
+}
 
 int main(int argc, char *argv[])
 {
@@ -21,7 +56,7 @@ int main(int argc, char *argv[])
 
 	cryptography_mode cryptography_mode = NOCRYPT;
 
-	const char *passphrase = NULL;
+	char *passphrase = NULL;
 
 	transform_details *first_transform_details = NULL;
 	transform_details *last_transform_details = NULL;
@@ -81,12 +116,13 @@ int main(int argc, char *argv[])
 
 	if (!passphrase)
 	{
-		fprintf(stderr, "%s", "No passphrase supplied!\n");
-		exit(1);
-		/* TODO: Prompt for passphrase
-		   Preliminary research indicates it might be worth it to roll our own
-		   Looks at getpass (obsolete), termios
-		*/
+		printf("%s", "Please enter a passphrase: ");
+		bool get_passphrase_successful = get_passphrase(passphrase);
+		printf("\n");
+		if (!get_passphrase_successful)
+		{
+			printf("%s", "No passphrase supplied!\n");
+		}
 	}
 
 	if (!first_transform_details)
@@ -95,10 +131,8 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	//transform_details_iterator *file_iterator= create_transform_details_iterator(first_transform_details);
-
 	// TODO: Uncomment when implemented
-	//handle_user_inputs(file_iterator, passphrase, cryptography_mode);
+	//handle_user_inputs(create_transform_details_iterator(first_transform_details), passphrase, cryptography_mode);
 
 	return 0;
 }
