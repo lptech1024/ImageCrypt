@@ -9,7 +9,7 @@ int main()
 	string_collection *ecpa = create_string_collection_initial(end_strings);
 
 	char *test = "test";
-	printf("[%d]\n", char_pointer_ends_with_string_collection(test, ecpa));
+	printf("[%d]\n", string_ends_with_string_collection(test, ecpa));
 
 	destroy_string_collection(ecpa);
 }
