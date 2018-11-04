@@ -114,6 +114,8 @@ int main(int argc, char *argv[])
 		}
 	}
 
+	bool sane_user_inputs = true;
+
 	if (!passphrase)
 	{
 		printf("%s", "Please enter a passphrase: ");
@@ -121,13 +123,19 @@ int main(int argc, char *argv[])
 		printf("\n");
 		if (!get_passphrase_successful)
 		{
+			sane_user_inputs = false;
 			printf("%s", "No passphrase supplied!\n");
 		}
 	}
 
 	if (!first_transform_details)
 	{
+		sane_user_inputs = false;
 		fprintf(stderr, "%s", "No file paths specified!\n");
+	}
+
+	if (!sane_user_inputs)
+	{
 		exit(1);
 	}
 
