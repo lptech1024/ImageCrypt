@@ -58,8 +58,7 @@ int main(int argc, char *argv[])
 
 	char *passphrase = NULL;
 
-	transform_details *first_transform_details = NULL;
-	transform_details *last_transform_details = NULL;
+	transform_details_iterator *transform_details_iterator = NULL;
 
 	while (counter < argc)
 	{
@@ -102,15 +101,8 @@ int main(int argc, char *argv[])
 		}
 		else
 		{
-			if (!first_transform_details)
-			{
-				first_transform_details = create_append_transform_details(NULL);
-				last_transform_details = first_transform_details;
-			}
-			else
-			{
-				last_transform_details = create_append_transform_details(last_transform_details);
-			}
+			// TODO: Output file name
+			transform_details_iterator_append(&transform_details_iterator, current_parameter, current_parameter);
 		}
 	}
 
@@ -128,7 +120,7 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	if (!first_transform_details)
+	if (!transform_details_iterator)
 	{
 		sane_user_inputs = false;
 		fprintf(stderr, "%s", "No file paths specified!\n");
@@ -139,8 +131,10 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
+	transform_details_iterator_reset(&transform_details_iterator);
+
 	// TODO: Uncomment when implemented
-	//handle_user_inputs(create_transform_details_iterator(first_transform_details), passphrase, cryptography_mode);
+	//handle_user_inputs(transform_details_iterator, passphrase, cryptography_mode);
 
 	return 0;
 }

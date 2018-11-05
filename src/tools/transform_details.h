@@ -9,7 +9,7 @@ extern "C" {
 
 typedef struct {
 	FILE *file;
-	char *file_path;
+	const char *file_path;
 } file_details;
 
 typedef struct transform_details {
@@ -25,11 +25,11 @@ typedef struct {
 	transform_details *current;
 } transform_details_iterator;
 
-file_details* create_file_details();
+file_details* create_file_details(const char *path);
 
 void destroy_file_details(file_details *file_details);
 
-transform_details* create_append_transform_details(transform_details *previous);
+transform_details* create_append_transform_details(transform_details *previous, const char *input_path, const char *output_path);
 
 void destroy_transform_details(transform_details *transform_details);
 
@@ -37,11 +37,13 @@ transform_details_iterator* create_transform_details_iterator(transform_details 
 
 void destroy_transform_details_iterator(transform_details_iterator *transform_details_iterator);
 
-void transform_details_iterator_reset(transform_details_iterator *iterator);
+void transform_details_iterator_reset(transform_details_iterator **iterator);
 
-transform_details* transform_details_iterator_previous(transform_details_iterator *iterator);
+transform_details* transform_details_iterator_previous(transform_details_iterator **iterator);
 
-transform_details* transform_details_iterator_next(transform_details_iterator *iterator);
+transform_details* transform_details_iterator_next(transform_details_iterator **iterator);
+
+transform_details* transform_details_iterator_append(transform_details_iterator **iterator, const char *input_path, const char *output_path);
 
 #ifdef __cplusplus
 }
