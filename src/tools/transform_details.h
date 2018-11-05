@@ -8,21 +8,21 @@ extern "C" {
 #endif
 
 typedef struct {
-   FILE *file;
-   char *file_path;
+	FILE *file;
+	char *file_path;
 } file_details;
 
 typedef struct transform_details {
-struct transform_details *previous;
-//IMAGE_FORMAT format;
-file_details *input;
-file_details *output;
-struct transform_details *next;
+	struct transform_details *previous;
+	//IMAGE_FORMAT format;
+	file_details *input;
+	file_details *output;
+	struct transform_details *next;
 } transform_details;
 
 typedef struct {
-   transform_details *head;
-   transform_details *current;
+	transform_details *head;
+	transform_details *current;
 } transform_details_iterator;
 
 file_details* create_file_details();
