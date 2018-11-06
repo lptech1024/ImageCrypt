@@ -131,8 +131,6 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	transform_details_iterator_reset(&transform_details_iterator);
-
 	// TODO: Uncomment when implemented
 	//handle_user_inputs(transform_details_iterator, passphrase, cryptography_mode);
 

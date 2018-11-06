@@ -18,15 +18,22 @@ void destroy_file_details(file_details *file_details)
 transform_details* create_append_transform_details(transform_details *previous, const char *input_path, const char *output_path)
 {
 	transform_details *new_transform_details = malloc(sizeof(transform_details *));
-	if (previous)
-	{
-		previous->next = new_transform_details;
-	}
-
 	new_transform_details->previous = previous;
 	new_transform_details->input = create_file_details(input_path);
 	new_transform_details->output = create_file_details(output_path);
 	new_transform_details->next = NULL;
+
+	if (previous)
+	{
+		if (previous->next)
+		{
+			previous->next->previous = new_transform_details;
+			new_transform_details->next = previous->next;
+		}
+
+		previous->next = new_transform_details;
+	}
+
 	return new_transform_details;
 }
 
@@ -61,28 +68,28 @@ void destroy_transform_details_iterator(transform_details_iterator *transform_de
 	free(transform_details_iterator);
 }
 
-void transform_details_iterator_reset(transform_details_iterator **iterator)
+void transform_details_iterator_reset(transform_details_iterator *iterator)
 {
-	(*iterator)->current = (*iterator)->head;
+	iterator->current = iterator->head;
 }
 
-transform_details* transform_details_iterator_previous(transform_details_iterator **iterator)
+transform_details* transform_details_iterator_previous(transform_details_iterator *iterator)
 {
-	if ((*iterator)->current->previous)
+	if (iterator->current->previous)
 	{
-		(*iterator)->current = (*iterator)->current->previous;
+		iterator->current = iterator->current->previous;
 	}
 
-	return (*iterator)->current->previous;
+	return iterator->current->previous;
 }
 
-transform_details* transform_details_iterator_next(transform_details_iterator **iterator)
+transform_details* transform_details_iterator_next(transform_details_iterator *iterator)
 {
-	transform_details *next = (*iterator)->current->next;
+	transform_details *next = iterator->current->next;
 
 	if (next)
 	{
-		(*iterator)->current = next;
+		iterator->current = next;
 	}
 
 	return next;
@@ -99,7 +106,7 @@ transform_details* transform_details_iterator_append(transform_details_iterator 
 	}
 	else
 	{
-		transform_details_iterator_next(iterator);
+		transform_details_iterator_next(*iterator);
 	}
 
 	return new_transform_details;
