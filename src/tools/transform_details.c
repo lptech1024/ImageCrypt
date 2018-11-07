@@ -10,7 +10,7 @@ file_details* create_file_details(const char *path)
 
 void destroy_file_details(file_details *file_details)
 {
-	free(file_details->file_path);
+	free((void *) file_details->file_path);
 	free(file_details->file);
 	free(file_details);
 }
@@ -95,7 +95,7 @@ transform_details* transform_details_iterator_next(transform_details_iterator *i
 	return next;
 }
 
-transform_details* transform_details_iterator_append(transform_details_iterator **iterator, const char *input_path, const char *output_path)
+void transform_details_iterator_append(transform_details_iterator **iterator, const char *input_path, const char *output_path)
 {
 	transform_details *current = (*iterator) ? (*iterator)->current : NULL;
 	transform_details *new_transform_details = create_append_transform_details(current, input_path, output_path);
@@ -108,6 +108,4 @@ transform_details* transform_details_iterator_append(transform_details_iterator 
 	{
 		transform_details_iterator_next(*iterator);
 	}
-
-	return new_transform_details;
 }

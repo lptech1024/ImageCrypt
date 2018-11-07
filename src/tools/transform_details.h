@@ -43,7 +43,7 @@ transform_details* transform_details_iterator_previous(transform_details_iterato
 
 transform_details* transform_details_iterator_next(transform_details_iterator *iterator);
 
-transform_details* transform_details_iterator_append(transform_details_iterator **iterator, const char *input_path, const char *output_path);
+void transform_details_iterator_append(transform_details_iterator **iterator, const char *input_path, const char *output_path);
 
 #ifdef __cplusplus
 }
