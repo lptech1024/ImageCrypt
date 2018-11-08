@@ -102,7 +102,7 @@ int main(int argc, char *argv[])
 		else
 		{
 			// TODO: Output file name
-			transform_details_iterator_append(&transform_details_iterator, current_parameter, current_parameter);
+			transform_details_iterator_append(&transform_details_iterator, current_parameter, NULL);
 		}
 	}
 
@@ -116,7 +116,7 @@ int main(int argc, char *argv[])
 		if (!get_passphrase_successful)
 		{
 			sane_user_inputs = false;
-			printf("%s", "No passphrase supplied!\n");
+			fprintf(stderr, "%s", "No passphrase supplied!\n");
 		}
 	}
 
