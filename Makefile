@@ -16,7 +16,7 @@ ALL_LIBS=$(LIB_MATH) $(LIB_CRYPTO)
 
 TOOLS=$(SOURCE)/tools
 
-.PHONY: all clean
+.PHONY: all tests clean
 
 all: $(ODIR)/safety.o $(ODIR)/cryptography.o $(ODIR)/fpe.o $(ODIR)/crc32.o $(BDIR)/imagecrypt
 
