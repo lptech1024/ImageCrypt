@@ -1,9 +1,10 @@
 #include <stdlib.h>
+#include "safety.h"
 #include "transform_details.h"
 
 file_details* create_file_details(const char *path)
 {
-	file_details *details = malloc(sizeof(file_details *));
+	file_details *details = malloc_or_exit(sizeof(file_details *));
 	details->file_path = path;
 	return details;
 }
@@ -17,7 +18,7 @@ void destroy_file_details(file_details *file_details)
 
 transform_details* create_append_transform_details(transform_details *previous, const char *input_path, const char *output_path)
 {
-	transform_details *new_transform_details = malloc(sizeof(transform_details *));
+	transform_details *new_transform_details = malloc_or_exit(sizeof(transform_details *));
 	new_transform_details->previous = previous;
 	new_transform_details->input = create_file_details(input_path);
 	new_transform_details->output = create_file_details(output_path);
@@ -57,7 +58,7 @@ void destroy_transform_details(transform_details *transform_details)
 
 transform_details_iterator* create_transform_details_iterator(transform_details *head)
 {
-	transform_details_iterator *iterator = malloc(sizeof(transform_details_iterator *));
+	transform_details_iterator *iterator = malloc_or_exit(sizeof(transform_details_iterator *));
 	iterator->head = head;
 	iterator->current = head;
 	return iterator;

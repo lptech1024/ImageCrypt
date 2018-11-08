@@ -18,7 +18,16 @@ TOOLS=$(SOURCE)/tools
 
 .PHONY: all clean
 
-all: $(ODIR)/cryptography.o $(ODIR)/fpe.o $(ODIR)/crc32.o $(BDIR)/imagecrypt
+all: $(ODIR)/safety.o $(ODIR)/cryptography.o $(ODIR)/fpe.o $(ODIR)/crc32.o $(BDIR)/imagecrypt
+
+$(ODIR)/safety.o: $(TOOLS)/safety.h $(TOOLS)/safety.c
+	$(CCCFLAGS) -c $(TOOLS)/safety.c -o $@
+
+#$(ODIR)/safety_test.o $(TOOLS)/safety.h $(TDIR)/safety_test.c\
+	$(CCCFLAGS) -c $(TDIR)/safety_test.c -o $@
+
+#$(BDIR)/safety_test $(ODIR)/safety.o $(ODIR)/safety_test.o\
+	$(CCDEBUG) $^ -o $@
 
 $(ODIR)/cryptography.o: $(TOOLS)/cryptography.h $(TOOLS)/cryptography.c
 	$(CCCFLAGS) -c $(TOOLS)/cryptography.c -o $@
@@ -68,7 +77,7 @@ $(ODIR)/transform_details.o: $(TOOLS)/transform_details.h $(TOOLS)/transform_det
 $(ODIR)/cli.o: $(ODIR)/string_collection.o $(SOURCE)/cli.c
 	$(CCCFLAGS) -c $(SOURCE)/cli.c -o $@
 
-$(BDIR)/imagecrypt: $(ODIR)/string_collection.o $(ODIR)/cli.o $(ODIR)/transform_details.o
+$(BDIR)/imagecrypt: $(ODIR)/safety.o $(ODIR)/string_collection.o $(ODIR)/cli.o $(ODIR)/transform_details.o
 	$(CCCFLAGS) $^ -o $@
 
 tests: $(BDIR)/cryptography_test $(BDIR)/fpe_test $(BDIR)/crc32_test $(BDIR)/string_collection_test
