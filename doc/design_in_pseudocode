@@ -1,4 +1,4 @@
-get_supported_formats
+get_supported_format
 {
 	// If file extension matches known, check that format first
 	
@@ -8,6 +8,7 @@ get_supported_formats
 	}
 }
 
+// Obsolete
 convert(FILE *input_file, FILE *output_file, FPE_KEY fpe_key, bool encrypt)
 {
 	loaded = load_file(input_file);
@@ -15,7 +16,7 @@ convert(FILE *input_file, FILE *output_file, FPE_KEY fpe_key, bool encrypt)
 	write_converted(converted, output_file);
 }
 
-convert_formats(passphrase, files_with_formats, encrypt)
+convert_formats(files_with_formats, passphrase, cryptography_mode cryptography_mode)
 {
 	const *key = get_key(passphrase);
 	FPE_KEY ff1;
@@ -25,19 +26,44 @@ convert_formats(passphrase, files_with_formats, encrypt)
 		files_with_format->convert(files_with_format->input_file, files_with_format->output_file, FPE_KEY fpe_key, encrypt);
 }
 
-handle_user_inputs(const char *non_empty_passphrase, const **unverified_file_paths, bool encrypt)
+// Passphrase isn't empty
+// iterator has at least one input file path
+// cryptography_mode is DECRYPT or ENCRYPT
+handle_user_inputs(char *passphrase, transform_details_iterator *iterator, cryptography_mode cryptography_mode)
 {
-	valid_files = get_files(unverified_file_paths);
-	if (count(valid_files) == 0)
+	transform_details_iterator_reset(iterator);
+
+	// Dump all transform_details where output path exists
+	//	Default output file paths where not set
+	sanitize_outputs(iterator, cryptography_mode);
+	if (!iterator->current)
 	{
-		printf("No valid files!");
+		fprintf(stderr, "No supported files!\n");
 	}
 
-	files_with_formats = get_supported_formats(valid_files);
-	if (count(files_with_formats) == 0)
+	transform_details_iterator_reset(iterator);
+
+	// Dump all invalid files
+	// Find out formats
+	get_supported_formats(iterator);
+	if (!iterator->current)
 	{
-		printf("No supported files!");
+		fprintf(stderr, "No supported files!\n");
 	}
 
-	convert_formats(passphrase, files_with_formats, encrypt);
+	transform_details_iterator_reset(iterator);
+
+	// Look at all inputpaths and output paths, checking for duplicates
+	remove_duplicates(iterator);
+	if (!iterator->current)
+	{
+		fprintf(stderr, "No supported non-duplicates!\n");
+	}
+
+	transform_details_iterator_reset(iterator);
+
+	// Need tool to maintain file read/write stack (only one at a time for eventual multithreading)
+	// Maximum number of threads could probably be something like min(CPU_count, 250)
+	// At this point, we have input paths, output paths, file formats, passphrase, and a cryptography mode
+	convert_formats(iterator, passphrase, cryptography_mode);
 }
