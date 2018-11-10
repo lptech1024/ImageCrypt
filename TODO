@@ -1,1 +1,3 @@
 * Once CLI is stable, create man page
+* Replace manual tests with unit tests
+* Add CI
