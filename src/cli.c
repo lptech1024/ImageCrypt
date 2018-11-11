@@ -14,7 +14,7 @@ bool get_passphrase(char *buffer)
 	if (tcgetattr(fileno(stdin), &visible))
 	{
 		fprintf(stderr, "%s", "Couldn't get stdin attributes.\n");
-		exit(1);
+		exit(-1);
 	}
 
 	hidden = visible;
@@ -22,7 +22,7 @@ bool get_passphrase(char *buffer)
 	if (tcsetattr(fileno(stdin), TCSAFLUSH, &hidden))
 	{
 		fprintf(stderr, "%s", "Could not protect passphrase echo.\n");
-		exit(1);
+		exit(-1);
 	}
 
 	size_t buffer_length = 0;
@@ -54,6 +54,12 @@ int main(int argc, char *argv[])
 	char *decrypt_aliases[] = { "-d", "--decrypt", NULL };
 	string_collection *decrypt_arguments = create_string_collection_initial(decrypt_aliases);
 
+	char *input_aliases[] = { "-i", "--input", NULL };
+	string_collection *input_arguments = create_string_collection_initial(input_aliases);
+
+	char *output_aliases[] = { "-o", "--output", NULL };
+	string_collection *output_arguments = create_string_collection_initial(output_aliases);
+
 	cryptography_mode cryptography_mode = NOCRYPT;
 
 	char *passphrase = NULL;
@@ -69,14 +75,14 @@ int main(int argc, char *argv[])
 			if (passphrase)
 			{
 				fprintf(stderr, "%s", "Multiple passphrase arguments supplied!\n");
-				exit(1);
+				exit(-1);
 			}
 
 			passphrase = argv[counter++];
 			if (!passphrase)
 			{
 				fprintf(stderr, "No passphrase provided!\n");
-				exit(1);
+				exit(-1);
 			}
 		}
 		else if (string_collection_contains_string(encrypt_arguments, current_parameter))
@@ -84,7 +90,7 @@ int main(int argc, char *argv[])
 			if (cryptography_mode)
 			{
 				fprintf(stderr, "Multiple cryptography modes specified!\n");
-				exit(1);
+				exit(-1);
 			}
 
 			cryptography_mode = ENCRYPT;
@@ -94,15 +100,59 @@ int main(int argc, char *argv[])
 			if (cryptography_mode)
 			{
 				fprintf(stderr, "Multiple cryptography modes specified!\n");
-				exit(1);
+				exit(-1);
 			}
 
 			cryptography_mode = DECRYPT;
 		}
+		else if (string_collection_contains_string(output_arguments, current_parameter))
+		{
+			const char *output_parameter = argv[counter++];
+
+			char *next_parameter = argv[counter];
+
+			if (!next_parameter || !string_collection_contains_string(input_arguments, next_parameter))
+			{
+				fprintf(stderr, "Missing input parameter for [%s]\n", output_parameter);
+				exit(-1);
+			}
+
+			next_parameter = argv[++counter];
+			if (!next_parameter)
+			{
+				fprintf(stderr, "Missing input file for [%s]\n", output_parameter);
+				exit(-1);
+			}
+
+			counter++;
+
+			transform_details_iterator_append(&transform_details_iterator, next_parameter, output_parameter);
+		}
 		else
 		{
-			// TODO: Output file name
-			transform_details_iterator_append(&transform_details_iterator, current_parameter, NULL);
+			const char *input_file_path;
+			char *output_file_path = NULL;
+
+			if (current_parameter && string_collection_contains_string(input_arguments, current_parameter))
+			{
+				counter++;
+			}
+
+			input_file_path = argv[counter - 1];
+			current_parameter = argv[counter];
+
+			if (current_parameter && string_collection_contains_string(output_arguments, current_parameter))
+			{
+				counter++;
+				output_file_path = argv[counter++];
+				if (!output_file_path)
+				{
+					fprintf(stderr, "Missing output file path for [%s]\n", current_parameter);
+					exit(-1);
+				}
+			}
+
+			transform_details_iterator_append(&transform_details_iterator, input_file_path, output_file_path);
 		}
 	}
 
@@ -128,7 +178,7 @@ int main(int argc, char *argv[])
 
 	if (!sane_user_inputs)
 	{
-		exit(1);
+		exit(-1);
 	}
 
 	// TODO: Uncomment when implemented
