@@ -50,7 +50,7 @@ void append_string_collection(string_collection *enhanced_char_pointer, char *st
 		enhanced_char_pointer->strings = realloc(enhanced_char_pointer->strings, (++enhanced_char_pointer->size) * sizeof(char *));
 	}
 
-	enhanced_char_pointer->strings[enhanced_char_pointer->count++] = strdup(string);
+	enhanced_char_pointer->strings[enhanced_char_pointer->count++] = strdup_or_exit(string);
 }
 
 bool string_collection_contains_string(string_collection *potential_matches, char *string)
