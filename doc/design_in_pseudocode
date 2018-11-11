@@ -34,7 +34,7 @@ handle_user_inputs(char *passphrase, transform_details_iterator *iterator, crypt
 	transform_details_iterator_reset(iterator);
 
 	// Dump all transform_details where output path exists
-	//	Default output file paths where not set
+	// Default output file paths where not set
 	sanitize_outputs(iterator, cryptography_mode);
 	if (!iterator->current)
 	{
