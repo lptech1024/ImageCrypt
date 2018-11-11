@@ -109,16 +109,16 @@ int main(int argc, char *argv[])
 		{
 			const char *output_parameter = argv[counter++];
 
-			char *next_parameter = argv[counter];
+			current_parameter = argv[counter];
 
-			if (!next_parameter || !string_collection_contains_string(input_arguments, next_parameter))
+			if (!current_parameter || !string_collection_contains_string(input_arguments, current_parameter))
 			{
 				fprintf(stderr, "Missing input parameter for [%s]\n", output_parameter);
 				exit(-1);
 			}
 
-			next_parameter = argv[++counter];
-			if (!next_parameter)
+			current_parameter = argv[++counter];
+			if (!current_parameter)
 			{
 				fprintf(stderr, "Missing input file for [%s]\n", output_parameter);
 				exit(-1);
@@ -126,7 +126,7 @@ int main(int argc, char *argv[])
 
 			counter++;
 
-			transform_details_iterator_append(&transform_details_iterator, next_parameter, output_parameter);
+			transform_details_iterator_append(&transform_details_iterator, current_parameter, output_parameter);
 		}
 		else
 		{
