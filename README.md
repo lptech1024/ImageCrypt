@@ -11,15 +11,18 @@ Primary Developer Image Format Support Priority
 
 ## Dependencies
 
-### Critical
+### Building
 * clang (recommended) or gcc
 * make
 * libm
 * libcrypto
-* rm
 
-### Recommended
+### Developing
+
+#### Recommended
 * valgrind
+* rm
+* ctags
 
 ## Make
 * make
