@@ -21,25 +21,12 @@ Primary Developer Image Format Support Priority
   
     b. .vimrc
     ```Makefile
-    set nocompatible
-    filetype off
-    " set the runtime path to include Vundle and initialize
-    set rtp+=~/vim/bundle/Vundle.vim
-    call vundle#begin()
-    
-    Plugin 'VundleVim/Vundle.vim'
-    
-    Plugin 'Valloric/YouCompleteMe'
-    
-    call vundle#end()
     
     " \t maps to $x spaces
     set tabstop=$x
     
     " Visual < and > uses tabstop setting
     set shiftwidth=0
-    
-    let g:ycm_collect_identifiers_from_comments_and_strings = 1
     ```
 2. git clone https://github.com/lptech1024/ImageCrypt
 
@@ -59,4 +46,3 @@ Primary Developer Image Format Support Priority
 * vim
   * ctags
   * vim-fugitive
-  * [Valloric/YouCompleteMe](https://github.com/Valloric/YouCompleteMe) (and [VundleVim/Vundle](https://github.com/VundleVim/Vundle.vim))
