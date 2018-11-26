@@ -1,6 +1,8 @@
 #ifndef IMAGECRYPT_CRYPTOGRAPHY
 #define IMAGECRYPT_CRYPTOGRAPHY
 
+#include <stdbool.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
