@@ -1,5 +1,7 @@
+#include <string.h>
 #include <stdlib.h>
 #include "safety.h"
+#include "cryptography.h"
 #include "transform_details.h"
 
 file_details* create_file_details(const char *path)
@@ -72,6 +74,56 @@ void destroy_transform_details_iterator(transform_details_iterator *transform_de
 void transform_details_iterator_reset(transform_details_iterator *iterator)
 {
 	iterator->current = iterator->head;
+}
+
+// Trailing slash of input path will be dropped when no file extension provided
+void default_output_file_path(transform_details *transform_details, cryptography_mode cryptography_mode)
+{
+	const char *unencrypted = "_unencrypted";
+	const char *encrypted = "_encrypted";
+
+	const char *mode_text = cryptography_mode == DECRYPT ? unencrypted : encrypted;
+
+	int last_non_slash_index = strlen(transform_details->input->file_path) - 1;
+	while (transform_details->input->file_path[last_non_slash_index] == '/')
+	{
+		last_non_slash_index--;
+	}
+
+	int last_slash_index = 0;
+	int last_dot_index = 0;
+	// Don't need to check 0th index
+	for (int reversed_cursor = last_non_slash_index; reversed_cursor > 0; reversed_cursor--)
+	{
+		if (!last_slash_index && transform_details->input->file_path[reversed_cursor] == '/')
+		{
+			last_slash_index = reversed_cursor;
+		}
+
+		if (!last_dot_index && transform_details->input->file_path[reversed_cursor] == '.')
+		{
+			last_dot_index = reversed_cursor;
+		}
+
+		if (last_slash_index && last_dot_index)
+		{
+			break;
+		}
+	}
+
+	if (last_slash_index >= last_dot_index)
+	{
+
+		transform_details->output->file_path = strcat(strndup(transform_details->input->file_path, last_non_slash_index + 1), strdup(mode_text));
+	}
+	else
+	{
+		char *output_path = strcat(strndup(transform_details->input->file_path, last_dot_index), strdup(mode_text));
+
+		char *extension = malloc(strlen(output_path) - last_dot_index + strlen(mode_text) + 1);
+		strcpy(extension, &transform_details->input->file_path[last_dot_index]);
+		transform_details->output->file_path = strcat(output_path, extension);
+	}
 }
 
 transform_details* transform_details_iterator_previous(transform_details_iterator *iterator)

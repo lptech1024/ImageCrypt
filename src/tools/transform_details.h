@@ -2,6 +2,7 @@
 #define IMAGECRYPT_TRANSFORM_DETAILS
 
 #include <stdio.h>
+#include "cryptography.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -32,6 +33,8 @@ void destroy_file_details(file_details *file_details);
 transform_details* create_append_transform_details(transform_details *previous, const char *input_path, const char *output_path);
 
 void destroy_transform_details(transform_details *transform_details);
+
+void default_output_file_path(transform_details *transform_details, cryptography_mode cryptography_mode);
 
 transform_details_iterator* create_transform_details_iterator(transform_details *head);
 
