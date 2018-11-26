@@ -158,7 +158,20 @@ int main(int argc, char *argv[])
 
 	bool sane_user_inputs = true;
 
-	if (!passphrase)
+	if (cryptography_mode == NOCRYPT)
+	{
+		sane_user_inputs = false;
+		fprintf(stderr, "%s", "No cryptography mode specified!\n");
+	}
+
+	if (!transform_details_iterator)
+	{
+		sane_user_inputs = false;
+		fprintf(stderr, "%s", "No file paths specified!\n");
+	}
+
+	// Don't bother to prompt for a passphrase if we won't be able to use it
+	if (sane_user_inputs && !passphrase)
 	{
 		printf("%s", "Please enter a passphrase: ");
 		bool get_passphrase_successful = get_passphrase(passphrase);
@@ -170,16 +183,20 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	if (!transform_details_iterator)
-	{
-		sane_user_inputs = false;
-		fprintf(stderr, "%s", "No file paths specified!\n");
-	}
-
 	if (!sane_user_inputs)
 	{
 		exit(-1);
 	}
+
+	transform_details_iterator_reset(transform_details_iterator);
+	do
+	{
+		if (!transform_details_iterator->current->output->file_path)
+		{
+			default_output_file_path(transform_details_iterator->current, cryptography_mode);
+		}
+	}
+	while(transform_details_iterator_next(transform_details_iterator));
 
 	// TODO: Uncomment when implemented
 	//handle_user_inputs(transform_details_iterator, passphrase, cryptography_mode);
