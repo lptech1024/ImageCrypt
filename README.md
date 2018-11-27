@@ -14,22 +14,6 @@ Primary Developer Image Format Support Priority
 * make tests
 * make clean
 
-## Recommended Setup Steps
-1. If using Vim,
-
-    a. Use [tpope's "Effortless Ctags with Git"](https://tbaggery.com/2011/08/08/effortless-ctags-with-git.html)
-  
-    b. .vimrc
-    ```Makefile
-    
-    " \t maps to $x spaces
-    set tabstop=$x
-    
-    " Visual < and > uses tabstop setting
-    set shiftwidth=0
-    ```
-2. git clone https://github.com/lptech1024/ImageCrypt
-
 ## Dependencies
 
 ### Building
@@ -43,6 +27,3 @@ Primary Developer Image Format Support Priority
 #### Recommended
 * valgrind
 * rm
-* vim
-  * ctags
-  * vim-fugitive
