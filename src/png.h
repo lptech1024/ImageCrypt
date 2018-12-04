@@ -7,7 +7,7 @@
 #include "tools/status.h"
 
 #ifdef __cplusplus
-extern "C"
+extern "C" {
 #endif
 
 typedef struct {
