@@ -1,5 +1,5 @@
-#ifndef IMAGECRYPT_ENHANCED_STRING
-#define IMAGECRYPT_ENHANCED_STRING
+#ifndef IMAGECRYPT_PNG
+#define IMAGECRYPT_PNG
 
 #include <stdbool.h>
 #include <stdint.h>
