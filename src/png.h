@@ -10,14 +10,17 @@
 extern "C" {
 #endif
 
+#define PNG_NAME_LENGTH 5
+
 typedef struct {
-	const unsigned char[5] name;
+	const unsigned char[PNG_NAME_LENGTH] name;
 	const bool cryptygraphy_applies;
 } png_chunk_spec;
 
+// Currently in on-disk order. Move crc32 to [1] for potential alignment improvement?
 typedef struct {
-	const unsigned char[5] name;
 	const uint32_t data_size;
+	const unsigned char[PNG_NAME_LENGTH] name;
 	const unsigned char[] data;
 	const uint32_t crc32;
 } png_chunk;
