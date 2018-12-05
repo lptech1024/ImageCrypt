@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include <stdint.h>
+#include <string.h>
 #include <stdio.h>
 //#include <netinet/in.h> // Alternative to <arpa/inet.h>. ifdef as appropriate
 #include <arpa/inet.h>
@@ -88,23 +89,31 @@ bool apply_chunk_cryptography(const char *name)
 	return (current ? current->cryptography_applied : true);
 }
 
+bool write_next_chunk(file_details *file_details, png_chunk *png_chunk)
+{
+	size_t chunks_read = fwrite(htonl(png_chunk->data_size), sizeof(png_chunk->data_size), 1, file_details->file);
+
+	chunks_read = fwrite(png_chunk->name, sizeof(char), PNG_NAME_LENGTH - 1, file_details->file);
+
+	chunks_read = fwrite(png_chunk->data, sizeof(png_chunk->data), png_chunk->data_size, file_details->file);
+
+	chunks_read = fwrite(htonl(png_chunk->crc32), sizeof(png_chunk->crc32), 1, file_details->file);
+	return true;
+}
+
 png_chunk* read_next_chunk(file_details *file_details)
 {
-	const int size_length = 4;
-	const int crc32_length = 4;
-
 	png_chunk png_chunk;
 
-	char *buffer;
+	uint8_t *buffer;
 	uint32_t network_order_temp;
 
-	size_t chunks_read = fread(buffer, sizeof(char), size_length, file_details->file);
+	size_t chunks_read = fread(buffer, sizeof(buffer), sizeof(network_order_temp), file_details->file);
 	if (!chunks_read)
 	{
-		// Assuming EOF
 		return NULL;
 	}
-	else if (chunks_read != size_length)
+	else if (chunks_read != sizeof(network_order_temp))
 	{
 		fprintf(stderr, "PNG | Bad size in [%s]", file_details->file_path);
 	}
@@ -115,7 +124,7 @@ png_chunk* read_next_chunk(file_details *file_details)
 	                     (uint32_t) buffer[3];
 	png_chunk.data_size = ntohl(network_order_temp);
 
-	chunks_read = fread(buffer, sizeof(char), (sizeof(name) - 1), file_details->file);
+	chunks_read = fread(buffer, sizeof(char), PNG_NAME_LENGTH - 1, file_details->file);
 	if (chunks_read != (sizeof(name) - 1))
 	{
 		fprintf(stderr, "PNG | Bad chunk name in [%s]", file_details->file_path);
@@ -130,8 +139,8 @@ png_chunk* read_next_chunk(file_details *file_details)
 	}
 
 	png_chunk.data = buffer;
-	chunks_read = fread(buffer, sizeof(char), crc32_length, file_details->file);
-	if (chunks_read != crc32_length)
+	chunks_read = fread(buffer, sizeof(buffer), sizeof(network_order_temp), file_details->file);
+	if (chunks_read != network_order_temp)
 	{
 		fprintf(stderr, "PNG | Bad CRC32 in [%s]", file_details->file_to_read);
 	}
