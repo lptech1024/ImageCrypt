@@ -4,12 +4,14 @@
 #include <stdio.h>
 //#include <netinet/in.h> // Alternative to <arpa/inet.h>. ifdef as appropriate
 #include <arpa/inet.h>
+#include "tools/crc32.h"
+#include "tools/cryptography.h"
 #include "tools/status.h"
 #include "tools/safety.h"
 #include "tools/transform_details.h"
 #include "png.h"
 
-png_chunk_spec[] png_chunk_specs =
+const png_chunk_spec[] png_chunk_specs =
 {
 	{ "IHDR", false }, // Basic image details
 	{ "PLTE", false }, // Palette (list of colors)
@@ -52,24 +54,26 @@ void destroy_png_chunk(png_chunk *png_chunk)
 	free(png_chunk);
 }
 
-status is_png(file_details *file_details)
+size_t read_signature(FILE *file)
 {
 	const char *signature = { 0x89, 0x50, 0xE4, 0x47, 0x0D, 0x0A, 0x1A, 0x0A };
 
 	unsigned char buffer[sizeof(signature)];
-	size_t chunks_read = fread(buffer, sizeof(buffer), strlen(signature), file_details->file_path);
-	// TODO: Move this to higher level
+	return fread(buffer, sizeof(buffer), strlen(signature), file_details->file_path);
+}
+
+status is_png(file_details *file_details)
+{
+	size_t chunks_read = read_signature(file_details->file);
 	if (!chunks_read)
 	{
 		stderr("Couldn't read [%s].", file_details->file_path);
 		return ERROR;
 	}
 
-	status result = strcmp(buffer, signature) ? SUCCESS : NOT_SUCCESS;
-
 	rewind(file_details->file);
 
-	return result;
+	return strcmp(buffer, signature) ? SUCCESS : NOT_SUCCESS;
 }
 
 bool apply_chunk_cryptography(const char *name)
@@ -153,14 +157,60 @@ png_chunk* read_next_chunk(file_details *file_details)
 	return create_png_chunk(png_chunk);
 }
 
-/*status encrypt_png(transform_details *details)
+void hex_to_ints(unsigned char *hex, unsigned int hex_length, unsigned int *result)
 {
-	printf("Encrypted PNG!");
+	for (int i = 0; i < hex_length; i++)
+	{
+		result[i] = hex[i];
+	}
+}
+
+
+bool convert_chunk(png_chunk *png_chunk, FPE_KEY *fpe_key, cryptography_mode cryptography_mode)
+{
+	const int crypt = -1;
+	switch (cryptography_mode)
+	{
+		case ENCRYPT:
+			crypt = FPE_ENCRYPT;
+			break;
+		case DECRYPT:
+			crypt = FPE_DECRYPT;
+			break;
+		default:
+			return false;
+	}
+
+	unsigned int crypt_data[png_chunk->data_size];
+	hex_to_ints(png_chunk->data, png_chunk->data_size, crypt_data);
+	fpe_ff1_encrypt(png_chunk->data, png_chunk->data, png_chunk->data_size, &fpe_key, crypt);
+
+	unsigned long crc32 = crc(png_chunk->name, strlen(png_chunk->name));
+	update_crc(crc32, png_chunk->data, png_chunk->data_size);
+	png_chunk->crc32 = crc32;
+
 	return true;
 }
 
-status decrypt_png(transform_details *details)
+status convert_png(transform_details *details, FPE_KEY *fpe_key, cryptography_mode cryptography_mode)
 {
-	printf("Decrypted PNG!");
+	if (!read_signature(details->input))
+	{
+		return ERROR;
+	}
+
+	png_chunk *png_chunk = NULL;
+	while (png_chunk = read_next_chunk(details->input))
+	{
+		if (apply_chunk_cryptography(png_chunk->name))
+		{
+			convert_chunk(png_chunk, fpe_key, cryptography_mode);
+		}
+
+		write_next_chunk(png_chunk, details->output);
+	}
+
+	// TODO: Check for details->input->file_path EOF
+
 	return true;
-}*/
+}

@@ -3,8 +3,10 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-#include "tools/transform_details.h"
 #include "tools/status.h"
+#include "tools/transform_details.h"
+#include "tools/fpe.h"
+#include "tools/cryptography.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -27,9 +29,7 @@ typedef struct {
 
 status is_png(file_details *file_details);
 
-//status encrypt_png(transform_details *details);
-
-//status decrypt_png(transform_details *details);
+status convert_png(transform_details *details, FPE_KEY *fpe_key, cryptography_mode cryptography_mode);
 
 #ifdef __cplusplus
 }
