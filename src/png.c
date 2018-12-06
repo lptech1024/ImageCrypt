@@ -5,7 +5,7 @@
 //#include <netinet/in.h> // Alternative to <arpa/inet.h>. ifdef as appropriate
 #include <arpa/inet.h>
 #include "tools/status.h"
-#include "safety.h"
+#include "tools/safety.h"
 #include "tools/transform_details.h"
 #include "png.h"
 
@@ -52,14 +52,12 @@ void destroy_png_chunk(png_chunk *png_chunk)
 	free(png_chunk);
 }
 
-// file_to_read should not be null
-// Will
 status is_png(file_details *file_details)
 {
 	const char *signature = { 0x89, 0x50, 0xE4, 0x47, 0x0D, 0x0A, 0x1A, 0x0A };
 
 	unsigned char buffer[sizeof(signature)];
-	size_t chunks_read = fread(buffer, sizeof(char), sizeof(signature) - 1, file_details->file_path);
+	size_t chunks_read = fread(buffer, sizeof(buffer), strlen(signature), file_details->file_path);
 	// TODO: Move this to higher level
 	if (!chunks_read)
 	{
@@ -93,7 +91,7 @@ bool write_next_chunk(file_details *file_details, png_chunk *png_chunk)
 {
 	size_t chunks_read = fwrite(htonl(png_chunk->data_size), sizeof(png_chunk->data_size), 1, file_details->file);
 
-	chunks_read = fwrite(png_chunk->name, sizeof(char), PNG_NAME_LENGTH - 1, file_details->file);
+	chunks_read = fwrite(png_chunk->name, sizeof(png_chunk->name), PNG_NAME_LENGTH - 1, file_details->file);
 
 	chunks_read = fwrite(png_chunk->data, sizeof(png_chunk->data), png_chunk->data_size, file_details->file);
 
@@ -124,25 +122,25 @@ png_chunk* read_next_chunk(file_details *file_details)
 	                     (uint32_t) buffer[3];
 	png_chunk.data_size = ntohl(network_order_temp);
 
-	chunks_read = fread(buffer, sizeof(char), PNG_NAME_LENGTH - 1, file_details->file);
-	if (chunks_read != (sizeof(name) - 1))
+	chunks_read = fread(buffer, sizeof(buffer), PNG_NAME_LENGTH - 1, file_details->file);
+	if (chunks_read != (PNG_NAME_LENGTH - 1))
 	{
 		fprintf(stderr, "PNG | Bad chunk name in [%s]", file_details->file_path);
 	}
 
 	png_chunk.name = buffer;
 
-	chunks_read = fread(buffer, sizeof(char), png_chunk.data_size, file_details->file);
+	chunks_read = fread(buffer, sizeof(buffer), png_chunk.data_size, file_details->file);
 	if (chunks_read != png_chunk.data_size)
 	{
-		fprintf(stderr, "PNG | Bad data read in [%s]", file_details->file_details);
+		fprintf(stderr, "PNG | Bad data read in [%s]", file_details->file_path);
 	}
 
 	png_chunk.data = buffer;
 	chunks_read = fread(buffer, sizeof(buffer), sizeof(network_order_temp), file_details->file);
-	if (chunks_read != network_order_temp)
+	if (chunks_read != sizeof(network_order_temp))
 	{
-		fprintf(stderr, "PNG | Bad CRC32 in [%s]", file_details->file_to_read);
+		fprintf(stderr, "PNG | Bad CRC32 in [%s]", file_details->file_path);
 	}
 
 	network_order_temp = (uint32_t) buffer[0] << 24 |
