@@ -78,9 +78,9 @@ status is_png(file_details *file_details)
 
 bool apply_chunk_cryptography(const char *name)
 {
-	int index = 0;
-	png_chunk_spec current;
-	while ((current = png_chunk_specs[index]))
+	size_t index = 0;
+	png_chunk_spec current = NULL;
+	while ((current = png_chunk_specs[index++]))
 	{
 		if (!strcmp(name, current->name))
 		{
