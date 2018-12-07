@@ -201,5 +201,5 @@ int main(int argc, char *argv[])
 	// TODO: Uncomment when implemented
 	//handle_user_inputs(transform_details_iterator, passphrase, cryptography_mode);
 
-	return 0;
+	return EXIT_SUCCESS;
 }
