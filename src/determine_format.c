@@ -37,7 +37,7 @@ void set_conversion(transform_details_iterator *iterator)
 			}
 		}
 
-		fclose(iterator->current->input->file_path);
+		fclose(input_file);
 	}
 	while(transform_details_iterator_next(iterator));
 }
