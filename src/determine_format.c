@@ -10,13 +10,13 @@
 typedef struct {
 	status (*image_format_test)(file_details *file_details);
 	status (*convert)(transform_details *details, FPE_KEY *fpe_key, cryptography_mode cryptography_mode);
-	//unsigned char *typical_file_extensions;
+	//unsigned char **typical_file_extensions;
 } image_format;
 
 // Extensions won't be useful until we have more than a single format
-const image_format image_formats[] =
+image_format *image_formats[] = // const
 {
-	{ &is_png, &convert_png /*, { "png", "apng", NULL }*/ },
+	{ is_png, convert_png /*, { "png", "apng", NULL }*/ },
 	NULL
 };
 
@@ -27,16 +27,19 @@ void set_conversion(transform_details_iterator *iterator)
 	do
 	{
 		FILE *input_file = fopen(iterator->current->input->file_path, "r");
+		file_details *file_details = create_file_details(iterator->current->input->file_path);
+		file_details->file = input_file;
 		size_t index = 0;
-		image_format current = NULL;
-		while ((image_format = image_formats[index++]));
+		image_format *current = NULL;
+		while ((current = image_formats[index++]))
 		{
-			if (image_format->image_format_test(input_file))
+			if (current->image_format_test(file_details))
 			{
-				iterator->current->convert = image_format.convert;
+				iterator->current->convert = current->convert;
 			}
 		}
 
+		destroy_file_details(file_details);
 		fclose(input_file);
 	}
 	while(transform_details_iterator_next(iterator));

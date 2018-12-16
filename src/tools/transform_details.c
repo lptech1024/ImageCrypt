@@ -21,6 +21,7 @@ void destroy_file_details(file_details *file_details)
 transform_details* create_append_transform_details(transform_details *previous, const char *input_path, const char *output_path)
 {
 	transform_details *new_transform_details = malloc_or_exit(sizeof(transform_details *));
+	new_transform_details->convert = NULL;
 	new_transform_details->previous = previous;
 	new_transform_details->input = create_file_details(input_path);
 	new_transform_details->output = create_file_details(output_path);

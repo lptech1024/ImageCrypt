@@ -2,6 +2,8 @@
 #define IMAGECRYPT_TRANSFORM_DETAILS
 
 #include <stdio.h>
+#include "fpe.h"
+#include "status.h"
 #include "cryptography.h"
 
 #ifdef __cplusplus
@@ -15,7 +17,7 @@ typedef struct {
 
 typedef struct transform_details {
 	struct transform_details *previous;
-	//IMAGE_FORMAT format;
+	status (*convert)(struct transform_details *details, FPE_KEY *fpe_key, cryptography_mode cryptography_mode);
 	file_details *input;
 	file_details *output;
 	struct transform_details *next;

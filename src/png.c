@@ -4,6 +4,7 @@
 #include <stdio.h>
 //#include <netinet/in.h> // Alternative to <arpa/inet.h>. ifdef as appropriate
 #include <arpa/inet.h>
+#include "tools/fpe.h"
 #include "tools/crc32.h"
 #include "tools/cryptography.h"
 #include "tools/status.h"
@@ -11,7 +12,7 @@
 #include "tools/transform_details.h"
 #include "png.h"
 
-const png_chunk_spec[] png_chunk_specs =
+png_chunk_spec *png_chunk_specs[] = //const
 {
 	{ "IHDR", false }, // Basic image details
 	{ "PLTE", false }, // Palette (list of colors)
@@ -37,13 +38,13 @@ const png_chunk_spec[] png_chunk_specs =
 	NULL
 };
 
-png_chunk* create_png_chunk(png_chunk png_chunk)
+png_chunk* create_png_chunk(png_chunk chunk)
 {
 	png_chunk *new_png_chunk = malloc_or_exit(sizeof(png_chunk *));
-	new_png_chunk->name = strdup_or_exit(png_chunk.name);
-	new_png_chunk->data_size = png_chunk.data_size;
-	new_png_chunk->data = strdup_or_exit(png_chunk.data);
-	new_png_chunk->crc32 = png_chunk.crc32;
+	new_png_chunk->name = strdup_or_exit(chunk.name);
+	new_png_chunk->data_size = chunk.data_size;
+	new_png_chunk->data = strdup_or_exit(chunk.data);
+	new_png_chunk->crc32 = chunk.crc32;
 	return new_png_chunk;
 }
 
@@ -54,32 +55,36 @@ void destroy_png_chunk(png_chunk *png_chunk)
 	free(png_chunk);
 }
 
-size_t read_signature(FILE *file)
+status read_signature(FILE *file)
 {
 	const char *signature = { 0x89, 0x50, 0xE4, 0x47, 0x0D, 0x0A, 0x1A, 0x0A };
+	const size_t signature_length = strlen(signature);
 
 	unsigned char buffer[sizeof(signature)];
-	return fread(buffer, sizeof(buffer), strlen(signature), file_details->file_path);
+	size_t bytes_read = fread(buffer, sizeof(buffer), signature_length, file);
+	if (bytes_read != signature_length)
+	{
+		return ERROR;
+	}
+	else
+	{
+		return (strcmp(buffer, signature) ? SUCCESS : NOT_SUCCESS);
+	}
 }
 
 status is_png(file_details *file_details)
 {
-	size_t chunks_read = read_signature(file_details->file);
-	if (!chunks_read)
-	{
-		stderr("Couldn't read [%s].", file_details->file_path);
-		return ERROR;
-	}
+	status signature_read_status = read_signature(file_details->file);
 
 	rewind(file_details->file);
 
-	return strcmp(buffer, signature) ? SUCCESS : NOT_SUCCESS;
+	return signature_read_status;
 }
 
 bool apply_chunk_cryptography(const char *name)
 {
 	size_t index = 0;
-	png_chunk_spec current = NULL;
+	png_chunk_spec *current = NULL;
 	while ((current = png_chunk_specs[index++]))
 	{
 		if (!strcmp(name, current->name))
@@ -88,7 +93,7 @@ bool apply_chunk_cryptography(const char *name)
 		}
 	}
 
-	return (current ? current->cryptography_applied : true);
+	return (current ? current->cryptography_applies : true);
 }
 
 bool write_next_chunk(file_details *file_details, png_chunk *png_chunk)
@@ -168,7 +173,7 @@ void hex_to_ints(unsigned char *hex, unsigned int hex_length, unsigned int *resu
 
 bool convert_chunk(png_chunk *png_chunk, FPE_KEY *fpe_key, cryptography_mode cryptography_mode)
 {
-	const int crypt = -1;
+	int crypt = -1;
 	switch (cryptography_mode)
 	{
 		case ENCRYPT:
@@ -194,13 +199,13 @@ bool convert_chunk(png_chunk *png_chunk, FPE_KEY *fpe_key, cryptography_mode cry
 
 status convert_png(transform_details *details, FPE_KEY *fpe_key, cryptography_mode cryptography_mode)
 {
-	if (!read_signature(details->input))
+	if (read_signature(details->input) != SUCCESS)
 	{
 		return ERROR;
 	}
 
 	png_chunk *png_chunk = NULL;
-	while (png_chunk = read_next_chunk(details->input))
+	while ((png_chunk = read_next_chunk(details->input)))
 	{
 		if (apply_chunk_cryptography(png_chunk->name))
 		{

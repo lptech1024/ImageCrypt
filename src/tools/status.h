@@ -6,9 +6,9 @@ extern "C" {
 #endif
 
 typedef enum {
-	SUCCESS = 0,
-	NOT_SUCCESS,
-	ERROR
+	ERROR = -1,
+	NOT_SUCCESS = 0,
+	SUCCESS = 1,
 } status;
 
 #ifdef __cplusplus

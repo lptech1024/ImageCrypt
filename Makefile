@@ -74,11 +74,20 @@ $(ODIR)/transform_details.o: $(TOOLS)/transform_details.h $(TOOLS)/transform_det
 #$(BDIR)/transform_details_test: $(ODIR)/transform_details.o $(ODIR)/transform_details_test.o\
 	$(CCDEBUG) $^ -o $@
 
-$(ODIR)/cli.o: $(ODIR)/string_collection.o $(SOURCE)/cli.c
+$(ODIR)/png.o: $(SOURCE)/png.h $(SOURCE)/png.c $(ODIR)/fpe.o $(ODIR)/crc32.o
+	$(CCCFLAGS) -c $(SOURCE)/png.c -o $@
+
+$(ODIR)/determine_format.o: $(SOURCE)/determine_format.h $(SOURCE)/determine_format.c $(ODIR)/transform_details.o $(ODIR)/png.o
+	$(CCCFLAGS) -c $(SOURCE)/determine_format.c -o $@
+
+$(ODIR)/user_input_handling.o: $(SOURCE)/user_input_handling.c $(SOURCE)/user_input_handling.h $(ODIR)/transform_details.o $(ODIR)/png.o $(ODIR)/fpe.o $(ODIR)/cryptography.o
+	$(CCCFLAGS) -c $(SOURCE)/user_input_handling.c -o $@
+
+$(ODIR)/cli.o: $(ODIR)/string_collection.o $(SOURCE)/cli.c $(ODIR)/user_input_handling.o
 	$(CCCFLAGS) -c $(SOURCE)/cli.c -o $@
 
-$(BDIR)/imagecrypt: $(ODIR)/safety.o $(ODIR)/string_collection.o $(ODIR)/cli.o $(ODIR)/transform_details.o
-	$(CCCFLAGS) $^ -o $@
+$(BDIR)/imagecrypt: $(ODIR)/safety.o $(ODIR)/string_collection.o $(ODIR)/cli.o $(ODIR)/transform_details.o $(ODIR)/user_input_handling.o $(ODIR)/determine_format.o $(ODIR)/png.o $(ODIR)/fpe.o $(ODIR)/cryptography.o $(ODIR)/crc32.o
+	$(CCCFLAGS) $^ $(ALL_LIBS) -o $@
 
 tests: $(BDIR)/cryptography_test $(BDIR)/fpe_test $(BDIR)/crc32_test $(BDIR)/string_collection_test
 

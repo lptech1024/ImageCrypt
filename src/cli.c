@@ -6,6 +6,7 @@
 #include "tools/string_collection.h"
 #include "tools/transform_details.h"
 #include "tools/cryptography.h"
+#include "user_input_handling.h"
 
 bool get_passphrase(char *buffer)
 {
@@ -198,8 +199,7 @@ int main(int argc, char *argv[])
 	}
 	while(transform_details_iterator_next(transform_details_iterator));
 
-	// TODO: Uncomment when implemented
-	//handle_user_inputs(transform_details_iterator, passphrase, cryptography_mode);
+	handle_user_inputs(transform_details_iterator, passphrase, cryptography_mode);
 
 	return EXIT_SUCCESS;
 }
