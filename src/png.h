@@ -24,7 +24,7 @@ typedef struct {
 	uint32_t data_size;
 	uint32_t crc32;
 	const char *name;
-	const unsigned char *data;
+	unsigned char *data;
 } png_chunk;
 
 status is_png(file_details *file_details);
