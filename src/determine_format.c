@@ -30,11 +30,11 @@ void set_conversion(transform_details_iterator *iterator)
 		file_details *file_details = create_file_details(iterator->current->input->file_path);
 		file_details->file = input_file;
 		size_t index = 0;
-		for (image_format current = image_formats[index]; current.image_format_test; current = image_formats[++index])
+		for (const image_format *current = &image_formats[index]; current->image_format_test; current = &image_formats[++index])
 		{
-			if (current.image_format_test(file_details))
+			if (current->image_format_test(file_details))
 			{
-				iterator->current->convert = current.convert;
+				iterator->current->convert = current->convert;
 			}
 		}
 
