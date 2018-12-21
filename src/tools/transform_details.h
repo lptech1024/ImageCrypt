@@ -12,7 +12,7 @@ extern "C" {
 
 typedef struct {
 	FILE *file;
-	const char *file_path;
+	char *file_path;
 } file_details;
 
 typedef struct transform_details {

@@ -6,8 +6,11 @@
 
 file_details* create_file_details(const char *path)
 {
-	file_details *details = malloc_or_exit(sizeof(file_details *));
-	details->file_path = path;
+	//printf("create_file_details start\n");
+	file_details *details = malloc_or_exit(sizeof(*details));
+	details->file = NULL;
+	details->file_path = path ? strdup_or_exit(path) : NULL;
+	//printf("create_file_details end\n");
 	return details;
 }
 
@@ -20,7 +23,8 @@ void destroy_file_details(file_details *file_details)
 
 transform_details* create_append_transform_details(transform_details *previous, const char *input_path, const char *output_path)
 {
-	transform_details *new_transform_details = malloc_or_exit(sizeof(transform_details *));
+	//printf("create_append_transform_details start\n");
+	transform_details *new_transform_details = malloc_or_exit(sizeof(*new_transform_details));
 	new_transform_details->convert = NULL;
 	new_transform_details->previous = previous;
 	new_transform_details->input = create_file_details(input_path);
@@ -29,8 +33,10 @@ transform_details* create_append_transform_details(transform_details *previous, 
 
 	if (previous)
 	{
+		//printf("\tprevious\n");
 		if (previous->next)
 		{
+			//printf("\t\tprevious->next\n");
 			previous->next->previous = new_transform_details;
 			new_transform_details->next = previous->next;
 		}
@@ -38,6 +44,7 @@ transform_details* create_append_transform_details(transform_details *previous, 
 		previous->next = new_transform_details;
 	}
 
+	//printf("create_append_transform_details end\n");
 	return new_transform_details;
 }
 
@@ -61,9 +68,11 @@ void destroy_transform_details(transform_details *transform_details)
 
 transform_details_iterator* create_transform_details_iterator(transform_details *head)
 {
-	transform_details_iterator *iterator = malloc_or_exit(sizeof(transform_details_iterator *));
+	//printf("create_transform_details_iterator start\n");
+	transform_details_iterator *iterator = malloc_or_exit(sizeof(*iterator));
 	iterator->head = head;
 	iterator->current = head;
+	//printf("create_transform_details_iterator end\n");
 	return iterator;
 }
 
@@ -84,6 +93,7 @@ void default_output_file_path(transform_details *transform_details, cryptography
 	const char *encrypted = "_encrypted";
 
 	const char *mode_text = cryptography_mode == DECRYPT ? unencrypted : encrypted;
+	const size_t mode_text_length = strlen(mode_text);
 
 	int last_non_slash_index = strlen(transform_details->input->file_path) - 1;
 	while (transform_details->input->file_path[last_non_slash_index] == '/')
@@ -114,17 +124,19 @@ void default_output_file_path(transform_details *transform_details, cryptography
 
 	if (last_slash_index >= last_dot_index)
 	{
-
-		transform_details->output->file_path = strcat(strndup(transform_details->input->file_path, last_non_slash_index + 1), strdup(mode_text));
+		transform_details->output->file_path = malloc(sizeof(char) * (last_non_slash_index + mode_text_length + 1));
+		memcpy(transform_details->output->file_path, transform_details->input->file_path, last_non_slash_index);
+		memcpy(transform_details->output->file_path + last_non_slash_index, mode_text, mode_text_length + 1);
 	}
 	else
 	{
-		char *output_path = strcat(strndup(transform_details->input->file_path, last_dot_index), strdup(mode_text));
-
-		char *extension = malloc(strlen(output_path) - last_dot_index + strlen(mode_text) + 1);
-		strcpy(extension, &transform_details->input->file_path[last_dot_index]);
-		transform_details->output->file_path = strcat(output_path, extension);
+		transform_details->output->file_path = malloc(sizeof(char) * (strlen(transform_details->input->file_path) + mode_text_length + 1));
+		memcpy(transform_details->output->file_path, transform_details->input->file_path, last_dot_index);
+		memcpy(transform_details->output->file_path + last_dot_index, mode_text, mode_text_length);
+		memcpy(transform_details->output->file_path + last_dot_index + mode_text_length, transform_details->input->file_path + last_dot_index, strlen(transform_details->input->file_path + last_dot_index) + 1);
 	}
+
+	//printf("\tDefaulted output file_path to [%s]\n", transform_details->output->file_path);
 }
 
 transform_details* transform_details_iterator_previous(transform_details_iterator *iterator)
@@ -139,18 +151,22 @@ transform_details* transform_details_iterator_previous(transform_details_iterato
 
 transform_details* transform_details_iterator_next(transform_details_iterator *iterator)
 {
+	//printf("transform_details_iterator_next start\n");
 	transform_details *next = iterator->current->next;
 
 	if (next)
 	{
 		iterator->current = next;
+		//printf("\tnext found\n");
 	}
 
+	//printf("transform_details_iterator_next end\n");
 	return next;
 }
 
 void transform_details_iterator_append(transform_details_iterator **iterator, const char *input_path, const char *output_path)
 {
+	//printf("transform_details_iterator_append start\n");
 	transform_details *current = (*iterator) ? (*iterator)->current : NULL;
 	transform_details *new_transform_details = create_append_transform_details(current, input_path, output_path);
 
@@ -160,6 +176,8 @@ void transform_details_iterator_append(transform_details_iterator **iterator, co
 	}
 	else
 	{
+		//printf("\ttransform_details_iterator_append next\n");
 		transform_details_iterator_next(*iterator);
 	}
+	//printf("transform_details_iterator_append end\n");
 }
