@@ -38,8 +38,8 @@ void set_conversion(transform_details_iterator *iterator)
 			}
 		}
 
-		destroy_file_details(file_details);
 		fclose(input_file);
+		destroy_file_details(file_details);
 	}
 	while(transform_details_iterator_next(iterator));
 }
