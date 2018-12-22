@@ -9,3 +9,5 @@ Code
 * Review endianess
 * Fix magic values
 * Add more complete error handling
+* Enable debug print statement if debug
+* Per-function documentation
