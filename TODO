@@ -8,3 +8,4 @@ Code
 * Fix memory leaks
 * Review endianess
 * Fix magic values
+* Add more complete error handling
