@@ -1,3 +1,10 @@
+Overall
 * Create man page
 * Replace manual tests with unit tests
 * Add CI
+
+Code
+* Make generated CRC32 order match read (?)
+* Fix memory leaks
+* Review endianess
+* Fix magic values
