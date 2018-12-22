@@ -17,7 +17,6 @@ file_details* create_file_details(const char *path)
 void destroy_file_details(file_details *file_details)
 {
 	free((void *) file_details->file_path);
-	free(file_details->file);
 	free(file_details);
 }
 
