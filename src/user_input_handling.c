@@ -17,21 +17,19 @@ void handle_user_inputs(transform_details_iterator *iterator, const char *passph
 	fpe_set_ff1_key(key, 8 * key_length, NULL, 0, 8 * key_length, ff1);
 
 	//printf("\thandle_user_inputs past fpe_set_ff1_key\n");
-	transform_details_iterator_reset(iterator);
 	set_conversion(iterator);
 
 	//printf("\thandle_user_inputs past set_conversion\n");
-	transform_details_iterator_reset(iterator);
-	do
+	for (transform_details *current = transform_details_iterator_first(iterator); current; current = transform_details_iterator_next(iterator))
 	{
 		//printf("\tconvert looped\n");
-		if (iterator->current->convert)
+		if (current->convert)
 		{
 			//printf("\t\ttrying to convert\n");
-			iterator->current->convert(iterator->current, ff1, cryptography_mode);
+			current->convert(current, ff1, cryptography_mode);
 		}
 	}
-	while(transform_details_iterator_next(iterator));
+
 	fpe_unset_ff1_key(ff1);
 	free(ff1);
 	//printf("handle_user_inputs end\n");

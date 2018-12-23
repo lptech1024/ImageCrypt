@@ -85,6 +85,12 @@ void transform_details_iterator_reset(transform_details_iterator *iterator)
 	iterator->current = iterator->head;
 }
 
+transform_details* transform_details_iterator_first(transform_details_iterator *iterator)
+{
+	transform_details_iterator_reset(iterator);
+	return iterator->current;
+}
+
 // Trailing slash of input path will be dropped when no file extension provided
 void default_output_file_path(transform_details *transform_details, cryptography_mode cryptography_mode)
 {

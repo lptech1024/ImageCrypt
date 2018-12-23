@@ -24,22 +24,21 @@ const image_format image_formats[] =
 // If conversion is not possible, transform_details will not change
 void set_conversion(transform_details_iterator *iterator)
 {
-	do
+	for (transform_details *current = transform_details_iterator_first(transform_details_iterator); current; current = transform_details_iterator_next(transform_details_iterator))
 	{
 		FILE *input_file = fopen(iterator->current->input->file_path, "r");
 		file_details *file_details = create_file_details(iterator->current->input->file_path);
 		file_details->file = input_file;
 		size_t index = 0;
-		for (const image_format *current = &image_formats[index]; current->image_format_test; current = &image_formats[++index])
+		for (const image_format *current_image_format = &image_formats[index]; current_image_format->image_format_test; current_image_format = &image_formats[++index])
 		{
-			if (current->image_format_test(file_details))
+			if (current_image_format->image_format_test(file_details))
 			{
-				iterator->current->convert = current->convert;
+				iterator->current->convert = current_image_format->convert;
 			}
 		}
 
 		fclose(input_file);
 		destroy_file_details(file_details);
 	}
-	while(transform_details_iterator_next(iterator));
 }

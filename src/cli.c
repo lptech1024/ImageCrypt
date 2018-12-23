@@ -44,6 +44,7 @@ bool get_passphrase(char *buffer)
 
 int main(int argc, char *argv[])
 {
+	//printf("main\n");
 	unsigned int counter = 1;
 
 	char *passphrase_aliases[] = { "-p", "--passphrase", NULL };
@@ -66,7 +67,7 @@ int main(int argc, char *argv[])
 	char *passphrase = NULL;
 
 	transform_details_iterator *transform_details_iterator = NULL;
-
+	//printf("at main while\n");
 	while (counter < argc)
 	{
 		char *current_parameter = argv[counter++];
@@ -153,9 +154,12 @@ int main(int argc, char *argv[])
 				}
 			}
 
+			//printf("transform_details_iterator_append attempt\n");
 			transform_details_iterator_append(&transform_details_iterator, input_file_path, output_file_path);
+			//printf("transform_details_iterator_append complete\n");
 		}
 	}
+	//printf("main while complete\n");
 
 	bool sane_user_inputs = true;
 
@@ -189,15 +193,13 @@ int main(int argc, char *argv[])
 		exit(-1);
 	}
 
-	transform_details_iterator_reset(transform_details_iterator);
-	do
+	for (transform_details *current = transform_details_iterator_first(transform_details_iterator); current; current = transform_details_iterator_next(transform_details_iterator))
 	{
-		if (!transform_details_iterator->current->output->file_path)
+		if (!current->output->file_path)
 		{
-			default_output_file_path(transform_details_iterator->current, cryptography_mode);
+			default_output_file_path(current, cryptography_mode);
 		}
 	}
-	while(transform_details_iterator_next(transform_details_iterator));
 
 	handle_user_inputs(transform_details_iterator, passphrase, cryptography_mode);
 
