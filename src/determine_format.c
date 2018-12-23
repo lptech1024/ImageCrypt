@@ -24,7 +24,7 @@ const image_format image_formats[] =
 // If conversion is not possible, transform_details will not change
 void set_conversion(transform_details_iterator *iterator)
 {
-	for (transform_details *current = transform_details_iterator_first(transform_details_iterator); current; current = transform_details_iterator_next(transform_details_iterator))
+	for (transform_details *current = transform_details_iterator_first(iterator); current; current = transform_details_iterator_next(iterator))
 	{
 		FILE *input_file = fopen(iterator->current->input->file_path, "r");
 		file_details *file_details = create_file_details(iterator->current->input->file_path);
