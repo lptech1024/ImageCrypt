@@ -169,6 +169,19 @@ transform_details* transform_details_iterator_next(transform_details_iterator *i
 	return next;
 }
 
+transform_details* transform_details_iterator_next_final(transform_details_iterator *iterator)
+{
+	//printf("transform_details_iterator_next_final start\n");
+	transform_details *current = iterator->current;
+
+	transform_details *next = transform_details_iterator_next(iterator);
+
+	destroy_transform_details(current);
+
+	//printf("transform_details_iterator_next_final end\n");
+	return next;
+}
+
 void transform_details_iterator_append(transform_details_iterator **iterator, const char *input_path, const char *output_path)
 {
 	//printf("transform_details_iterator_append start\n");
