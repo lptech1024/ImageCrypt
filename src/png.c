@@ -12,6 +12,8 @@
 #include "tools/transform_details.h"
 #include "png.h"
 
+const char PNG_SIGNATURE[] = { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 0x00 };
+
 const png_chunk_spec png_chunk_specs[] =
 {
 	{ "IHDR", false }, // Basic image details
@@ -42,7 +44,7 @@ png_chunk* create_png_chunk(uint32_t data_size)
 {
 	png_chunk *new_png_chunk = malloc_or_exit(sizeof(*new_png_chunk));
 	new_png_chunk->data_size = data_size;
-	new_png_chunk->crc32 = -1;
+	new_png_chunk->crc32 = 0;
 	new_png_chunk->name = NULL;
 	new_png_chunk->data = malloc(data_size);
 	return new_png_chunk;
@@ -58,8 +60,7 @@ void destroy_png_chunk(png_chunk *png_chunk)
 status read_signature(FILE *file)
 {
 	//printf("read_signature\n");
-	const char signature[] = { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A };
-	const size_t signature_length = 8;
+	size_t signature_length = strlen(PNG_SIGNATURE);
 
 	char buffer[signature_length];
 	//printf("\trs fread\n");
@@ -74,7 +75,7 @@ status read_signature(FILE *file)
 	{
 		for (int i = 0; i < signature_length; i++)
 		{
-			if (signature[i] != buffer[i])
+			if (PNG_SIGNATURE[i] != buffer[i])
 			{
 				//printf("\trs NOT_SUCCESS\n");
 				return NOT_SUCCESS;
@@ -84,6 +85,12 @@ status read_signature(FILE *file)
 		//printf("\trs SUCCESS\n");
 		return SUCCESS;
 	}
+}
+
+status write_signature(FILE *file)
+{
+	fwrite(PNG_SIGNATURE, 1, strlen(PNG_SIGNATURE), file);
+	return SUCCESS;
 }
 
 status is_png(file_details *file_details)
@@ -125,8 +132,8 @@ bool write_next_chunk(file_details *file_details, png_chunk *png_chunk)
 
 	chunks_read = fwrite(png_chunk->data, 1, png_chunk->data_size, file_details->file);
 
-	//htonl_result = htonl(png_chunk->crc32);
-	chunks_read = fwrite(&png_chunk->crc32, sizeof(png_chunk->crc32), 1, file_details->file);
+	htonl_result = htonl(png_chunk->crc32);
+	chunks_read = fwrite(&htonl_result, 1, 4, file_details->file);
 	//printf("write_next_chunk complete\n");
 	return true;
 }
@@ -170,10 +177,10 @@ png_chunk* read_next_chunk(file_details *file_details)
 		fprintf(stderr, "\tPNG | Bad chunk name in [%s]\n", file_details->file_path);
 	}
 
-	char *temp = malloc(sizeof(char) * PNG_NAME_LENGTH);
+	unsigned char *temp = malloc(sizeof(char) * PNG_NAME_LENGTH);
 	memcpy(temp, buffer, PNG_NAME_LENGTH - 1);
 	temp[PNG_NAME_LENGTH - 1] = '\0';
-	png_chunk->name = strdup(temp);
+	png_chunk->name = strdup((char *) temp);
 	free(temp);
 
 	if ((png_chunk->data_size) > buffer_size)
@@ -196,14 +203,14 @@ png_chunk* read_next_chunk(file_details *file_details)
 		fprintf(stderr, "\tPNG | Bad CRC32 in [%s]\n", file_details->file_path);
 	}
 
-	network_order_temp = (uint32_t) buffer[0] << 24 |
-	                     (uint32_t) buffer[1] << 16 |
-	                     (uint32_t) buffer[2] << 8 |
-	                     (uint32_t) buffer[3];
-	png_chunk->crc32 = ntohl(network_order_temp);
+	network_order_temp = /*(uint32_t)*/ buffer[0] << 24 |
+	                     /*(uint32_t)*/ buffer[1] << 16 |
+	                     /*(uint32_t)*/ buffer[2] << 8 |
+	                     /*(uint32_t)*/ buffer[3];
+	//png_chunk->crc32 = ntohl(network_order_temp);
+	png_chunk->crc32 = network_order_temp;
 
 	free(buffer);
-
 	// Create this last so we can set data array length
 	//printf("\tread_next_chunk complete\n");
 	return png_chunk;
@@ -225,6 +232,11 @@ void ints_to_hex(unsigned int *ints, size_t int_length, unsigned char *result)
 		result[i] = ints[i];
 	}
 }
+
+//union {
+//	unsigned char crc32_chars[4];
+//	uint32_t crc32_value;
+//} crc32_union;
 
 bool convert_chunk(png_chunk *png_chunk, FPE_KEY *fpe_key, cryptography_mode cryptography_mode)
 {
@@ -261,10 +273,26 @@ bool convert_chunk(png_chunk *png_chunk, FPE_KEY *fpe_key, cryptography_mode cry
 	free(crypt_data2);
 
 	//printf("\tcrc32\n");
-	unsigned long crc32 = crc((unsigned char *) png_chunk->name, strlen(png_chunk->name));
-	update_crc(crc32, png_chunk->data, (png_chunk->data_size));
+	//printf("png_chunk->data_size is [%" PRIu32 "]\n", png_chunk->data_size);
+	//crc32_union.crc32_value = png_chunk->crc32;
+	//printf("crc32 (c) is [%02X]\n", crc32_union.crc32_chars[0]);
+	//printf("crc32 (c) is [%02X]\n", crc32_union.crc32_chars[1]);
+	//printf("crc32 (c) is [%02X]\n", crc32_union.crc32_chars[2]);
+	//printf("crc32 (c) is [%02X]\n", crc32_union.crc32_chars[3]);
+	unsigned char full_data[4 + png_chunk->data_size];
+	memcpy(full_data, png_chunk->name, 4);
+	memcpy(full_data + 4, png_chunk->data, png_chunk->data_size);
+	uint32_t crc32 = crc(full_data, 4 + png_chunk->data_size);
+	//crc32 = update_crc(crc32, png_chunk->data, png_chunk->data_size);
+	//crc32_union.crc32_value = crc32_2;
+	//crc32_union.crc32_value = crc32;
 	png_chunk->crc32 = crc32;
-
+	//png_chunk->crc32 = htonl(png_chunk->crc32);
+	//png_chunk->crc32 = ntohl(png_chunk->crc32);
+	//printf("crc32 is [%02X]\n", crc32_union.crc32_chars[0]);
+	//printf("crc32 is [%02X]\n", crc32_union.crc32_chars[1]);
+	//printf("crc32 is [%02X]\n", crc32_union.crc32_chars[2]);
+	//printf("crc32 is [%02X]\n", crc32_union.crc32_chars[3]);
 	//printf("convert_chunk complete\n");
 	return true;
 }
@@ -272,8 +300,7 @@ bool convert_chunk(png_chunk *png_chunk, FPE_KEY *fpe_key, cryptography_mode cry
 status convert_png(transform_details *details, FPE_KEY *fpe_key, cryptography_mode cryptography_mode)
 {
 	//printf("convert_png start\n");
-	FILE *file = malloc(sizeof(*file));
-	file = fopen(details->input->file_path, "r");
+	FILE *file = fopen(details->input->file_path, "r");
 	if (read_signature(file) != SUCCESS)
 	{
 		//printf("\tread_signature ! SUCCESS\n");
@@ -281,9 +308,10 @@ status convert_png(transform_details *details, FPE_KEY *fpe_key, cryptography_mo
 	}
 
 	details->input->file = file;
-	FILE *output_file = malloc(sizeof(*output_file));
-	output_file = fopen(details->output->file_path, "w");
+	FILE *output_file = fopen(details->output->file_path, "w");
 	details->output->file = output_file;
+
+	write_signature(details->output->file);
 
 	png_chunk *png_chunk = NULL;
 	//printf("\twhile loop prepped\n");
@@ -296,11 +324,11 @@ status convert_png(transform_details *details, FPE_KEY *fpe_key, cryptography_mo
 		}
 
 		write_next_chunk(details->output, png_chunk);
-		free(png_chunk);
+		destroy_png_chunk(png_chunk);
 	}
 
+	fclose(output_file);
 	//printf("convert_png end\n");
-	// TODO: Check for details->input->file_path EOF
 
 	return true;
 }
