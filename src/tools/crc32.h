@@ -1,8 +1,16 @@
-#ifndef IMAGECRYPT_CRC
-#define IMAGECRYPT_CRC
+#ifndef IMAGECRYPT_CRC32
+#define IMAGECRYPT_CRC32
 
-unsigned long update_crc(unsigned long crc, unsigned char *buf, int len);
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-unsigned long crc(unsigned char *buf, int len);
+uint32_t crc(unsigned char *buf, size_t len);
+
+uint32_t update_crc(uint32_t crc, unsigned char *buf, size_t len);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
