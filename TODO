@@ -4,7 +4,6 @@ Project
 * Add CI
 
 Code
-* Make generated CRC32 order match read (?)
 * Fix memory leaks
 * Review endianess
 * Fix magic values
