@@ -9,7 +9,7 @@ void handle_user_inputs(transform_details_iterator *iterator, const char *passph
 {
 	//printf("handle_user_inputs start\n");
 	const unsigned int key_length = 32;
-	unsigned char *key = malloc(key_length);
+	unsigned char key[key_length];
 	set_key(passphrase, key, key_length);
 
 	//printf("\thandle_user_inputs past set_key\n");
@@ -20,7 +20,7 @@ void handle_user_inputs(transform_details_iterator *iterator, const char *passph
 	set_conversion(iterator);
 
 	//printf("\thandle_user_inputs past set_conversion\n");
-	for (transform_details *current = transform_details_iterator_first(iterator); current; current = transform_details_iterator_next(iterator))
+	for (transform_details *current = transform_details_iterator_first(iterator); current; current = transform_details_iterator_next_final(iterator))
 	{
 		//printf("\tconvert looped\n");
 		if (current->convert)
