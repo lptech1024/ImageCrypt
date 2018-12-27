@@ -40,7 +40,7 @@ const png_chunk_spec png_chunk_specs[] =
 	{ NULL,   true }
 };
 
-png_chunk* create_png_chunk(uint32_t data_size)
+static png_chunk* create_png_chunk(uint32_t data_size)
 {
 	png_chunk *new_png_chunk = malloc_or_exit(sizeof(*new_png_chunk));
 	new_png_chunk->data_size = data_size;
@@ -50,14 +50,14 @@ png_chunk* create_png_chunk(uint32_t data_size)
 	return new_png_chunk;
 }
 
-void destroy_png_chunk(png_chunk *png_chunk)
+static void destroy_png_chunk(png_chunk *png_chunk)
 {
 	free((void *) png_chunk->name);
 	free((void *) png_chunk->data);
 	free(png_chunk);
 }
 
-status read_signature(FILE *file)
+static status read_signature(FILE *file)
 {
 	//printf("read_signature\n");
 	size_t signature_length = strlen(PNG_SIGNATURE);
@@ -87,7 +87,7 @@ status read_signature(FILE *file)
 	}
 }
 
-status write_signature(FILE *file)
+static status write_signature(FILE *file)
 {
 	fwrite(PNG_SIGNATURE, 1, strlen(PNG_SIGNATURE), file);
 	return SUCCESS;
@@ -106,7 +106,7 @@ status is_png(file_details *file_details)
 	return signature_read_status;
 }
 
-bool apply_chunk_cryptography(const char *name)
+static bool apply_chunk_cryptography(const char *name)
 {
 	size_t index = 0;
 	png_chunk_spec *match = NULL;
@@ -122,7 +122,7 @@ bool apply_chunk_cryptography(const char *name)
 	return (match ? match->cryptography_applies : true);
 }
 
-bool write_next_chunk(file_details *file_details, png_chunk *png_chunk)
+static bool write_next_chunk(file_details *file_details, png_chunk *png_chunk)
 {
 	//printf("write_next_chunk\n");
 	uint32_t htonl_result = htonl(png_chunk->data_size);
@@ -138,7 +138,7 @@ bool write_next_chunk(file_details *file_details, png_chunk *png_chunk)
 	return true;
 }
 
-png_chunk* read_next_chunk(file_details *file_details)
+static png_chunk* read_next_chunk(file_details *file_details)
 {
 	//printf("read_next_chunk\n");
 
@@ -216,7 +216,7 @@ png_chunk* read_next_chunk(file_details *file_details)
 	return png_chunk;
 }
 
-void hex_to_ints(unsigned char *hex, unsigned int hex_length, unsigned int *result)
+static void hex_to_ints(unsigned char *hex, unsigned int hex_length, unsigned int *result)
 {
 	for (int i = 0; i < hex_length; i++)
 	{
@@ -238,7 +238,7 @@ void ints_to_hex(unsigned int *ints, size_t int_length, unsigned char *result)
 //	uint32_t crc32_value;
 //} crc32_union;
 
-bool convert_chunk(png_chunk *png_chunk, FPE_KEY *fpe_key, cryptography_mode cryptography_mode)
+static bool convert_chunk(png_chunk *png_chunk, FPE_KEY *fpe_key, cryptography_mode cryptography_mode)
 {
 	//printf("convert_chunk\n");
 	int crypt = -1;

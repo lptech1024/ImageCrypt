@@ -8,7 +8,7 @@
 #include "tools/cryptography.h"
 #include "user_input_handling.h"
 
-bool get_passphrase(char *buffer)
+static bool get_passphrase(char *buffer)
 {
 	struct termios visible, hidden;
 

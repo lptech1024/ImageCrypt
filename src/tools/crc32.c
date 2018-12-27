@@ -3,13 +3,13 @@
 #include <stdlib.h>
 
 // Table of CRCs of all 8-bit messages.
-uint32_t crc_table[256];
+static uint32_t crc_table[256];
 
 // Flag: has the table been computed?
-bool crc_table_computed = false;
+static bool crc_table_computed = false;
 
 // Make the table for a fast CRC
-void make_crc_table()
+static void make_crc_table()
 {
 	for (uint32_t n = 0; n < 256; n++)
 	{

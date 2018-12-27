@@ -80,7 +80,7 @@ void destroy_transform_details_iterator(transform_details_iterator *transform_de
 	free(transform_details_iterator);
 }
 
-void transform_details_iterator_reset(transform_details_iterator *iterator)
+static void transform_details_iterator_reset(transform_details_iterator *iterator)
 {
 	iterator->current = iterator->head;
 }

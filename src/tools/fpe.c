@@ -14,7 +14,7 @@
 #define floor2(x, bit) ((x) >> (bit))
 
 // quick power: result = x ^ e
-void pow_uv(BIGNUM *pow_u, BIGNUM *pow_v, unsigned int x, int u, int v, BN_CTX *ctx)
+static void pow_uv(BIGNUM *pow_u, BIGNUM *pow_v, unsigned int x, int u, int v, BN_CTX *ctx)
 {
 	BN_CTX_start(ctx);
 	BIGNUM *base = BN_CTX_get(ctx),
@@ -46,7 +46,7 @@ void pow_uv(BIGNUM *pow_u, BIGNUM *pow_v, unsigned int x, int u, int v, BN_CTX *
 }
 
 // convert numeral string to number
-void str_to_num(BIGNUM *Y, const unsigned int *X, unsigned long long radix, unsigned int len, BN_CTX *ctx)
+static void str_to_num(BIGNUM *Y, const unsigned int *X, unsigned long long radix, unsigned int len, BN_CTX *ctx)
 {
 	BN_CTX_start(ctx);
 	BIGNUM *r = BN_CTX_get(ctx),
@@ -67,7 +67,7 @@ void str_to_num(BIGNUM *Y, const unsigned int *X, unsigned long long radix, unsi
 }
 
 // convert number to numeral string
-void num_to_str(const BIGNUM *X, unsigned int *Y, unsigned int radix, int len, BN_CTX *ctx)
+static void num_to_str(const BIGNUM *X, unsigned int *Y, unsigned int radix, int len, BN_CTX *ctx)
 {
 	BN_CTX_start(ctx);
 	BIGNUM *dv = BN_CTX_get(ctx),
@@ -169,11 +169,11 @@ void ff1_encrypt(const unsigned int *in, unsigned int *out, AES_KEY *aes_enc_ctx
 		// i
 		Q[tweaklen + pad] = i & 0xff;
 		str_to_num(bnum, B, radix, inlen - m, ctx);
-		int BytesLen = BN_bn2bin(bnum, Bytes);
+		int bytes_len = BN_bn2bin(bnum, Bytes);
 		memset(Q + Qlen - b, 0x00, b);
 
-		int qtmp = Qlen - BytesLen;
-		memcpy(Q + qtmp, Bytes, BytesLen);
+		int qtmp = Qlen - bytes_len;
+		memcpy(Q + qtmp, Bytes, bytes_len);
 
 		// ii PRF(P || Q), P is always 16 bytes long
 		AES_encrypt(P, R, aes_enc_ctx);
@@ -191,7 +191,7 @@ void ff1_encrypt(const unsigned int *in, unsigned int *out, AES_KEY *aes_enc_ctx
 			Qi += 16;
 		}
 
-		// iii 
+		// iii
 		unsigned char tmp[16], SS[16];
 		memset(S, 0x00, Slen);
 		assert(Slen >= 16);
@@ -337,9 +337,9 @@ void ff1_decrypt(const unsigned int *in, unsigned int *out, AES_KEY *aes_enc_ctx
 		Q[tweaklen + pad] = i & 0xff;
 		str_to_num(anum, A, radix, inlen - m, ctx);
 		memset(Q + Qlen - b, 0x00, b);
-		int BytesLen = BN_bn2bin(anum, Bytes);
-		int qtmp = Qlen - BytesLen;
-		memcpy(Q + qtmp, Bytes, BytesLen);
+		int bytes_len = BN_bn2bin(anum, Bytes);
+		int qtmp = Qlen - bytes_len;
+		memcpy(Q + qtmp, Bytes, bytes_len);
 
 		// ii PRF(P || Q)
 		memset(R, 0x00, sizeof(R));
@@ -453,10 +453,10 @@ void fpe_ff1_encrypt(unsigned int *in, unsigned int *out, unsigned int inlen, FP
 {
 	if (enc)
 	{
-		ff1_encrypt(in, out, &key->aes_enc_ctx, key->tweak,	key->radix, inlen, key->tweaklen);
+		ff1_encrypt(in, out, &key->aes_enc_ctx, key->tweak, key->radix, inlen, key->tweaklen);
 	}
 	else
 	{
-		ff1_decrypt(in, out, &key->aes_enc_ctx, key->tweak,	key->radix, inlen, key->tweaklen);
+		ff1_decrypt(in, out, &key->aes_enc_ctx, key->tweak, key->radix, inlen, key->tweaklen);
 	}
 }
