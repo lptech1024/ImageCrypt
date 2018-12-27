@@ -10,10 +10,17 @@ Primary Developer Image Format Support Priority
 1. [JPEG](https://en.wikipedia.org/wiki/JPEG) (next planned)
 1. [NEF](https://www.nikonusa.com/en/learn-and-explore/a/products-and-innovation/nikon-electronic-format-nef.html)
 
-## Make
-* make
-* make tests
-* make clean
+## Setup
+* I want to run ImageCrypt
+  * make release
+  * ./release/imagecrypt
+
+* I am developing ImageCrypt
+  * make debug
+  * ./debug/imagecrypt
+  
+* I want to undo the above make commands
+  * make clean
 
 ## Dependencies
 
