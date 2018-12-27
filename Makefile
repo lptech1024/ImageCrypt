@@ -2,11 +2,10 @@ CC=clang
 CFLAGS=-Wall
 CDEBUG=-g
 CSTD=-std=gnu17
+OPT=-O2
 CCCFLAGS=$(CC) $(CSTD) $(CFLAGS)
-CCDEBUG=$(CCCFLAGS) $(CDEBUG)
 
 ODIR=obj
-BDIR=bin
 TDIR=tests
 SOURCE=src
 
@@ -16,80 +15,96 @@ ALL_LIBS=$(LIB_MATH) $(LIB_CRYPTO)
 
 TOOLS=$(SOURCE)/tools
 
-.PHONY: all tests clean
+ALL=all
+RELEASE_TARGET=release
+DEBUG_TARGET=debug
+CLEAN=clean
 
-all: $(ODIR)/safety.o $(ODIR)/cryptography.o $(ODIR)/fpe.o $(ODIR)/crc32.o $(BDIR)/imagecrypt
+.PHONY: $(ALL) $(RELEASE_TARGET) $(DEBUG_TARGET) $(CLEAN)
 
-$(ODIR)/safety.o: $(TOOLS)/safety.h $(TOOLS)/safety.c
-	$(CCCFLAGS) -c $(TOOLS)/safety.c -o $@
+# Don't delete any intermediate files (e.g. .o)
+.SECONDARY:
 
-#$(ODIR)/safety_test.o $(TOOLS)/safety.h $(TDIR)/safety_test.c\
-	$(CCCFLAGS) -c $(TDIR)/safety_test.c -o $@
+$(ALL): $(RELEASE_TARGET) $(RELEASE_TARGET)/tests
 
-#$(BDIR)/safety_test $(ODIR)/safety.o $(ODIR)/safety_test.o\
-	$(CCDEBUG) $^ -o $@
+.SECONDEXPANSION:
 
-$(ODIR)/cryptography.o: $(TOOLS)/cryptography.h $(TOOLS)/cryptography.c
-	$(CCCFLAGS) -c $(TOOLS)/cryptography.c -o $@
+$(RELEASE_TARGET): CCCFLAGS += $(OPT)
+$(RELEASE_TARGET): $$@/imagecrypt
 
-$(ODIR)/cryptography_test.o: $(TOOLS)/cryptography.h $(TDIR)/cryptography_test.c
-	$(CCCFLAGS) -c $(TDIR)/cryptography_test.c -o $@
+$(DEBUG_TARGET): CCCFLAGS += $(CDEBUG)
+$(DEBUG_TARGET): $$@/imagecrypt $$@/tests
 
-$(BDIR)/cryptography_test: $(ODIR)/cryptography.o $(ODIR)/cryptography_test.o
-	$(CCDEBUG) $^ $(LIB_CRYPTO) -o $@
+$(CLEAN):
+	-rm release/* release/obj/*.o debug/* debug/obj/*.o
 
-$(ODIR)/fpe.o: $(TOOLS)/fpe.h $(TOOLS)/fpe.c
-	$(CCCFLAGS) -c $(TOOLS)/fpe.c -o $@
+%/safety.o: $(TOOLS)/safety.c $(TOOLS)/safety.h
+	$(CCCFLAGS) -c $< -o $@
 
-$(ODIR)/fpe_test.o: $(TOOLS)/fpe.h $(TDIR)/fpe_test.c
-	$(CCCFLAGS) -c $(TDIR)/fpe_test.c -o $@
+#%/safety_test.o $(TDIR)/safety_test.c $(TOOLS)/safety.h\
+	$(CCCFLAGS) -c $< -o $@
 
-$(BDIR)/fpe_test: $(ODIR)/fpe.o $(ODIR)/fpe_test.o
-	$(CCDEBUG) $^ $(ALL_LIBS) -o $@
+#%/safety_test: %/$(ODIR)/safety.o %/$(ODIR)/safety_test.o\
+	$(CCCFLAGS) $^ -o $@
 
-$(ODIR)/crc32.o: $(TOOLS)/crc32.h $(TOOLS)/crc32.c
-	$(CCCFLAGS) -c $(TOOLS)/crc32.c -o $@
+%/cryptography.o: $(TOOLS)/cryptography.c $(TOOLS)/cryptography.h
+	$(CCCFLAGS) -c $< -o $@
 
-$(ODIR)/crc32_test.o: $(TOOLS)/crc32.h $(ODIR)/crc32.o $(TDIR)/crc32_test.c
-	$(CCCFLAGS) -c $(TDIR)/crc32_test.c -o $@
+%/cryptography_test.o: $(TDIR)/cryptography_test.c $(TOOLS)/cryptography.h
+	$(CCCFLAGS) -c $< -o $@
 
-$(BDIR)/crc32_test: $(ODIR)/crc32.o $(ODIR)/crc32_test.o
-	$(CCDEBUG) $^ -o $@
+%/cryptography_test: %/$(ODIR)/cryptography.o %/$(ODIR)/cryptography_test.o
+	$(CCCFLAGS) $^ $(LIB_CRYPTO) -o $@
 
-$(ODIR)/string_collection.o: $(TOOLS)/string_collection.h $(TOOLS)/string_collection.c
-	$(CCCFLAGS) -c $(TOOLS)/string_collection.c -o $@
+%/fpe.o: $(TOOLS)/fpe.c $(TOOLS)/fpe.h
+	$(CCCFLAGS) -c $< -o $@
 
-$(ODIR)/string_collection_test.o: $(TOOLS)/string_collection.h $(ODIR)/string_collection.o $(TDIR)/string_collection_test.c
-	$(CCCFLAGS) -c $(TDIR)/string_collection_test.c -o $@
+%/fpe_test.o: $(TDIR)/fpe_test.c $(TOOLS)/fpe.h
+	$(CCCFLAGS) -c $< -o $@
 
-$(BDIR)/string_collection_test: $(ODIR)/string_collection.o $(ODIR)/string_collection_test.o
-	$(CCDEBUG) $^ -o $@
-
-$(ODIR)/transform_details.o: $(TOOLS)/transform_details.h $(TOOLS)/transform_details.c
-	$(CCCFLAGS) -c $(TOOLS)/transform_details.c -o $@
-
-#$(ODIR)/transform_details_test.o: $(TOOLS)/transform_details.h $(ODIR)/transform_details.o $(TDIR)/transform_details_test.c\
-	$(CCCFLAGS) -c $(TDIR)/transform_details_test.c -o $@
-
-#$(BDIR)/transform_details_test: $(ODIR)/transform_details.o $(ODIR)/transform_details_test.o\
-	$(CCDEBUG) $^ -o $@
-
-$(ODIR)/png.o: $(SOURCE)/png.h $(SOURCE)/png.c $(ODIR)/fpe.o $(ODIR)/crc32.o
-	$(CCCFLAGS) -c $(SOURCE)/png.c -o $@
-
-$(ODIR)/determine_format.o: $(SOURCE)/determine_format.h $(SOURCE)/determine_format.c $(ODIR)/transform_details.o $(ODIR)/png.o
-	$(CCCFLAGS) -c $(SOURCE)/determine_format.c -o $@
-
-$(ODIR)/user_input_handling.o: $(SOURCE)/user_input_handling.c $(SOURCE)/user_input_handling.h $(ODIR)/transform_details.o $(ODIR)/png.o $(ODIR)/fpe.o $(ODIR)/cryptography.o
-	$(CCCFLAGS) -c $(SOURCE)/user_input_handling.c -o $@
-
-$(ODIR)/cli.o: $(ODIR)/string_collection.o $(SOURCE)/cli.c $(ODIR)/user_input_handling.o
-	$(CCCFLAGS) -c $(SOURCE)/cli.c -o $@
-
-$(BDIR)/imagecrypt: $(ODIR)/safety.o $(ODIR)/string_collection.o $(ODIR)/cli.o $(ODIR)/transform_details.o $(ODIR)/user_input_handling.o $(ODIR)/determine_format.o $(ODIR)/png.o $(ODIR)/fpe.o $(ODIR)/cryptography.o $(ODIR)/crc32.o
+%/fpe_test: %/$(ODIR)/fpe.o %/$(ODIR)/fpe_test.o
 	$(CCCFLAGS) $^ $(ALL_LIBS) -o $@
 
-tests: $(BDIR)/cryptography_test $(BDIR)/fpe_test $(BDIR)/crc32_test $(BDIR)/string_collection_test
+%/crc32.o: $(TOOLS)/crc32.c $(TOOLS)/crc32.h
+	$(CCCFLAGS) -c $< -o $@
 
-clean:
-	-rm $(ODIR)/*.o $(BDIR)/*
+%/crc32_test.o: $(TDIR)/crc32_test.c $(TOOLS)/crc32.h %/crc32.o
+	$(CCCFLAGS) -c $< -o $@
+
+%/crc32_test: %/$(ODIR)/crc32.o %/$(ODIR)/crc32_test.o
+	$(CCCFLAGS) $^ -o $@
+
+%/string_collection.o: $(TOOLS)/string_collection.c $(TOOLS)/string_collection.h %/safety.o
+	$(CCCFLAGS) -c $< -o $@
+
+%/string_collection_test.o: $(TDIR)/string_collection_test.c $(TOOLS)/string_collection.h %/string_collection.o
+	$(CCCFLAGS) -c $< -o $@
+
+%/string_collection_test: %/$(ODIR)/string_collection.o %/$(ODIR)/string_collection_test.o %/$(ODIR)/safety.o
+	$(CCCFLAGS) $^ -o $@
+
+%/transform_details.o: $(TOOLS)/transform_details.c $(TOOLS)/transform_details.h
+	$(CCCFLAGS) -c $< -o $@
+
+#%/transform_details_test.o: $(TDIR)/transform_details_test.c $(TOOLS)/transform_details.h %/transform_details.o\
+	$(CCCFLAGS) -c $< -o $@
+
+#%/transform_details_test: %/$(ODIR)/transform_details.o %/$(ODIR)/transform_details_test.o\
+	$(CCCFLAGS) $^ -o $@
+
+%/png.o: $(SOURCE)/png.c $(SOURCE)/png.h %/fpe.o %/crc32.o
+	$(CCCFLAGS) -c $< -o $@
+
+%/determine_format.o: $(SOURCE)/determine_format.c $(SOURCE)/determine_format.h %/transform_details.o %/png.o
+	$(CCCFLAGS) -c $< -o $@
+
+%/user_input_handling.o: $(SOURCE)/user_input_handling.c $(SOURCE)/user_input_handling.h %/transform_details.o %/png.o %/fpe.o %/cryptography.o
+	$(CCCFLAGS) -c $< -o $@
+
+%/cli.o: $(SOURCE)/cli.c %/string_collection.o %/user_input_handling.o
+	$(CCCFLAGS) -c $< -o $@
+
+%/imagecrypt: %/$(ODIR)/safety.o %/$(ODIR)/string_collection.o %/$(ODIR)/cli.o %/$(ODIR)/transform_details.o %/$(ODIR)/user_input_handling.o %/$(ODIR)/determine_format.o %/$(ODIR)/png.o %/$(ODIR)/fpe.o %/$(ODIR)/cryptography.o %/$(ODIR)/crc32.o
+	$(CCCFLAGS) $^ $(ALL_LIBS) -o $@
+
+%/tests: %/cryptography_test %/fpe_test %/crc32_test %/string_collection_test;
