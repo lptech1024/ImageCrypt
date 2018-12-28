@@ -10,3 +10,11 @@ Code
 * Add more complete error handling
 * Enable debug print statement if debug
 * Per-function documentation
+
+Wishlist/Potential Features
+* Threading
+* FPE tweaks for PNG Chunks (chunk-sensitive encrypted output)
+* Cross-compilation to Windows (mingw-w64-clang?)
+* User configurations
+* Alternatives to passphrase
+* GUI
