@@ -45,7 +45,7 @@ static png_chunk* create_png_chunk(uint32_t data_size)
 	png_chunk *new_png_chunk = malloc_or_exit(sizeof(*new_png_chunk));
 	new_png_chunk->data_size = data_size;
 	new_png_chunk->crc32 = 0;
-	new_png_chunk->name = NULL;
+	new_png_chunk->name = malloc_or_exit(PNG_NAME_LENGTH - 1);
 	new_png_chunk->data = malloc(data_size);
 	return new_png_chunk;
 }
@@ -112,7 +112,7 @@ static bool apply_chunk_cryptography(const char *name)
 	png_chunk_spec *match = NULL;
 	for (const png_chunk_spec *current = &png_chunk_specs[index]; current->name; current = &png_chunk_specs[++index])
 	{
-		if (!strcmp(name, current->name))
+		if (!strncmp(name, current->name, PNG_NAME_LENGTH - 1))
 		{
 			match = (png_chunk_spec *) current;
 			break;
@@ -142,14 +142,15 @@ static png_chunk* read_next_chunk(file_details *file_details)
 {
 	//printf("read_next_chunk\n");
 
-	size_t buffer_size = sizeof(uint8_t) * 4;
-	uint8_t *buffer = malloc_or_exit(buffer_size);
+	size_t buffer_size = sizeof(unsigned char) * 4;
+	unsigned char *buffer = malloc_or_exit(8192);
 	uint32_t network_order_temp;
 
 	size_t chunks_read = fread(buffer, 1, buffer_size, file_details->file);
 	if (!chunks_read)
 	{
 		//printf("\t!chunks_read\n");
+		free(buffer);
 		return NULL;
 	}
 	else if (chunks_read != sizeof(network_order_temp))
@@ -171,17 +172,11 @@ static png_chunk* read_next_chunk(file_details *file_details)
 	//printf("!ntohl is [%" PRIu32 "]\n", png_chunk->data_size);
 	//printf("ntohl is [%" PRIu32 "]\n", ntohl(network_order_temp));
 
-	chunks_read = fread(buffer, 1, PNG_NAME_LENGTH - 1, file_details->file);
+	chunks_read = fread(png_chunk->name, 1, PNG_NAME_LENGTH - 1, file_details->file);
 	if (chunks_read != (PNG_NAME_LENGTH - 1))
 	{
 		fprintf(stderr, "\tPNG | Bad chunk name in [%s]\n", file_details->file_path);
 	}
-
-	unsigned char *temp = malloc(sizeof(char) * PNG_NAME_LENGTH);
-	memcpy(temp, buffer, PNG_NAME_LENGTH - 1);
-	temp[PNG_NAME_LENGTH - 1] = '\0';
-	png_chunk->name = strdup((char *) temp);
-	free(temp);
 
 	if ((png_chunk->data_size) > buffer_size)
 	{

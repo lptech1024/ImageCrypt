@@ -23,7 +23,7 @@ typedef struct {
 typedef struct {
 	uint32_t data_size;
 	uint32_t crc32;
-	const char *name;
+	char *name;
 	unsigned char *data;
 } png_chunk;
 
