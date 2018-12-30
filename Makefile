@@ -3,7 +3,7 @@ CFLAGS=-Wall
 CDEBUG=-g
 CSTD=-std=gnu17
 OPT=-O2
-CCCFLAGS=$(CC) $(CSTD) $(CFLAGS)
+CCCFLAGS=$(CC) $(CSTD)
 
 ODIR=obj
 TDIR=tests
@@ -32,7 +32,7 @@ $(ALL): $(RELEASE_TARGET) $(RELEASE_TARGET)/tests
 $(RELEASE_TARGET): CCCFLAGS += $(OPT)
 $(RELEASE_TARGET): $$@/imagecrypt
 
-$(DEBUG_TARGET): CCCFLAGS += $(CDEBUG)
+$(DEBUG_TARGET): CCCFLAGS += $(CDEBUG) $(CFLAGS)
 $(DEBUG_TARGET): $$@/imagecrypt $$@/tests
 
 $(CLEAN):
