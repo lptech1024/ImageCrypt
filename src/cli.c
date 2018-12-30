@@ -161,6 +161,12 @@ int main(int argc, char *argv[])
 	}
 	//printf("main while complete\n");
 
+	destroy_string_collection(passphrase_arguments);
+	destroy_string_collection(encrypt_arguments);
+	destroy_string_collection(decrypt_arguments);
+	destroy_string_collection(input_arguments);
+	destroy_string_collection(output_arguments);
+
 	bool sane_user_inputs = true;
 
 	if (cryptography_mode == NOCRYPT)
@@ -202,6 +208,8 @@ int main(int argc, char *argv[])
 	}
 
 	handle_user_inputs(transform_details_iterator, passphrase, cryptography_mode);
+
+	destroy_transform_details_iterator(transform_details_iterator);
 
 	return EXIT_SUCCESS;
 }
