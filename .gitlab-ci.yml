@@ -2,7 +2,6 @@ image: clang
 
 build:
   stage: build
-
     before_script:
       - apt update && apt -y install make
 
