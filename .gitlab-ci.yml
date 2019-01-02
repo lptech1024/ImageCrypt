@@ -1,4 +1,4 @@
-image: clang
+image: ubuntu:18.04
 
 before_script:
   - apt update && apt -y install make
