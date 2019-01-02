@@ -1,7 +1,6 @@
 Project
 * Create man page
 * Replace manual tests with unit tests
-* Add CI
 
 Code
 * Review endianess
