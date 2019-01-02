@@ -1,7 +1,7 @@
 image: ubuntu:18.04
 
 before_script:
-  - apt update && apt -y install make clang
+  - apt update && apt -y install make clang libssl-dev
 
 imagecrypt:
   stage: build
