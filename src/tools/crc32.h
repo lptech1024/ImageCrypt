@@ -1,6 +1,8 @@
 #ifndef IMAGECRYPT_CRC32
 #define IMAGECRYPT_CRC32
 
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
