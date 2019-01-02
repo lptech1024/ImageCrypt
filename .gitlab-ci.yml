@@ -1,13 +1,9 @@
-image: clang
+image: gcc
 
-build:
+before_script:
+  - apt update && apt -y install make
+
+imagecrypt:
   stage: build
-  before_script:
-    - apt update && apt -y install make
-
   script:
     - make debug
-
-  artifacts:
-    paths:
-      - ./debug/imagecrypt
