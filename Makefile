@@ -1,5 +1,6 @@
 CC=clang
 CFLAGS=-Wall
+CIFLAGS=-Werror
 CDEBUG=-g
 CSTD=-std=gnu17
 OPT=-O2
@@ -18,9 +19,10 @@ TOOLS=$(SOURCE)/tools
 ALL=all
 RELEASE_TARGET=release
 DEBUG_TARGET=debug
+CI_TARGET=ci
 CLEAN=clean
 
-.PHONY: $(ALL) $(RELEASE_TARGET) $(DEBUG_TARGET) $(CLEAN)
+.PHONY: $(ALL) $(RELEASE_TARGET) $(DEBUG_TARGET) $(CI_TARGET) $(CLEAN)
 
 # Don't delete any intermediate files (e.g. .o)
 .SECONDARY:
@@ -34,6 +36,9 @@ $(RELEASE_TARGET): $$@/imagecrypt
 
 $(DEBUG_TARGET): CCCFLAGS += $(CDEBUG) $(CFLAGS)
 $(DEBUG_TARGET): $$@/imagecrypt $$@/tests
+
+$(CI_TARGET): CCCFLAGS += $(CIFLAGS)
+$(CI_TARGET): $(DEBUG_TARGET)
 
 $(CLEAN):
 	-rm release/* release/obj/*.o debug/* debug/obj/*.o

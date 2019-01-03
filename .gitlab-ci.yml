@@ -6,4 +6,4 @@ before_script:
 imagecrypt:
   stage: build
   script:
-    - make debug
+    - make ci
