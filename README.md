@@ -10,6 +10,9 @@ Primary Developer Image Format Support Priority
 1. [JPEG](https://en.wikipedia.org/wiki/JPEG) (next planned)
 1. [NEF](https://www.nikonusa.com/en/learn-and-explore/a/products-and-innovation/nikon-electronic-format-nef.html)
 
+## Build Status
+[![pipeline status](https://gitlab.com/lptech1024/ImageCrypt/badges/master/pipeline.svg)](https://gitlab.com/lptech1024/ImageCrypt/commits/master)
+
 ## Setup
 * I want to run ImageCrypt
   * make release
