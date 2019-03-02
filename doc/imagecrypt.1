@@ -1,0 +1,69 @@
+.TH IMAGECRYPT 1 "March 2019" "IMAGECRYPT 0.1"
+.SH NAME
+imagecrypt - In-place Image Encryption
+
+.SH SYNOPSIS
+.BR imagecrypt " [OPTIONS]"
+.I [INPUT_FILE_PATHS]
+
+.SH DESCRIPTION
+In-place encryption and decryption of supported image formats: PNG.
+
+.SH OPTIONS
+
+Mandatory arguments to long options are mandatory for short options too.
+
+.RE
+.B -e, --encrypt
+.RS 8
+Applies to all specified files.
+
+Either this OR
+.BR "-d, --decrypt" " must be specified."
+
+
+.RE
+.B -d, --decrypt
+.RS 8
+Applies to all specified files.
+
+Either this OR
+.BR "-e, --encrypt" " must be specified."
+
+
+.RE
+.B -i, --input [FILE_PATH]
+.RS 8
+At least one input file is required.
+
+.BR "-o, --output" " argument may predece or follow."
+
+
+.RE
+.B -o, --output [FILE_PATH]
+.RS 8
+.BR "-i, --input" " argument must predece or follow."
+
+If not supplied, a default will be generated.
+
+
+.RE
+.B -p, --passphrase [PASSPHRASE]
+.RS 8
+If unsupplied, user will be prompted for passphrase.
+
+Only one of these arguments are allowed.
+
+This option would be useful for scripting.
+
+.SH EXAMPLES
+imagecrypt --decrypt "encrypted_image.png" --output "decrypted_image.png"
+
+imagecrypt --encrypt --input "image.png" --output "encrypted_image.png"
+
+.SH BUGS
+To report a bug, please visit
+.I https://gitlab.com/lptech1024/ImageCrypt/issues
+
+.SH AUTHOR
+Clayton Casciato
