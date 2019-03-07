@@ -17,7 +17,8 @@ typedef struct {
 
 typedef struct transform_details {
 	struct transform_details *previous;
-	status (*convert)(struct transform_details *details, FPE_KEY *fpe_key, cryptography_mode cryptography_mode);
+	//
+	return_status (*convert)(struct transform_details *details, FPE_KEY *fpe_key, cryptography_mode cryptography_mode);
 	file_details *input;
 	file_details *output;
 	struct transform_details *next;

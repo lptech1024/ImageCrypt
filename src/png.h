@@ -27,9 +27,9 @@ typedef struct {
 	unsigned char *data;
 } png_chunk;
 
-status is_png(file_details *file_details);
+return_status is_png(file_details *file_details);
 
-status convert_png(transform_details *details, FPE_KEY *fpe_key, cryptography_mode cryptography_mode);
+return_status convert_png(transform_details *details, FPE_KEY *fpe_key, cryptography_mode cryptography_mode);
 
 #ifdef __cplusplus
 }

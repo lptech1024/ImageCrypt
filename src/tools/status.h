@@ -6,10 +6,10 @@ extern "C" {
 #endif
 
 typedef enum {
-	ERROR = -1,
-	NOT_SUCCESS = 0,
-	SUCCESS = 1,
-} status;
+	RETURN_STATUS_ERROR = -1,
+	RETURN_STATUS_NOT_SUCCESS = 0,
+	RETURN_STATUS_SUCCESS = 1,
+} return_status;
 
 #ifdef __cplusplus
 }

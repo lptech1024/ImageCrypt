@@ -57,7 +57,7 @@ static void destroy_png_chunk(png_chunk *png_chunk)
 	free(png_chunk);
 }
 
-static status read_signature(FILE *file)
+static return_status read_signature(FILE *file)
 {
 	//printf("read_signature\n");
 	size_t signature_length = strlen(PNG_SIGNATURE);
@@ -69,7 +69,7 @@ static status read_signature(FILE *file)
 	if (bytes_read != signature_length)
 	{
 		//printf("\trs ERROR\n");
-		return ERROR;
+		return RETURN_STATUS_ERROR;
 	}
 	else
 	{
@@ -78,25 +78,25 @@ static status read_signature(FILE *file)
 			if (PNG_SIGNATURE[i] != buffer[i])
 			{
 				//printf("\trs NOT_SUCCESS\n");
-				return NOT_SUCCESS;
+				return RETURN_STATUS_NOT_SUCCESS;
 			}
 		}
 
 		//printf("\trs SUCCESS\n");
-		return SUCCESS;
+		return RETURN_STATUS_SUCCESS;
 	}
 }
 
-static status write_signature(FILE *file)
+static return_status write_signature(FILE *file)
 {
 	fwrite(PNG_SIGNATURE, 1, strlen(PNG_SIGNATURE), file);
-	return SUCCESS;
+	return RETURN_STATUS_SUCCESS;
 }
 
-status is_png(file_details *file_details)
+return_status is_png(file_details *file_details)
 {
 	//printf("is_png\n");
-	status signature_read_status = read_signature(file_details->file);
+	return_status signature_read_status = read_signature(file_details->file);
 
 	//printf("\trewind complete\n");
 	rewind(file_details->file);
@@ -292,14 +292,14 @@ static bool convert_chunk(png_chunk *png_chunk, FPE_KEY *fpe_key, cryptography_m
 	return true;
 }
 
-status convert_png(transform_details *details, FPE_KEY *fpe_key, cryptography_mode cryptography_mode)
+return_status convert_png(transform_details *details, FPE_KEY *fpe_key, cryptography_mode cryptography_mode)
 {
 	//printf("convert_png start\n");
 	FILE *file = fopen(details->input->file_path, "r");
-	if (read_signature(file) != SUCCESS)
+	if (read_signature(file) != RETURN_STATUS_SUCCESS)
 	{
 		//printf("\tread_signature ! SUCCESS\n");
-		return ERROR;
+		return RETURN_STATUS_ERROR;
 	}
 
 	details->input->file = file;

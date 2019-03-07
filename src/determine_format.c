@@ -8,8 +8,8 @@
 #include "determine_format.h"
 
 typedef struct {
-	status (*image_format_test)(file_details *);
-	status (*convert)(transform_details *, FPE_KEY *, cryptography_mode);
+	return_status (*image_format_test)(file_details *);
+	return_status (*convert)(transform_details *, FPE_KEY *, cryptography_mode);
 	//unsigned char **typical_file_extensions;
 } image_format;
 
