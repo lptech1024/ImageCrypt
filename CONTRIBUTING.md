@@ -12,7 +12,7 @@ Rationale: Allows for customized indentation representation size and alignment r
 
 Library includes should proceed local include.
 
-Rationale: Projeect functions should take precedence.
+Rationale: Project functions should take precedence.
 
 **Header Files**
 
