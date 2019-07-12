@@ -40,15 +40,15 @@ Create meaningful variable names.
 
 Filenames and variables: Lowercase, separated by underscores.
 
-Macros and enums: Uppercase, separated by underscroes.
+Macros and enums: Uppercase, separated by underscores.
 
 **Commits**
 
-Commits should be as small and related.
+Commits should be small and related.
 
 Commits must have a description.
 
-Signing commits with a Github-verified GPG key is preferred.
+Signing commits with a GitLab-verified GPG key is preferred.
 
 **Comments**
 
