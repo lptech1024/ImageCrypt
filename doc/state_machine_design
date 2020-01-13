@@ -1,0 +1,34 @@
+*Why?*
+1) Optimize for available file descriptors
+2) Workaround OOM and other errors
+3) Cleanup on errors
+4) (Future) Allow tunable RAM and CPU cores usage
+5) (Future) Balance resource consumption to avoid bottlnecks
+6) (Future) Utilize multiple CPU cores
+
+*Core Operations*
+set_ff1_key
+	set_key
+	fpe_set_ff1_key
+set_conversion
+convert
+fpe_unset_ff1_key
+destroy_transform_details_iterator
+
+*State Machine Design/Features*
+* Enum "Direction"
+** Forward, Backward
+* Enum "State"
+** Actions: Continue, Clean, Revert
+	*Future Considerations*
+	* Max Allowable OOM Errors: 2
+	** OOM Counter
+	* Max Allowable Files Errors: MAX(20%, 3)
+	** File Error Counter
+	* Maximum Cores Override: 0
+	** Core Count
+	* Available RAM (Need to estimate/calculate RAM usage based on the file type and size)
+	* Maximum RAM Override
+	** Current RAM usage (Linux): /proc/self/statm [0], unistd (POSIX) > int getpagesize
+
+Avoid global state as much as possible.
