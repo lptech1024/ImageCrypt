@@ -57,15 +57,6 @@ $(INSTALL_TARGET):
 	mkdir -p $(bindir) && install -m 0755 ./release/imagecrypt $(bindir)/imagecrypt
 	gzip -c doc/imagecrypt.1 > $(man1dir)/imagecrypt.1.gz && mandb
 
-%/safety.o: $(TOOLS)/safety.c $(TOOLS)/safety.h
-	$(CCCFLAGS) -c $< -o $@
-
-#%/safety_test.o $(TDIR)/safety_test.c $(TOOLS)/safety.h\
-	$(CCCFLAGS) -c $< -o $@
-
-#%/safety_test: %/$(ODIR)/safety.o %/$(ODIR)/safety_test.o\
-	$(CCCFLAGS) $^ -o $@
-
 %/cryptography.o: $(TOOLS)/cryptography.c $(TOOLS)/cryptography.h
 	$(CCCFLAGS) -c $< -o $@
 
@@ -93,13 +84,13 @@ $(INSTALL_TARGET):
 %/crc32_test: %/$(ODIR)/crc32.o %/$(ODIR)/crc32_test.o
 	$(CCCFLAGS) $^ -o $@
 
-%/string_collection.o: $(TOOLS)/string_collection.c $(TOOLS)/string_collection.h %/safety.o
+%/string_collection.o: $(TOOLS)/string_collection.c $(TOOLS)/string_collection.h
 	$(CCCFLAGS) -c $< -o $@
 
 %/string_collection_test.o: $(TDIR)/string_collection_test.c $(TOOLS)/string_collection.h %/string_collection.o
 	$(CCCFLAGS) -c $< -o $@
 
-%/string_collection_test: %/$(ODIR)/string_collection.o %/$(ODIR)/string_collection_test.o %/$(ODIR)/safety.o
+%/string_collection_test: %/$(ODIR)/string_collection.o %/$(ODIR)/string_collection_test.o
 	$(CCCFLAGS) $^ -o $@
 
 %/transform_details.o: $(TOOLS)/transform_details.c $(TOOLS)/transform_details.h
@@ -123,7 +114,7 @@ $(INSTALL_TARGET):
 %/cli.o: $(SOURCE)/cli.c %/string_collection.o %/user_input_handling.o
 	$(CCCFLAGS) -c $< -o $@
 
-%/imagecrypt: %/$(ODIR)/safety.o %/$(ODIR)/string_collection.o %/$(ODIR)/cli.o %/$(ODIR)/transform_details.o %/$(ODIR)/user_input_handling.o %/$(ODIR)/determine_format.o %/$(ODIR)/png.o %/$(ODIR)/fpe.o %/$(ODIR)/cryptography.o %/$(ODIR)/crc32.o
+%/imagecrypt: %/$(ODIR)/string_collection.o %/$(ODIR)/cli.o %/$(ODIR)/transform_details.o %/$(ODIR)/user_input_handling.o %/$(ODIR)/determine_format.o %/$(ODIR)/png.o %/$(ODIR)/fpe.o %/$(ODIR)/cryptography.o %/$(ODIR)/crc32.o
 	$(CCCFLAGS) $^ $(ALL_LIBS) -o $@
 
 %/tests: %/cryptography_test %/fpe_test %/crc32_test %/string_collection_test;

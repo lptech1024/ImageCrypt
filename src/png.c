@@ -8,7 +8,6 @@
 #include "tools/crc32.h"
 #include "tools/cryptography.h"
 #include "tools/status.h"
-#include "tools/safety.h"
 #include "tools/transform_details.h"
 #include "png.h"
 
@@ -42,10 +41,10 @@ const png_chunk_spec png_chunk_specs[] =
 
 static png_chunk* create_png_chunk(uint32_t data_size)
 {
-	png_chunk *new_png_chunk = malloc_or_exit(sizeof(*new_png_chunk));
+	png_chunk *new_png_chunk = malloc(sizeof(*new_png_chunk));
 	new_png_chunk->data_size = data_size;
 	new_png_chunk->crc32 = 0;
-	new_png_chunk->name = malloc_or_exit(PNG_NAME_LENGTH - 1);
+	new_png_chunk->name = malloc(PNG_NAME_LENGTH - 1);
 	new_png_chunk->data = malloc(data_size);
 	return new_png_chunk;
 }
@@ -143,7 +142,7 @@ static png_chunk* read_next_chunk(file_details *file_details)
 	//printf("read_next_chunk\n");
 
 	size_t buffer_size = sizeof(unsigned char) * 4;
-	unsigned char *buffer = malloc_or_exit(8192);
+	unsigned char *buffer = malloc(8192);
 	uint32_t network_order_temp;
 
 	size_t chunks_read = fread(buffer, 1, buffer_size, file_details->file);
@@ -250,8 +249,8 @@ static bool convert_chunk(png_chunk *png_chunk, FPE_KEY *fpe_key, cryptography_m
 	}
 
 	//printf("\tpng_chunk->data_size [%" PRIu32 "]\n", png_chunk->data_size);
-	unsigned int *crypt_data = malloc_or_exit(sizeof(*crypt_data) * png_chunk->data_size);
-	unsigned int *crypt_data2 = malloc_or_exit(sizeof(*crypt_data2) * png_chunk->data_size);
+	unsigned int *crypt_data = malloc(sizeof(*crypt_data) * png_chunk->data_size);
+	unsigned int *crypt_data2 = malloc(sizeof(*crypt_data2) * png_chunk->data_size);
 	hex_to_ints(png_chunk->data, png_chunk->data_size, crypt_data);
 	//printf("\tfpe_ff1_encrypt\n");
 	//printf("\tcrypt is [%i]\n", crypt);
