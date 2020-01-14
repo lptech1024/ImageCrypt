@@ -1,12 +1,11 @@
 #include <string.h>
 #include <stdlib.h>
-#include "safety.h"
 #include "string_collection.h"
 
 string_collection* create_string_collection(int initial_size)
 {
-	string_collection *new_string_collection = malloc_or_exit(sizeof(string_collection));
-	new_string_collection->strings = malloc_or_exit(initial_size * sizeof(char *));
+	string_collection *new_string_collection = malloc(sizeof(string_collection));
+	new_string_collection->strings = malloc(initial_size * sizeof(char *));
 	new_string_collection->size = initial_size;
 	new_string_collection->count = 0;
 	return new_string_collection;
@@ -50,7 +49,7 @@ void append_string_collection(string_collection *enhanced_char_pointer, char *st
 		enhanced_char_pointer->strings = realloc(enhanced_char_pointer->strings, (++enhanced_char_pointer->size) * sizeof(char *));
 	}
 
-	enhanced_char_pointer->strings[enhanced_char_pointer->count++] = strdup_or_exit(string);
+	enhanced_char_pointer->strings[enhanced_char_pointer->count++] = strdup(string);
 }
 
 bool string_collection_contains_string(string_collection *potential_matches, char *string)

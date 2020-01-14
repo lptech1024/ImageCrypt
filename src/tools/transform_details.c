@@ -1,15 +1,14 @@
 #include <string.h>
 #include <stdlib.h>
-#include "safety.h"
 #include "cryptography.h"
 #include "transform_details.h"
 
 file_details* create_file_details(const char *path)
 {
 	//printf("create_file_details start\n");
-	file_details *details = malloc_or_exit(sizeof(*details));
+	file_details *details = malloc(sizeof(*details));
 	details->file = NULL;
-	details->file_path = path ? strdup_or_exit(path) : NULL;
+	details->file_path = path ? strdup(path) : NULL;
 	//printf("create_file_details end\n");
 	return details;
 }
@@ -23,7 +22,7 @@ void destroy_file_details(file_details *file_details)
 transform_details* create_append_transform_details(transform_details *previous, const char *input_path, const char *output_path)
 {
 	//printf("create_append_transform_details start\n");
-	transform_details *new_transform_details = malloc_or_exit(sizeof(*new_transform_details));
+	transform_details *new_transform_details = malloc(sizeof(*new_transform_details));
 	new_transform_details->convert = NULL;
 	new_transform_details->previous = previous;
 	new_transform_details->input = create_file_details(input_path);
@@ -68,7 +67,7 @@ void destroy_transform_details(transform_details *transform_details)
 transform_details_iterator* create_transform_details_iterator(transform_details *head)
 {
 	//printf("create_transform_details_iterator start\n");
-	transform_details_iterator *iterator = malloc_or_exit(sizeof(*iterator));
+	transform_details_iterator *iterator = malloc(sizeof(*iterator));
 	iterator->head = head;
 	iterator->current = head;
 	//printf("create_transform_details_iterator end\n");
