@@ -8,13 +8,15 @@
 void handle_user_inputs(transform_details_iterator *iterator, const char *passphrase, cryptography_mode cryptography_mode)
 {
 	//printf("handle_user_inputs start\n");
-	const unsigned int key_length = 32;
+	const signed int key_length = 32;
 	unsigned char key[key_length];
 	set_key(passphrase, key, key_length);
 
 	//printf("\thandle_user_inputs past set_key\n");
 	FPE_KEY *ff1 = malloc(sizeof(*ff1));
-	fpe_set_ff1_key(key, 8 * key_length, NULL, 0, 8 * key_length, ff1);
+	const signed int bit_length = 8;
+	const signed int key_bits = bit_length * key_length;
+	fpe_set_ff1_key(key, key_bits, NULL, 0, key_bits, ff1);
 
 	//printf("\thandle_user_inputs past fpe_set_ff1_key\n");
 	set_conversion(iterator);

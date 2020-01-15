@@ -11,7 +11,7 @@
 #include "tools/transform_details.h"
 #include "png.h"
 
-const char PNG_SIGNATURE[] = { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 0x00 };
+const char unsigned PNG_SIGNATURE[] = { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 0x00 };
 
 const png_chunk_spec png_chunk_specs[] =
 {
@@ -59,7 +59,7 @@ static void destroy_png_chunk(png_chunk *png_chunk)
 static return_status read_signature(FILE *file)
 {
 	//printf("read_signature\n");
-	size_t signature_length = strlen(PNG_SIGNATURE);
+	size_t signature_length = strlen((const char *) PNG_SIGNATURE);
 
 	char buffer[signature_length];
 	//printf("\trs fread\n");
@@ -70,25 +70,23 @@ static return_status read_signature(FILE *file)
 		//printf("\trs ERROR\n");
 		return RETURN_STATUS_ERROR;
 	}
-	else
-	{
-		for (int i = 0; i < signature_length; i++)
-		{
-			if (PNG_SIGNATURE[i] != buffer[i])
-			{
-				//printf("\trs NOT_SUCCESS\n");
-				return RETURN_STATUS_NOT_SUCCESS;
-			}
-		}
 
-		//printf("\trs SUCCESS\n");
-		return RETURN_STATUS_SUCCESS;
+	for (int i = 0; i < signature_length; i++)
+	{
+		if (PNG_SIGNATURE[i] != buffer[i])
+		{
+			//printf("\trs NOT_SUCCESS\n");
+			return RETURN_STATUS_NOT_SUCCESS;
+		}
 	}
+
+	//printf("\trs SUCCESS\n");
+	return RETURN_STATUS_SUCCESS;
 }
 
 static return_status write_signature(FILE *file)
 {
-	fwrite(PNG_SIGNATURE, 1, strlen(PNG_SIGNATURE), file);
+	fwrite(PNG_SIGNATURE, 1, strlen((const char *) PNG_SIGNATURE), file);
 	return RETURN_STATUS_SUCCESS;
 }
 
@@ -125,14 +123,12 @@ static bool write_next_chunk(file_details *file_details, png_chunk *png_chunk)
 {
 	//printf("write_next_chunk\n");
 	uint32_t htonl_result = htonl(png_chunk->data_size);
-	size_t chunks_read = fwrite(&htonl_result, 1, 4, file_details->file);
-
-	chunks_read = fwrite(png_chunk->name, 1, PNG_NAME_LENGTH - 1, file_details->file);
-
-	chunks_read = fwrite(png_chunk->data, 1, png_chunk->data_size, file_details->file);
+	fwrite(&htonl_result, 1, 4, file_details->file);
+	fwrite(png_chunk->name, 1, PNG_NAME_LENGTH - 1, file_details->file);
+	fwrite(png_chunk->data, 1, png_chunk->data_size, file_details->file);
 
 	htonl_result = htonl(png_chunk->crc32);
-	chunks_read = fwrite(&htonl_result, 1, 4, file_details->file);
+	fwrite(&htonl_result, 1, 4, file_details->file);
 	//printf("write_next_chunk complete\n");
 	return true;
 }
@@ -152,7 +148,8 @@ static png_chunk* read_next_chunk(file_details *file_details)
 		free(buffer);
 		return NULL;
 	}
-	else if (chunks_read != sizeof(network_order_temp))
+
+	if (chunks_read != sizeof(network_order_temp))
 	{
 		fprintf(stderr, "\tPNG | Bad size in [%s]\n", file_details->file_path);
 		exit(-1);
@@ -210,7 +207,7 @@ static png_chunk* read_next_chunk(file_details *file_details)
 	return png_chunk;
 }
 
-static void hex_to_ints(unsigned char *hex, unsigned int hex_length, unsigned int *result)
+static void hex_to_ints(const unsigned char *hex, const unsigned int hex_length, unsigned int *result)
 {
 	for (int i = 0; i < hex_length; i++)
 	{
@@ -219,7 +216,7 @@ static void hex_to_ints(unsigned char *hex, unsigned int hex_length, unsigned in
 	}
 }
 
-void ints_to_hex(unsigned int *ints, size_t int_length, unsigned char *result)
+void ints_to_hex(const unsigned int *ints, const size_t int_length, unsigned char *result)
 {
 	for (int i = 0; i < int_length; i++)
 	{
