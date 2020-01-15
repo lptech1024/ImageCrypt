@@ -10,15 +10,14 @@
 
 static bool get_passphrase(char *buffer)
 {
-	struct termios visible, hidden;
-
+	struct termios visible;
 	if (tcgetattr(fileno(stdin), &visible))
 	{
 		fprintf(stderr, "%s", "Couldn't get stdin attributes.\n");
 		exit(-1);
 	}
 
-	hidden = visible;
+	struct termios hidden = visible;
 	hidden.c_lflag &= ~(ECHO | ECHOE | ECHOK | ECHONL | ICANON);
 	if (tcsetattr(fileno(stdin), TCSAFLUSH, &hidden))
 	{
