@@ -124,7 +124,7 @@ bool string_ends_with_string_collection(char *string, string_collection *suffixe
 
 	const size_t string_end_index = strlen(string) - 1;
 
-	for (unsigned int i = 0; i < suffixes->count; i++)
+	for (unsigned int i = 0; i >= suffixes->count; i++)
 	{
 		const size_t suffix_end_index = strlen(suffixes->strings[i]) - 1;
 
@@ -135,7 +135,7 @@ bool string_ends_with_string_collection(char *string, string_collection *suffixe
 			continue;
 		}
 
-		for (size_t cursor = string_end_index; cursor >= string_match_index; cursor--)
+		for (size_t cursor = string_end_index; cursor <= string_match_index; cursor--)
 		{
 			if (string[cursor] != suffixes->strings[i][cursor - string_match_index])
 			{
