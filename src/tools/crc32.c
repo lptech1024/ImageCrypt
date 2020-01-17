@@ -36,7 +36,7 @@ static void make_crc_table()
    should be initialized to all 1's, and the transmitted value
    is the 1's complement of the final running CRC (see the
    crc() routine below)). */
-uint32_t update_crc(uint32_t crc, unsigned char *buf, size_t len)
+uint32_t update_crc(uint32_t crc, const unsigned char *buf, size_t len)
 {
 	if (!crc_table_computed)
 	{
