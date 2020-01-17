@@ -17,7 +17,7 @@ string_collection* create_string_collection(int initial_size);
 
 string_collection* create_string_collection_initial(char **initial);
 
-void destroy_string_collection(string_collection *ecpa);
+void destroy_string_collection(string_collection *collection);
 
 void append_string_collection(string_collection *enhanced_char_pointer, char *string);
 

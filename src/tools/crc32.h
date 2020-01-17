@@ -10,7 +10,7 @@ extern "C" {
 
 uint32_t crc(unsigned char *buf, size_t len);
 
-uint32_t update_crc(uint32_t crc, unsigned char *buf, size_t len);
+uint32_t update_crc(uint32_t crc, const unsigned char *buf, size_t len);
 
 #ifdef __cplusplus
 }

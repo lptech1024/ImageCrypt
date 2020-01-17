@@ -13,7 +13,7 @@ typedef enum {
 	DECRYPT
 } cryptography_mode;
 
-bool set_key(const char *passphrase, unsigned char *key, unsigned int key_length);
+bool set_key(const char *passphrase, unsigned char *key, signed int key_length);
 
 #ifdef __cplusplus
 }

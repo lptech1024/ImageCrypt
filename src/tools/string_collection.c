@@ -56,9 +56,9 @@ bool string_collection_contains_string(string_collection *potential_matches, cha
 {
 	bool found_match = false;
 
-	const int string_end_index = strlen(string) - 1;
+	const size_t string_end_index = strlen(string) - 1;
 
-	for (int i = 0; i < potential_matches->count; i++)
+	for (unsigned int i = 0; i < potential_matches->count; i++)
 	{
 		if (string_end_index != (strlen(potential_matches->strings[i]) - 1))
 		{
@@ -72,7 +72,8 @@ bool string_collection_contains_string(string_collection *potential_matches, cha
 				j = string_end_index;
 				continue;
 			}
-			else if (j == string_end_index)
+
+			if (j == string_end_index)
 			{
 				i = potential_matches->count;
 				found_match = true;
@@ -87,11 +88,11 @@ bool string_starts_with_string_collection(char *string, string_collection *prefi
 {
 	bool starts_with_prefix = false;
 
-	const int string_end_index = strlen(string) - 1;
+	const size_t string_end_index = strlen(string) - 1;
 
-	for (int i = 0; i < prefixes->count; i++)
+	for (unsigned int i = 0; i < prefixes->count; i++)
 	{
-		const int prefix_end_index = strlen(prefixes->strings[i]) - 1;
+		const size_t prefix_end_index = strlen(prefixes->strings[i]) - 1;
 
 		if (prefix_end_index < string_end_index)
 		{
@@ -105,7 +106,8 @@ bool string_starts_with_string_collection(char *string, string_collection *prefi
 				j = prefix_end_index;
 				continue;
 			}
-			else if ((j + 1) == prefix_end_index)
+
+			if ((j + 1) == prefix_end_index)
 			{
 				i = prefixes->count;
 				starts_with_prefix = true;
@@ -120,27 +122,28 @@ bool string_ends_with_string_collection(char *string, string_collection *suffixe
 {
 	bool ends_with_suffix = false;
 
-	const int string_end_index = strlen(string) - 1;
+	const size_t string_end_index = strlen(string) - 1;
 
-	for (int i = 0; i < suffixes->count; i++)
+	for (unsigned int i = 0; i < suffixes->count; i++)
 	{
-		const int suffix_end_index = strlen(suffixes->strings[i]) - 1;
+		const size_t suffix_end_index = strlen(suffixes->strings[i]) - 1;
 
-		const int string_match_index = string_end_index - suffix_end_index;
+		const size_t string_match_index = string_end_index - suffix_end_index;
 
 		if (string_match_index < 0)
 		{
 			continue;
 		}
 
-		for (int cursor = string_end_index; cursor >= string_match_index; cursor--)
+		for (size_t cursor = string_end_index; cursor >= string_match_index; cursor--)
 		{
 			if (string[cursor] != suffixes->strings[i][cursor - string_match_index])
 			{
 				cursor = string_match_index - 1;
 				continue;
 			}
-			else if (cursor == string_match_index)
+
+			if (cursor == string_match_index)
 			{
 				i = suffixes->count;
 				ends_with_suffix = true;
