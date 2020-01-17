@@ -99,7 +99,7 @@ void default_output_file_path(transform_details *transform_details, cryptography
 	const char *mode_text = cryptography_mode == DECRYPT ? unencrypted : encrypted;
 	const size_t mode_text_length = strlen(mode_text);
 
-	int last_non_slash_index = strlen(transform_details->input->file_path) - 1;
+	size_t last_non_slash_index = strlen(transform_details->input->file_path) - 1;
 	while (transform_details->input->file_path[last_non_slash_index] == '/')
 	{
 		last_non_slash_index--;
