@@ -28,11 +28,13 @@ void set_conversion(transform_details_iterator *iterator)
 	{
 		// TODO: Handle unexpected results
 		FILE *input_file = fopen(iterator->current->input->file_path, "r");
+		// TODO: Handle errors
 		file_details *file_details = create_file_details(iterator->current->input->file_path);
 		file_details->file = input_file;
 		size_t index = 0;
 		for (const image_format *current_image_format = &image_formats[index]; current_image_format->image_format_test; current_image_format = &image_formats[++index])
 		{
+			// Handle errors
 			if (current_image_format->image_format_test(file_details))
 			{
 				iterator->current->convert = current_image_format->convert;
