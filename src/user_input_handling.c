@@ -16,6 +16,7 @@ void handle_user_inputs(transform_details_iterator *iterator, const char *passph
 	FPE_KEY *ff1 = malloc(sizeof(*ff1));
 	const signed int bit_length = 8;
 	const signed int key_bits = bit_length * key_length;
+	// TODO: Handle errors
 	fpe_set_ff1_key(key, key_bits, NULL, 0, key_bits, ff1);
 
 	//printf("\thandle_user_inputs past fpe_set_ff1_key\n");
@@ -28,6 +29,7 @@ void handle_user_inputs(transform_details_iterator *iterator, const char *passph
 		if (current->convert)
 		{
 			//printf("\t\ttrying to convert\n");
+			// TODO: Handle errors
 			current->convert(current, ff1, cryptography_mode);
 		}
 	}

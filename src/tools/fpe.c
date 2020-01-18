@@ -439,6 +439,7 @@ int fpe_set_ff1_key(const unsigned char *userKey, const int bits, const unsigned
 	key->radix = radix;
 	key->tweaklen = tweaklen;
 	key->tweak = (unsigned char *)OPENSSL_malloc(tweaklen);
+	// TODO: Handle errors
 	memcpy(key->tweak, tweak, tweaklen);
 	ret = AES_set_encrypt_key(userKey, bits, &key->aes_enc_ctx);
 	return ret;

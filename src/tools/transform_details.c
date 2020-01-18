@@ -128,15 +128,22 @@ void default_output_file_path(transform_details *transform_details, cryptography
 
 	if (last_slash_index >= last_dot_index)
 	{
+		// TODO: Handle errors
 		transform_details->output->file_path = malloc(sizeof(char) * (last_non_slash_index + mode_text_length + 1));
+		// TODO: Handle errors
 		memcpy(transform_details->output->file_path, transform_details->input->file_path, last_non_slash_index);
+		// TODO: Handle errors
 		memcpy(transform_details->output->file_path + last_non_slash_index, mode_text, mode_text_length + 1);
 	}
 	else
 	{
+		// TODO: Handle errors
 		transform_details->output->file_path = malloc(sizeof(char) * (strlen(transform_details->input->file_path) + mode_text_length + 1));
+		// TODO: Handle errors
 		memcpy(transform_details->output->file_path, transform_details->input->file_path, last_dot_index);
+		// TODO: Handle errors
 		memcpy(transform_details->output->file_path + last_dot_index, mode_text, mode_text_length);
+		// TODO: Handle errors
 		memcpy(transform_details->output->file_path + last_dot_index + mode_text_length, transform_details->input->file_path + last_dot_index, strlen(transform_details->input->file_path + last_dot_index) + 1);
 	}
 

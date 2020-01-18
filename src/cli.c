@@ -27,6 +27,7 @@ static bool get_passphrase(char *buffer)
 
 	size_t buffer_length = 0;
 	// NB: Backspace does not work as expected
+	// TODO: Handle -1
 	int chars_read = getline(&buffer, &buffer_length, stdin);
 	if (buffer[chars_read - 1] == '\n')
 	{
@@ -47,18 +48,23 @@ int main(int argc, char *argv[])
 	unsigned int counter = 1;
 
 	char *passphrase_aliases[] = { "-p", "--passphrase", NULL };
+	// TODO: Handle potential errors
 	string_collection *passphrase_arguments = create_string_collection_initial(passphrase_aliases);
 
 	char *encrypt_aliases[] = { "-e", "--encrypt", NULL };
+	// TODO: Handle potential errors
 	string_collection *encrypt_arguments = create_string_collection_initial(encrypt_aliases);
 
 	char *decrypt_aliases[] = { "-d", "--decrypt", NULL };
+	// TODO: Handle potential errors
 	string_collection *decrypt_arguments = create_string_collection_initial(decrypt_aliases);
 
 	char *input_aliases[] = { "-i", "--input", NULL };
+	// TODO: Handle potential errors
 	string_collection *input_arguments = create_string_collection_initial(input_aliases);
 
 	char *output_aliases[] = { "-o", "--output", NULL };
+	// TODO: Handle potential errors
 	string_collection *output_arguments = create_string_collection_initial(output_aliases);
 
 	cryptography_mode cryptography_mode = NOCRYPT;
@@ -127,6 +133,7 @@ int main(int argc, char *argv[])
 
 			counter++;
 
+			// TODO: Handle errors
 			transform_details_iterator_append(&transform_details_iterator, current_parameter, output_parameter);
 		}
 		else
@@ -154,12 +161,14 @@ int main(int argc, char *argv[])
 			}
 
 			//printf("transform_details_iterator_append attempt\n");
+			// TODO: Handle errors
 			transform_details_iterator_append(&transform_details_iterator, input_file_path, output_file_path);
 			//printf("transform_details_iterator_append complete\n");
 		}
 	}
 	//printf("main while complete\n");
 
+	// TODO: Add helper to pass in all arguments at once
 	destroy_string_collection(passphrase_arguments);
 	destroy_string_collection(encrypt_arguments);
 	destroy_string_collection(decrypt_arguments);
@@ -202,6 +211,7 @@ int main(int argc, char *argv[])
 	{
 		if (!current->output->file_path)
 		{
+			// TODO: Handle errors
 			default_output_file_path(current, cryptography_mode);
 		}
 	}

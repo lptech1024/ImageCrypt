@@ -63,6 +63,8 @@ static return_status read_signature(FILE *file)
 
 	char buffer[signature_length];
 	//printf("\trs fread\n");
+
+	// TODO: Handle error
 	size_t bytes_read = fread(buffer, 1, signature_length, file);
 	//printf("\trs fread complete\n");
 	if (bytes_read != signature_length)
@@ -96,6 +98,7 @@ return_status is_png(file_details *file_details)
 	return_status signature_read_status = read_signature(file_details->file);
 
 	//printf("\trewind complete\n");
+	// TODO: Handle -1
 	rewind(file_details->file);
 	//printf("\trewind complete\n");
 
@@ -246,7 +249,9 @@ static bool convert_chunk(png_chunk *png_chunk, FPE_KEY *fpe_key, cryptography_m
 	}
 
 	//printf("\tpng_chunk->data_size [%" PRIu32 "]\n", png_chunk->data_size);
+	// TODO: Handle errors
 	unsigned int *crypt_data = malloc(sizeof(*crypt_data) * png_chunk->data_size);
+	// TODO: Handle errors
 	unsigned int *crypt_data2 = malloc(sizeof(*crypt_data2) * png_chunk->data_size);
 	hex_to_ints(png_chunk->data, png_chunk->data_size, crypt_data);
 	//printf("\tfpe_ff1_encrypt\n");
@@ -257,6 +262,7 @@ static bool convert_chunk(png_chunk *png_chunk, FPE_KEY *fpe_key, cryptography_m
 		exit(-1);
 	}
 
+	// TODO: Handle errors
 	fpe_ff1_encrypt(crypt_data, crypt_data2, png_chunk->data_size, fpe_key, crypt);
 	//printf("\tfpe_ff1_encrypt complete\n");
 	ints_to_hex(crypt_data2, png_chunk->data_size, png_chunk->data);
@@ -271,7 +277,9 @@ static bool convert_chunk(png_chunk *png_chunk, FPE_KEY *fpe_key, cryptography_m
 	//printf("crc32 (c) is [%02X]\n", crc32_union.crc32_chars[2]);
 	//printf("crc32 (c) is [%02X]\n", crc32_union.crc32_chars[3]);
 	unsigned char full_data[4 + png_chunk->data_size];
+	// TODO: Handle errors
 	memcpy(full_data, png_chunk->name, 4);
+	// TODO: Handle errors
 	memcpy(full_data + 4, png_chunk->data, png_chunk->data_size);
 	uint32_t crc32 = crc(full_data, 4 + png_chunk->data_size);
 	//crc32 = update_crc(crc32, png_chunk->data, png_chunk->data_size);
@@ -291,6 +299,7 @@ static bool convert_chunk(png_chunk *png_chunk, FPE_KEY *fpe_key, cryptography_m
 return_status convert_png(transform_details *details, FPE_KEY *fpe_key, cryptography_mode cryptography_mode)
 {
 	//printf("convert_png start\n");
+	// TODO: Handle errors
 	FILE *file = fopen(details->input->file_path, "r");
 	if (read_signature(file) != RETURN_STATUS_SUCCESS)
 	{
@@ -299,25 +308,31 @@ return_status convert_png(transform_details *details, FPE_KEY *fpe_key, cryptogr
 	}
 
 	details->input->file = file;
+	// TODO: Handle errors
 	FILE *output_file = fopen(details->output->file_path, "w");
 	details->output->file = output_file;
 
+	// TODO: Handle errors
 	write_signature(details->output->file);
 
 	png_chunk *png_chunk = NULL;
 	//printf("\twhile loop prepped\n");
+	// TODO: Handle errors
 	while ((png_chunk = read_next_chunk(details->input)))
 	{
 		//printf("\twhile loop\n");
 		if (apply_chunk_cryptography(png_chunk->name))
 		{
+			// TODO: Handle errors
 			convert_chunk(png_chunk, fpe_key, cryptography_mode);
 		}
 
+		// TODO: Handle errors
 		write_next_chunk(details->output, png_chunk);
 		destroy_png_chunk(png_chunk);
 	}
 
+	// TODO: Note errors for debugging
 	fclose(output_file);
 	//printf("convert_png end\n");
 
