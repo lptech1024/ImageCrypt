@@ -34,7 +34,7 @@ void set_conversion(transform_details_iterator *iterator)
 		size_t index = 0;
 		for (const image_format *current_image_format = &image_formats[index]; current_image_format->image_format_test; current_image_format = &image_formats[++index])
 		{
-			// Handle errors
+			// TODO: Handle errors
 			if (current_image_format->image_format_test(file_details))
 			{
 				iterator->current->convert = current_image_format->convert;
