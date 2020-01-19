@@ -13,9 +13,9 @@ typedef struct {
 	//unsigned char **typical_file_extensions;
 } image_format;
 
-// Extensions won't be useful until we have more than a single format
 const image_format image_formats[] =
 {
+	// Extensions won't be useful until we have more than a single format
 	{ is_png, convert_png /*, { "png", "apng", NULL }*/ },
 	{ NULL, NULL }
 };
@@ -37,6 +37,7 @@ void set_conversion(transform_details_iterator *iterator)
 			// TODO: Handle errors
 			if (current_image_format->image_format_test(file_details))
 			{
+				//printf("converting...\n");
 				iterator->current->convert = current_image_format->convert;
 			}
 		}

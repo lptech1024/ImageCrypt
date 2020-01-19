@@ -6,8 +6,10 @@
 file_details* create_file_details(const char *path)
 {
 	//printf("create_file_details start\n");
+	// TODO: Handle failure
 	file_details *details = malloc(sizeof(*details));
 	details->file = NULL;
+	// TODO: Handle failure
 	details->file_path = path ? strdup(path) : NULL;
 	//printf("create_file_details end\n");
 	return details;
@@ -22,10 +24,13 @@ void destroy_file_details(file_details *file_details)
 transform_details* create_append_transform_details(transform_details *previous, const char *input_path, const char *output_path)
 {
 	//printf("create_append_transform_details start\n");
+	// TODO: Handle failure
 	transform_details *new_transform_details = malloc(sizeof(*new_transform_details));
 	new_transform_details->convert = NULL;
 	new_transform_details->previous = previous;
+	// TODO: Handle failure
 	new_transform_details->input = create_file_details(input_path);
+	// TODO: Handle failure
 	new_transform_details->output = create_file_details(output_path);
 	new_transform_details->next = NULL;
 
@@ -67,6 +72,7 @@ void destroy_transform_details(transform_details *transform_details)
 transform_details_iterator* create_transform_details_iterator(transform_details *head)
 {
 	//printf("create_transform_details_iterator start\n");
+	// TODO: Handle failure
 	transform_details_iterator *iterator = malloc(sizeof(*iterator));
 	iterator->head = head;
 	iterator->current = head;
@@ -114,8 +120,7 @@ void default_output_file_path(transform_details *transform_details, cryptography
 		{
 			last_slash_index = reversed_cursor;
 		}
-
-		if (!last_dot_index && transform_details->input->file_path[reversed_cursor] == '.')
+		else if (!last_dot_index && transform_details->input->file_path[reversed_cursor] == '.')
 		{
 			last_dot_index = reversed_cursor;
 		}
@@ -130,8 +135,10 @@ void default_output_file_path(transform_details *transform_details, cryptography
 	{
 		// TODO: Handle errors
 		transform_details->output->file_path = malloc(sizeof(char) * (last_non_slash_index + mode_text_length + 1));
+		// TODO: Consider dropping usage of memcpy
 		// TODO: Handle errors
 		memcpy(transform_details->output->file_path, transform_details->input->file_path, last_non_slash_index);
+		// TODO: Consider dropping usage of memcpy
 		// TODO: Handle errors
 		memcpy(transform_details->output->file_path + last_non_slash_index, mode_text, mode_text_length + 1);
 	}
@@ -139,10 +146,13 @@ void default_output_file_path(transform_details *transform_details, cryptography
 	{
 		// TODO: Handle errors
 		transform_details->output->file_path = malloc(sizeof(char) * (strlen(transform_details->input->file_path) + mode_text_length + 1));
+		// TODO: Consider dropping usage of memcpy
 		// TODO: Handle errors
 		memcpy(transform_details->output->file_path, transform_details->input->file_path, last_dot_index);
+		// TODO: Consider dropping usage of memcpy
 		// TODO: Handle errors
 		memcpy(transform_details->output->file_path + last_dot_index, mode_text, mode_text_length);
+		// TODO: Consider dropping usage of memcpy
 		// TODO: Handle errors
 		memcpy(transform_details->output->file_path + last_dot_index + mode_text_length, transform_details->input->file_path + last_dot_index, strlen(transform_details->input->file_path + last_dot_index) + 1);
 	}
@@ -192,10 +202,12 @@ void transform_details_iterator_append(transform_details_iterator **iterator, co
 {
 	//printf("transform_details_iterator_append start\n");
 	transform_details *current = (*iterator) ? (*iterator)->current : NULL;
+	// TODO: Handle failure
 	transform_details *new_transform_details = create_append_transform_details(current, input_path, output_path);
 
 	if (!(*iterator))
 	{
+	// TODO: Handle failure
 		*iterator = create_transform_details_iterator(new_transform_details);
 	}
 	else

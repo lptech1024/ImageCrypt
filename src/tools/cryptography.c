@@ -14,10 +14,3 @@ bool set_key(const char *passphrase, unsigned char *key, signed int key_length)
 
 	return ((bool) PKCS5_PBKDF2_HMAC(passphrase, -1, output_size_salt, sizeof(output_size_salt), PBKDF2_ITERATION_COUNT, EVP_sha512(), key_length, key));
 }
-
-//TODO: Add to header
-/*bool wipe_sensitive_memory()
-{
-	// TODO: Implement as needed
-	return false;
-}*/
