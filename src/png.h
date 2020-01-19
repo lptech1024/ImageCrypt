@@ -12,8 +12,6 @@
 extern "C" {
 #endif
 
-#define PNG_NAME_LENGTH 5
-
 typedef struct {
 	char *name;//const ... [PNG_NAME_LENGTH]
 	const bool cryptography_applies;
