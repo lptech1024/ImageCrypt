@@ -2,8 +2,8 @@ Project
 * Replace manual tests with unit tests
 
 Code
-* Review endianess
 * Fix magic values
+* Add State Machine
 * Add more complete error handling
 * Enable debug print statement if debug
 * Per-function documentation

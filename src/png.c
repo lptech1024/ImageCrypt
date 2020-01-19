@@ -13,6 +13,15 @@
 
 const char unsigned PNG_SIGNATURE[] = { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 0x00 };
 
+// Byte = 8 bits
+#define UINT32_T_SHIFT_THREE_BYTES 24
+#define UINT32_T_SHIFT_TWO_BYTES 16
+#define UINT32_T_SHIFT_ONE_BYTE 8
+
+#define BYTES_DATA 4
+#define BYTES_CHUNK_TYPE 4
+#define BYTES_CRC32 4
+
 const png_chunk_spec png_chunk_specs[] =
 {
 	{ "IHDR", false }, // Basic image details
@@ -36,15 +45,18 @@ const png_chunk_spec png_chunk_specs[] =
 	{ "tIME", true  }, // Time of last image modification
 	{ "tRNS", true  }, // Simple transparency
 	{ "zTXt", true  }, // Compressed text annotations
-	{ NULL,   true }
+	{ NULL,   true }   // Encrypt unspecified chunk types
 };
 
 static png_chunk* create_png_chunk(uint32_t data_size)
 {
+	// TODO: Handle error
 	png_chunk *new_png_chunk = malloc(sizeof(*new_png_chunk));
 	new_png_chunk->data_size = data_size;
 	new_png_chunk->crc32 = 0;
-	new_png_chunk->name = malloc(PNG_NAME_LENGTH - 1);
+	// TODO: Handle error
+	new_png_chunk->name = malloc(BYTES_CHUNK_TYPE);
+	// TODO: Handle error
 	new_png_chunk->data = malloc(data_size);
 	return new_png_chunk;
 }
@@ -60,8 +72,9 @@ static return_status read_signature(FILE *file)
 {
 	//printf("read_signature\n");
 	size_t signature_length = strlen((const char *) PNG_SIGNATURE);
+	//printf("\trs signature_length is %lu\n", signature_length);
 
-	char buffer[signature_length];
+	unsigned char buffer[signature_length];
 	//printf("\trs fread\n");
 
 	// TODO: Handle error
@@ -95,9 +108,10 @@ static return_status write_signature(FILE *file)
 return_status is_png(file_details *file_details)
 {
 	//printf("is_png\n");
+	// TODO: Handle errors
 	return_status signature_read_status = read_signature(file_details->file);
 
-	//printf("\trewind complete\n");
+	//printf("\trewind started\n");
 	// TODO: Handle -1
 	rewind(file_details->file);
 	//printf("\trewind complete\n");
@@ -112,7 +126,7 @@ static bool apply_chunk_cryptography(const char *name)
 	png_chunk_spec *match = NULL;
 	for (const png_chunk_spec *current = &png_chunk_specs[index]; current->name; current = &png_chunk_specs[++index])
 	{
-		if (!strncmp(name, current->name, PNG_NAME_LENGTH - 1))
+		if (!strncmp(name, current->name, BYTES_CHUNK_TYPE))
 		{
 			match = (png_chunk_spec *) current;
 			break;
@@ -126,12 +140,16 @@ static bool write_next_chunk(file_details *file_details, png_chunk *png_chunk)
 {
 	//printf("write_next_chunk\n");
 	uint32_t htonl_result = htonl(png_chunk->data_size);
-	fwrite(&htonl_result, 1, 4, file_details->file);
-	fwrite(png_chunk->name, 1, PNG_NAME_LENGTH - 1, file_details->file);
+	// TODO: Handle potential error
+	fwrite(&htonl_result, 1, BYTES_DATA, file_details->file);
+	// TODO: Handle potential error
+	fwrite(png_chunk->name, 1, BYTES_DATA, file_details->file);
+	// TODO: Handle potential error
 	fwrite(png_chunk->data, 1, png_chunk->data_size, file_details->file);
 
 	htonl_result = htonl(png_chunk->crc32);
-	fwrite(&htonl_result, 1, 4, file_details->file);
+	// TODO: Handle potential error
+	fwrite(&htonl_result, 1, BYTES_CRC32, file_details->file);
 	//printf("write_next_chunk complete\n");
 	return true;
 }
@@ -140,9 +158,9 @@ static png_chunk* read_next_chunk(file_details *file_details)
 {
 	//printf("read_next_chunk\n");
 
-	size_t buffer_size = sizeof(unsigned char) * 4;
-	unsigned char *buffer = malloc(8192);
-	uint32_t network_order_temp;
+	size_t buffer_size = sizeof(unsigned char) * BYTES_DATA;
+	// TODO: Handle failure
+	unsigned char *buffer = malloc(buffer_size);
 
 	size_t chunks_read = fread(buffer, 1, buffer_size, file_details->file);
 	if (!chunks_read)
@@ -152,27 +170,22 @@ static png_chunk* read_next_chunk(file_details *file_details)
 		return NULL;
 	}
 
-	if (chunks_read != sizeof(network_order_temp))
+	if (chunks_read != BYTES_DATA)
 	{
 		fprintf(stderr, "\tPNG | Bad size in [%s]\n", file_details->file_path);
 		exit(-1);
 	}
 
-	network_order_temp = /*(uint32_t)*/ buffer[0] << 24 |
-	                     /*(uint32_t)*/ buffer[1] << 16 |
-	                     /*(uint32_t)*/ buffer[2] << 8 |
-	                     /*(uint32_t)*/ buffer[3];
-	//printf("buffer[0] is [%" PRIu8 "]\n", buffer[0]);
-	//printf("buffer[1] is [%" PRIu8 "]\n", buffer[1]);
-	//printf("buffer[2] is [%" PRIu8 "]\n", buffer[2]);
-	//printf("buffer[3] is [%" PRIu8 "]\n", buffer[3]);
-	png_chunk *png_chunk = create_png_chunk(network_order_temp);
-	//png_chunk.data_size = ntohl(network_order_temp);
-	//printf("!ntohl is [%" PRIu32 "]\n", png_chunk->data_size);
-	//printf("ntohl is [%" PRIu32 "]\n", ntohl(network_order_temp));
+	uint32_t host_order_buffer = buffer[0] << UINT32_T_SHIFT_THREE_BYTES |
+	                             buffer[1] << UINT32_T_SHIFT_TWO_BYTES |
+	                             buffer[2] << UINT32_T_SHIFT_ONE_BYTE |
+	                             buffer[3];
 
-	chunks_read = fread(png_chunk->name, 1, PNG_NAME_LENGTH - 1, file_details->file);
-	if (chunks_read != (PNG_NAME_LENGTH - 1))
+	// TODO: Handle failure
+	png_chunk *png_chunk = create_png_chunk(host_order_buffer);
+
+	chunks_read = fread(png_chunk->name, 1, BYTES_CHUNK_TYPE, file_details->file);
+	if (chunks_read != BYTES_CHUNK_TYPE)
 	{
 		fprintf(stderr, "\tPNG | Bad chunk name in [%s]\n", file_details->file_path);
 	}
@@ -181,31 +194,33 @@ static png_chunk* read_next_chunk(file_details *file_details)
 	{
 		buffer_size = png_chunk->data_size;
 		//printf("\trealloc to buffer_size [%zu]\n", buffer_size);
-		buffer = realloc(buffer, sizeof(buffer) * buffer_size);
+		// TODO: Handle errors
+		buffer = realloc(buffer, buffer_size);
 	}
 
 	chunks_read = fread(buffer, 1, png_chunk->data_size, file_details->file);
 	if (chunks_read != png_chunk->data_size)
 	{
-		fprintf(stderr, "\tPNG | Bad data read in [%s]\n", file_details->file_path);
+		fprintf(stderr, "\tPNG | Bad data read in [%s]. Bytes read is [%lu], but data size is [%d]\n", file_details->file_path, chunks_read, png_chunk->data_size);
 	}
 
+	// TODO: Consider dropping usage of memcpy
+	// TODO: Handle errors
 	memcpy(png_chunk->data, buffer, png_chunk->data_size);
-	chunks_read = fread(buffer, 1, sizeof(network_order_temp), file_details->file);
-	if (chunks_read != sizeof(network_order_temp))
+	chunks_read = fread(buffer, 1, BYTES_CRC32, file_details->file);
+	if (chunks_read != BYTES_CRC32)
 	{
 		fprintf(stderr, "\tPNG | Bad CRC32 in [%s]\n", file_details->file_path);
 	}
 
-	network_order_temp = /*(uint32_t)*/ buffer[0] << 24 |
-	                     /*(uint32_t)*/ buffer[1] << 16 |
-	                     /*(uint32_t)*/ buffer[2] << 8 |
-	                     /*(uint32_t)*/ buffer[3];
-	//png_chunk->crc32 = ntohl(network_order_temp);
-	png_chunk->crc32 = network_order_temp;
+	host_order_buffer =  buffer[0] << UINT32_T_SHIFT_THREE_BYTES |
+	                     buffer[1] << UINT32_T_SHIFT_TWO_BYTES |
+	                     buffer[2] << UINT32_T_SHIFT_ONE_BYTE |
+	                     buffer[3];
+	png_chunk->crc32 = host_order_buffer;
 
 	free(buffer);
-	// Create this last so we can set data array length
+
 	//printf("\tread_next_chunk complete\n");
 	return png_chunk;
 }
@@ -227,15 +242,10 @@ void ints_to_hex(const unsigned int *ints, const size_t int_length, unsigned cha
 	}
 }
 
-//union {
-//	unsigned char crc32_chars[4];
-//	uint32_t crc32_value;
-//} crc32_union;
-
 static bool convert_chunk(png_chunk *png_chunk, FPE_KEY *fpe_key, cryptography_mode cryptography_mode)
 {
 	//printf("convert_chunk\n");
-	int crypt = -1;
+	int crypt;
 	switch (cryptography_mode)
 	{
 		case ENCRYPT:
@@ -269,29 +279,16 @@ static bool convert_chunk(png_chunk *png_chunk, FPE_KEY *fpe_key, cryptography_m
 	free(crypt_data);
 	free(crypt_data2);
 
-	//printf("\tcrc32\n");
-	//printf("png_chunk->data_size is [%" PRIu32 "]\n", png_chunk->data_size);
-	//crc32_union.crc32_value = png_chunk->crc32;
-	//printf("crc32 (c) is [%02X]\n", crc32_union.crc32_chars[0]);
-	//printf("crc32 (c) is [%02X]\n", crc32_union.crc32_chars[1]);
-	//printf("crc32 (c) is [%02X]\n", crc32_union.crc32_chars[2]);
-	//printf("crc32 (c) is [%02X]\n", crc32_union.crc32_chars[3]);
-	unsigned char full_data[4 + png_chunk->data_size];
+	unsigned char full_data[BYTES_DATA + png_chunk->data_size];
 	// TODO: Handle errors
-	memcpy(full_data, png_chunk->name, 4);
+	// TODO: Consider dropping use of memcpy
+	memcpy(full_data, png_chunk->name, BYTES_DATA);
 	// TODO: Handle errors
-	memcpy(full_data + 4, png_chunk->data, png_chunk->data_size);
-	uint32_t crc32 = crc(full_data, 4 + png_chunk->data_size);
-	//crc32 = update_crc(crc32, png_chunk->data, png_chunk->data_size);
-	//crc32_union.crc32_value = crc32_2;
-	//crc32_union.crc32_value = crc32;
-	png_chunk->crc32 = crc32;
-	//png_chunk->crc32 = htonl(png_chunk->crc32);
-	//png_chunk->crc32 = ntohl(png_chunk->crc32);
-	//printf("crc32 is [%02X]\n", crc32_union.crc32_chars[0]);
-	//printf("crc32 is [%02X]\n", crc32_union.crc32_chars[1]);
-	//printf("crc32 is [%02X]\n", crc32_union.crc32_chars[2]);
-	//printf("crc32 is [%02X]\n", crc32_union.crc32_chars[3]);
+	// TODO: Consider dropping use of memcpy
+	memcpy(full_data + BYTES_DATA, png_chunk->data, png_chunk->data_size);
+
+	png_chunk->crc32 = crc(full_data, BYTES_DATA + png_chunk->data_size);
+
 	//printf("convert_chunk complete\n");
 	return true;
 }
@@ -321,6 +318,7 @@ return_status convert_png(transform_details *details, FPE_KEY *fpe_key, cryptogr
 	while ((png_chunk = read_next_chunk(details->input)))
 	{
 		//printf("\twhile loop\n");
+		// TODO: Handle errors
 		if (apply_chunk_cryptography(png_chunk->name))
 		{
 			// TODO: Handle errors
