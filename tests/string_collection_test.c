@@ -9,6 +9,8 @@ int main()
 	string_collection *end_collection = create_string_collection_initial(end_strings);
 
 	char *test = "test";
+
+	printf("[%d]\n", string_starts_with_string_collection(test, end_collection));
 	printf("[%d]\n", string_ends_with_string_collection(test, end_collection));
 
 	destroy_string_collection(end_collection);
