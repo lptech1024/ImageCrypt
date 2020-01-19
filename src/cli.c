@@ -168,7 +168,6 @@ int main(int argc, char *argv[])
 	}
 	//printf("main while complete\n");
 
-	// TODO: Add helper to pass in all arguments at once
 	destroy_string_collection(passphrase_arguments);
 	destroy_string_collection(encrypt_arguments);
 	destroy_string_collection(decrypt_arguments);
@@ -189,7 +188,7 @@ int main(int argc, char *argv[])
 		fprintf(stderr, "%s", "No file paths specified!\n");
 	}
 
-	// Don't bother to prompt for a passphrase if we won't be able to use it
+	// Don't prompt for a passphrase if we won't be able to use it
 	if (sane_user_inputs && !passphrase)
 	{
 		printf("%s", "Please enter a passphrase: ");
@@ -216,6 +215,8 @@ int main(int argc, char *argv[])
 		}
 	}
 
+	//printf("Handling user inputs\n");
+	// TODO: Handle errors
 	handle_user_inputs(transform_details_iterator, passphrase, cryptography_mode);
 
 	destroy_transform_details_iterator(transform_details_iterator);

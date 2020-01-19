@@ -4,7 +4,11 @@
 
 string_collection* create_string_collection(int initial_size)
 {
+	// TODO: Handle failure
 	string_collection *new_string_collection = malloc(sizeof(string_collection));
+	// TODO: Handle failure
+	// Acknowledging initial_size could be 0.
+	// NOLINTNEXTLINE(clang-analyzer-optin.portability.UnixAPI)
 	new_string_collection->strings = malloc(initial_size * sizeof(char *));
 	new_string_collection->size = initial_size;
 	new_string_collection->count = 0;
@@ -19,10 +23,12 @@ string_collection* create_string_collection_initial(char **initial)
 		initial_count++;
 	}
 
+	// TODO: Handle failure
 	string_collection *new_string_collection = create_string_collection(initial_count);
 
-	for (int i = 0; initial[i]; i++)
+	for (int i = 0; i < initial_count; i++)
 	{
+		// TODO: Handle failure
 		append_string_collection(new_string_collection, initial[i]);
 	}
 
@@ -46,9 +52,11 @@ void append_string_collection(string_collection *enhanced_char_pointer, char *st
 	// Change size to allow for one more char *
 	if ((enhanced_char_pointer->size) <= (enhanced_char_pointer->count))
 	{
+		// TODO: Handle potential failure
 		enhanced_char_pointer->strings = realloc(enhanced_char_pointer->strings, (++enhanced_char_pointer->size) * sizeof(char *));
 	}
 
+	// TODO: Handle potential failure
 	enhanced_char_pointer->strings[enhanced_char_pointer->count++] = strdup(string);
 }
 

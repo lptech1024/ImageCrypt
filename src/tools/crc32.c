@@ -5,7 +5,7 @@
 // Table of CRCs of all 8-bit messages.
 static uint32_t crc_table[256];
 
-// Flag: has the table been computed?
+// Has the table been computed?
 static bool crc_table_computed = false;
 
 // Make the table for a fast CRC
@@ -32,10 +32,10 @@ static void make_crc_table()
 	crc_table_computed = true;
 }
 
-/* Update a running CRC with the bytes buf[0..len-1]--the CRC
-   should be initialized to all 1's, and the transmitted value
-   is the 1's complement of the final running CRC (see the
-   crc() routine below)). */
+/* Update a running CRC with the bytes buf[0..len-1]--the CRC should be
+ * initialized to all 1s, and the transmitted value is the 1s complement of the
+ * final running CRC (see the crc() routine below)).
+ */
 uint32_t update_crc(uint32_t crc, const unsigned char *buf, size_t len)
 {
 	if (!crc_table_computed)

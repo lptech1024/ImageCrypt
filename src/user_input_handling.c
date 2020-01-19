@@ -10,16 +10,19 @@ void handle_user_inputs(transform_details_iterator *iterator, const char *passph
 	//printf("handle_user_inputs start\n");
 	const signed int key_length = 32;
 	unsigned char key[key_length];
+	// TODO: Handle return value
 	set_key(passphrase, key, key_length);
 
 	//printf("\thandle_user_inputs past set_key\n");
+	// TODO: Handle errors
 	FPE_KEY *ff1 = malloc(sizeof(*ff1));
-	const signed int bit_length = 8;
-	const signed int key_bits = bit_length * key_length;
+	const signed int byte_length = 8;
+	const signed int key_bits = byte_length * key_length;
 	// TODO: Handle errors
 	fpe_set_ff1_key(key, key_bits, NULL, 0, key_bits, ff1);
 
 	//printf("\thandle_user_inputs past fpe_set_ff1_key\n");
+	// TODO: Handle errors
 	set_conversion(iterator);
 
 	//printf("\thandle_user_inputs past set_conversion\n");
