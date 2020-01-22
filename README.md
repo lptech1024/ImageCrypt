@@ -14,16 +14,12 @@ Primary Developer Image Format Support Priority
 [![pipeline status](https://gitlab.com/lptech1024/ImageCrypt/badges/master/pipeline.svg)](https://gitlab.com/lptech1024/ImageCrypt/commits/master)
 
 ## Setup
-* I want to run ImageCrypt
-  * make release
-  * ./release/imagecrypt
+* I want to install ImageCrypt as a user
+  * make install
 
-* I am developing ImageCrypt
+* I want to run ImageCrypt as a developer
   * make debug
   * ./debug/imagecrypt
-  
-* I want to undo the above make commands
-  * make clean
 
 ## Dependencies
 

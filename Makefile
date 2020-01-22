@@ -10,6 +10,14 @@ ODIR=obj
 TDIR=tests
 SOURCE=src
 
+prefix=/usr/local
+exec_prefix=$(prefix)
+bindir=$(exec_prefix)/bin
+datarootdir=$(prefix)/share
+mandir=$(datarootdir)/man
+man1dir=$(mandir)/man1
+manext='.1.'
+
 LIB_MATH=-lm
 LIB_CRYPTO=-lcrypto
 ALL_LIBS=$(LIB_MATH) $(LIB_CRYPTO)
@@ -17,12 +25,13 @@ ALL_LIBS=$(LIB_MATH) $(LIB_CRYPTO)
 TOOLS=$(SOURCE)/tools
 
 ALL=all
+INSTALL_TARGET=install
 RELEASE_TARGET=release
 DEBUG_TARGET=debug
 CI_TARGET=ci
 CLEAN=clean
 
-.PHONY: $(ALL) $(RELEASE_TARGET) $(DEBUG_TARGET) $(CI_TARGET) $(CLEAN)
+.PHONY: $(ALL) $(INSTALL_TARGET) $(RELEASE_TARGET) $(DEBUG_TARGET) $(CI_TARGET) $(CLEAN)
 
 # Don't delete any intermediate files (e.g. .o)
 .SECONDARY:
@@ -42,6 +51,11 @@ $(CI_TARGET): $(DEBUG_TARGET)
 
 $(CLEAN):
 	-rm release/* release/obj/*.o debug/* debug/obj/*.o
+
+$(INSTALL_TARGET): $(RELEASE_TARGET)
+$(INSTALL_TARGET):
+	mkdir -p $(bindir) && install -m 0755 ./release/imagecrypt $(bindir)/imagecrypt
+	gzip -c doc/imagecrypt.1 > $(man1dir)/imagecrypt.1.gz && mandb
 
 %/safety.o: $(TOOLS)/safety.c $(TOOLS)/safety.h
 	$(CCCFLAGS) -c $< -o $@
