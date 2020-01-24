@@ -1,7 +1,1 @@
-# Don't include object or binary files
-release/*
-debug/*
-
-# Keep the obj directories
-!release/obj/.keep
-!debug/obj/.keep
+build/*
