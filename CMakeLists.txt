@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5...3.16)
 
 if (${CMAKE_VERSION} VERSION_LESS 3.16)
-	cmake_policy(VERSION ${CMAKE_MAJOR_VERSION.${CMAKE_MINOR_VERSION})
+	cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
 endif()
 
 project(ImageCrypt VERSION 0.1
