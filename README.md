@@ -14,23 +14,23 @@ Primary Developer Image Format Support Priority
 [![pipeline status](https://gitlab.com/lptech1024/ImageCrypt/badges/master/pipeline.svg)](https://gitlab.com/lptech1024/ImageCrypt/commits/master)
 
 ## Setup
-* I want to install ImageCrypt as a user
-  * make install
-
-* I want to run ImageCrypt as a developer
-  * make debug
-  * ./debug/imagecrypt
+* mkdir build
+* cd build
+* cmake ..
+* make
 
 ## Dependencies
 
 ### Building
+#### Required Tools
 * clang (recommended) or gcc
+* cmake
 * make
+
+#### Libraries
 * libm
 * libcrypto
 
-### Developing
-
-#### Recommended
-* valgrind
-* rm
+#### Recommended Developer Tools
+* valgrind (debugging, profiling)
+* GDB (debugger)
