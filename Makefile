@@ -40,6 +40,11 @@ $(ALL): $(RELEASE_TARGET) $(RELEASE_TARGET)/tests
 
 .SECONDEXPANSION:
 
+$(INSTALL_TARGET): $(RELEASE_TARGET)
+$(INSTALL_TARGET):
+	mkdir -p $(bindir) && install -m 0755 ./release/imagecrypt $(bindir)/imagecrypt
+	gzip -c doc/imagecrypt.1 > $(man1dir)/imagecrypt.1.gz && mandb
+
 $(RELEASE_TARGET): CCCFLAGS += $(OPT)
 $(RELEASE_TARGET): $$@/imagecrypt
 
@@ -51,11 +56,6 @@ $(CI_TARGET): $(DEBUG_TARGET)
 
 $(CLEAN):
 	-rm release/* release/obj/*.o debug/* debug/obj/*.o
-
-$(INSTALL_TARGET): $(RELEASE_TARGET)
-$(INSTALL_TARGET):
-	mkdir -p $(bindir) && install -m 0755 ./release/imagecrypt $(bindir)/imagecrypt
-	gzip -c doc/imagecrypt.1 > $(man1dir)/imagecrypt.1.gz && mandb
 
 %/cryptography.o: $(TOOLS)/cryptography.c $(TOOLS)/cryptography.h
 	$(CCCFLAGS) -c $< -o $@
