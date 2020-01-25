@@ -31,7 +31,7 @@ else()
 	message(STATUS "clang-tidy not found")
 endif()
 
-add_library(imagecryptlib STATIC src/tools/safety.c src/tools/safety.h src/tools/cryptography.c src/tools/cryptography.c src/tools/fpe.h src/tools/fpe.c src/tools/crc32.c src/tools/crc32.h src/tools/string_collection.c src/tools/string_collection.h src/tools/transform_details.c src/tools/transform_details.h src/png.c src/png.h src/user_input_handling.c src/user_input_handling.h src/determine_format.c src/determine_format.h)
+add_library(imagecryptlib STATIC src/tools/cryptography.c src/tools/cryptography.c src/tools/fpe.h src/tools/fpe.c src/tools/crc32.c src/tools/crc32.h src/tools/string_collection.c src/tools/string_collection.h src/tools/transform_details.c src/tools/transform_details.h src/png.c src/png.h src/user_input_handling.c src/user_input_handling.h src/determine_format.c src/determine_format.h)
 
 # TODO: Add tests
 
