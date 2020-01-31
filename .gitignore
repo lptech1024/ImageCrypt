@@ -1,2 +1,6 @@
+# CMake
 build/*
 CMakeCache.txt
+
+# Developer Tools
+cscope.out
