@@ -1,6 +1,17 @@
-# CMake
+## CMake
 build/*
 CMakeCache.txt
 
-# Developer Tools
-cscope.out
+## Developer Tools
+# etags
+TAGS
+# ctags
+tags
+# cscope
+cscope.*
+# GNU Global
+GPATH
+# GNU Global
+GRTAGS
+# GNU Global
+GTAGS
