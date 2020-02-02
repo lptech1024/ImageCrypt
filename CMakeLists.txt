@@ -31,7 +31,6 @@ else()
 	message(STATUS "clang-tidy not found")
 endif()
 
-#add_library(imagecryptlib "")
 add_executable(imagecrypt "")
 
 # TODO: Replace with unit testing framework
