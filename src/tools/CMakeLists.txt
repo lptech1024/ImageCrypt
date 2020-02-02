@@ -1,0 +1,14 @@
+target_sources(imagecryptlib
+	PRIVATE
+		crc32.c
+		crc32.h
+		cryptography.c
+		cryptography.h
+		fpe.c
+		fpe.h
+		status.h
+		string_collection.c
+		string_collection.h
+		transform_details.c
+		transform_details.h
+)

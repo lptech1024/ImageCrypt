@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.8...3.16)
+cmake_minimum_required(VERSION 3.13...3.16)
 
 if (${CMAKE_VERSION} VERSION_LESS 3.16)
 	cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
@@ -31,19 +31,16 @@ else()
 	message(STATUS "clang-tidy not found")
 endif()
 
-add_library(imagecryptlib STATIC src/tools/cryptography.c src/tools/cryptography.c src/tools/fpe.h src/tools/fpe.c src/tools/crc32.c src/tools/crc32.h src/tools/string_collection.c src/tools/string_collection.h src/tools/transform_details.c src/tools/transform_details.h src/png.c src/png.h src/user_input_handling.c src/user_input_handling.h src/determine_format.c src/determine_format.h)
+#add_library(imagecryptlib "")
+add_executable(imagecrypt "")
 
-# TODO: Add tests
+# TODO: Replace with unit testing framework
 
-add_executable(imagecrypt src/cli.c)
-find_library(MATH_LIBRARY m)
-if (MATH_LIBRARY)
-	target_link_libraries(imagecryptlib PUBLIC ${MATH_LIBRARY})
-endif()
+add_subdirectory(src)
+add_subdirectory(tests)
 
-find_package(OpenSSL REQUIRED)
-target_link_libraries(imagecryptlib PRIVATE crypto)
-target_link_libraries(imagecrypt PRIVATE imagecryptlib)
+# TODO
+#target_compile_definitions(<TEST_TARGETS> PRIVATE _DEBUG)
 
 set(default_build_type "RelWithDebInfo")
 
