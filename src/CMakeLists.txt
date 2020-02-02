@@ -21,9 +21,6 @@ endif()
 find_package(OpenSSL REQUIRED)
 target_link_libraries(imagecryptlib PRIVATE crypto)
 
-target_sources(imagecrypt
-	PRIVATE
-		cli.c
-)
+target_sources(imagecrypt PRIVATE cli.c)
 
 target_link_libraries(imagecrypt PRIVATE imagecryptlib)
