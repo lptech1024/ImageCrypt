@@ -33,9 +33,9 @@ endif()
 
 add_executable(imagecrypt "")
 
-# TODO: Replace with unit testing framework
-
 add_subdirectory(src)
+
+# TODO: Replace with unit testing framework
 add_subdirectory(tests)
 
 # TODO
