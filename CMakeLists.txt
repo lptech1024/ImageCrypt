@@ -13,7 +13,7 @@ set(CMAKE_C_STANDARD_REQUIRED True)
 
 find_program(CCACHE_PROGRAM ccache)
 if (CCACHE_PROGRAM)
-	set(CMAKEC_COMPILER_LAUNCHER "${CCACHE_PROGRAM}")
+	set(CMAKE_C_COMPILER_LAUNCHER "${CCACHE_PROGRAM}")
 endif()
 
 option(CLANG_TIDY_FIX "Perform fixes for Clang-Tidy" OFF)
