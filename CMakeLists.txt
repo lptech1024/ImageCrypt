@@ -54,3 +54,8 @@ endif()
 
 install(TARGETS imagecrypt DESTINATION bin)
 # TODO: man page
+
+include(InstallRequiredSystemLibraries)
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
+set(CPACK_PACKAGE_CHECKSUM "SHA256")
+include(CPack)
