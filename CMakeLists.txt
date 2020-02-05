@@ -6,6 +6,7 @@ endif()
 
 project(ImageCrypt VERSION 0.1
                    DESCRIPTION "In-Place Image Encryption"
+                   HOMEPAGE_URL "https://gitlab.com/lptech1024/ImageCrypt"
                    LANGUAGES C)
 
 set(CMAKE_C_STANDARD 11)
@@ -56,6 +57,8 @@ install(TARGETS imagecrypt DESTINATION bin)
 # TODO: man page
 
 include(InstallRequiredSystemLibraries)
+set(CPACK_PACKAGE_VENDOR "Clayton Casciato")
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
+set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
 set(CPACK_PACKAGE_CHECKSUM "SHA256")
 include(CPack)
