@@ -41,7 +41,7 @@ add_subdirectory(src)
 # TODO: Replace with unit testing framework
 add_subdirectory(tests)
 
-# GCC, Clang. What other compilers will be supported (and is the flag supported)?
+# Works with GCC, Clang. What other compilers will be supported (and is the flag supported)?
 string(APPEND CMAKE_C_FLAGS_DEBUG " -Wall")
 
 set(default_build_type "RelWithDebInfo")
