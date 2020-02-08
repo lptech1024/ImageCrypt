@@ -37,6 +37,7 @@ endif()
 add_executable(imagecrypt "")
 
 add_subdirectory(src)
+add_subdirectory(doc)
 
 # TODO: Replace with unit testing framework
 add_subdirectory(tests)
@@ -56,8 +57,6 @@ if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
 endif()
 
 install(TARGETS imagecrypt DESTINATION ${CMAKE_INSTALL_BINDIR})
-# TODO: GZIP
-install(FILES doc/imagecrypt.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
 
 include(InstallRequiredSystemLibraries)
 set(CPACK_PACKAGE_VENDOR "Clayton Casciato")
