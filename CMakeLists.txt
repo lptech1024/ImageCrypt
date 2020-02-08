@@ -41,8 +41,8 @@ add_subdirectory(src)
 # TODO: Replace with unit testing framework
 add_subdirectory(tests)
 
-# TODO
-#target_compile_definitions(<TEST_TARGETS> PRIVATE _DEBUG)
+# GCC, Clang. What other compilers will be supported (and is the flag supported)?
+string(APPEND CMAKE_C_FLAGS_DEBUG " -Wall")
 
 set(default_build_type "RelWithDebInfo")
 
