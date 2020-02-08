@@ -12,6 +12,8 @@ project(ImageCrypt VERSION 0.1
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED True)
 
+include(GNUInstallDirs)
+
 find_program(CCACHE_PROGRAM ccache)
 if (CCACHE_PROGRAM)
 	set(CMAKE_C_COMPILER_LAUNCHER "${CCACHE_PROGRAM}")
@@ -53,8 +55,9 @@ if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
 		"Debug" "Release" "MinSizeRel" "RelWithDebInfo")
 endif()
 
-install(TARGETS imagecrypt DESTINATION bin)
-# TODO: man page
+install(TARGETS imagecrypt DESTINATION ${CMAKE_INSTALL_BINDIR})
+# TODO: GZIP
+install(FILES doc/imagecrypt.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
 
 include(InstallRequiredSystemLibraries)
 set(CPACK_PACKAGE_VENDOR "Clayton Casciato")
