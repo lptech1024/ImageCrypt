@@ -24,3 +24,5 @@ target_link_libraries(imagecryptlib PRIVATE crypto)
 target_sources(imagecrypt PRIVATE cli.c)
 
 target_link_libraries(imagecrypt PRIVATE imagecryptlib)
+
+install(TARGETS imagecrypt DESTINATION ${CMAKE_INSTALL_BINDIR})

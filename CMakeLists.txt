@@ -56,7 +56,6 @@ if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
 		"Debug" "Release" "MinSizeRel" "RelWithDebInfo")
 endif()
 
-install(TARGETS imagecrypt DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 include(InstallRequiredSystemLibraries)
 set(CPACK_PACKAGE_VENDOR "Clayton Casciato")
