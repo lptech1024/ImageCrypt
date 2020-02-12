@@ -21,3 +21,15 @@ ubuntu 20.04:
     - cd build
     - cmake ..
     - make
+
+fedora latest:
+  image: fedora:latest
+  stage: build
+  before_script:
+    - dnf install -y cmake make clang clang openssl-devel
+    - export CC=/usr/bin/clang
+  script:
+    - mkdir build
+    - cd build
+    - cmake ..
+    - make
