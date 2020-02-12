@@ -1,12 +1,11 @@
 # ubuntu:19.10 should also work
-image: ubuntu:20.04
 
-before_script:
-  - apt-get update && apt-get -y install cmake make clang clang-tidy libssl-dev
-  - export CC=/usr/bin/clang
-
-imagecrypt:
+ubuntu 20.04:
+  image: ubuntu:20.04
   stage: build
+  before_script:
+    - apt-get update && apt-get -y install cmake make clang clang-tidy libssl-dev
+    - export CC=/usr/bin/clang
   script:
     - mkdir build
     - cd build
