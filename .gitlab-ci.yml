@@ -1,3 +1,15 @@
+debian latest:
+  image: debian:latest
+  stage: build
+  before_script:
+    - apt-get update && apt-get -y install cmake make clang clang-tidy libssl-dev
+    - export CC=/usr/bin/clang
+  script:
+    - mkdir build
+    - cd build
+    - cmake ..
+    - make
+
 ubuntu 19.10:
   image: ubuntu:19.10
   stage: build
