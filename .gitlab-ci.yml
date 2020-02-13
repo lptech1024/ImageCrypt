@@ -40,7 +40,7 @@ centos latest:
   before_script:
     - dnf install -y make clang openssl-devel
     # Using to install compliant cmake version
-    - dnf install python3-pip
+    - dnf install -y python3-pip
     # CMake 3.16.3 will not install (even with scikit-build)
     - pip3 install cmake==3.13.3
     - export CC=/usr/bin/clang
