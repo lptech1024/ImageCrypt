@@ -73,3 +73,15 @@ archlinux latest:
     - cd build
     - cmake ..
     - make
+
+clearlinux latest:
+  image: clearlinux:latest
+  stage: build
+  before_script:
+    - swupd bundle-add c-basic devpkg-openssl
+    - export CC=/usr/bin/clang
+  script:
+    - mkdir build
+    - cd build
+    - cmake ..
+    - make
