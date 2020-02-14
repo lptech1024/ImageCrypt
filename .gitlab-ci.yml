@@ -62,6 +62,19 @@ fedora latest:
     - cmake ..
     - make
 
+mageia 7:
+  # "latest" points to 6
+  image: mageia:7
+  stage: build
+  before_script:
+    - dnf install -y cmake make clang openssl-devel
+    - export CC=/usr/bin/clang
+  script:
+    - mkdir build
+    - cd build
+    - cmake ..
+    - make
+
 archlinux latest:
   image: archlinux:latest
   stage: build
