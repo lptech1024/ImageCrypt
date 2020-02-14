@@ -61,3 +61,15 @@ fedora latest:
     - cd build
     - cmake ..
     - make
+
+archlinux latest:
+  image: archlinux:latest
+  stage: build
+  before_script:
+    - pacman --quiet --sync --refresh --sysupgrade --needed --noprogressbar --noconfirm cmake make clang openssl
+    - export CC=/usr/bin/clang
+  script:
+    - mkdir build
+    - cd build
+    - cmake ..
+    - make
