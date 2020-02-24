@@ -4,7 +4,7 @@ debian latest:
   before_script:
     - apt-get update && apt-get -y install cmake make clang clang-tidy libssl-dev
     - export CC=/usr/bin/clang
-  script: "./scripts/build_fedora_rpm.sh"
+  script: "./scripts/build_generic.sh"
 
 ubuntu 19.10:
   image: ubuntu:19.10
@@ -12,7 +12,7 @@ ubuntu 19.10:
   before_script:
     - apt-get update && apt-get -y install cmake make clang clang-tidy libssl-dev
     - export CC=/usr/bin/clang
-  script: "./scripts/build_fedora_rpm.sh"
+  script: "./scripts/build_generic.sh"
 
 fedora latest:
   image: fedora:latest
@@ -34,7 +34,7 @@ mageia 7:
   before_script:
     - dnf install -y cmake make clang openssl-devel
     - export CC=/usr/bin/clang
-  script: "./scripts/build_fedora_rpm.sh"
+  script: "./scripts/build_generic.sh"
 
 archlinux latest:
   image: archlinux:latest
@@ -42,7 +42,7 @@ archlinux latest:
   before_script:
     - pacman --quiet --sync --refresh --sysupgrade --needed --noprogressbar --noconfirm cmake make clang openssl
     - export CC=/usr/bin/clang
-  script: "./scripts/build_fedora_rpm.sh"
+  script: "./scripts/build_generic.sh"
 
 clearlinux latest:
   image: clearlinux:latest
@@ -50,4 +50,4 @@ clearlinux latest:
   before_script:
     - swupd bundle-add c-basic devpkg-openssl
     - export CC=/usr/bin/clang
-  script: "./scripts/build_fedora_rpm.sh"
+  script: "./scripts/build_generic.sh"
