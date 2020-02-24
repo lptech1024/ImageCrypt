@@ -2,8 +2,8 @@ debian latest:
   image: debian:latest
   stage: build
   before_script:
-    - apt-get update
-    - apt-get --assume-yes install cmake make clang clang-tidy libssl-dev
+    - apt-get update --quiet
+    - apt-get --assume-yes --quiet install cmake make clang clang-tidy libssl-dev
     - export CC=/usr/bin/clang
   script: "./scripts/build_generic.sh"
 
@@ -12,7 +12,7 @@ ubuntu 19.10:
   stage: build
   before_script:
     - apt-get update
-    - apt-get --assume-yes install cmake make clang clang-tidy libssl-dev
+    - apt-get --assume-yes --quiet install cmake make clang clang-tidy libssl-dev
     - export CC=/usr/bin/clang
   script: "./scripts/build_generic.sh"
 
@@ -21,12 +21,12 @@ fedora latest:
   stage: build
   before_script:
     # Project
-    - dnf install --assumeyes openssl-devel
+    - dnf install --assumeyes --quiet openssl-devel
     # Build System
-    - dnf install --assumeyes cmake make clang
+    - dnf install --assumeyes --quiet cmake make clang
     - export CC=/usr/bin/clang
     # Packaging
-    - dnf install --assumeyes rpm-build rpmlint
+    - dnf install --assumeyes --quiet rpm-build rpmlint
   script: "./scripts/build_fedora_rpm.sh"
 
 mageia 7:
@@ -34,7 +34,7 @@ mageia 7:
   image: mageia:7
   stage: build
   before_script:
-    - dnf install --assumeyes cmake make clang openssl-devel
+    - dnf install --assumeyes --quiet cmake make clang openssl-devel
     - export CC=/usr/bin/clang
   script: "./scripts/build_generic.sh"
 
@@ -50,6 +50,6 @@ clearlinux latest:
   image: clearlinux:latest
   stage: build
   before_script:
-    - swupd bundle-add c-basic devpkg-openssl
+    - swupd bundle-add --no-progress --assume=yes --quiet c-basic devpkg-openssl
     - export CC=/usr/bin/clang
   script: "./scripts/build_generic.sh"
