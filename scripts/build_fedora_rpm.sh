@@ -14,9 +14,9 @@
 set -e
 unset IFS
 # TODO: Default spec template doesn't exist on second run.
-rm -rf ../custom_rpm_build
-mkdir -p ../custom_rpm_build
-cd ../custom_rpm_build
+rm -rf custom_rpm_build
+mkdir -p custom_rpm_build
+cd custom_rpm_build
 cmake .. -D 'CPACK_GENERATOR=RPM'
 make
 make package
