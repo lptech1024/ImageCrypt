@@ -50,6 +50,6 @@ clearlinux latest:
   image: clearlinux:latest
   stage: build
   before_script:
-    - swupd bundle-add --no-progress --assume=yes --quiet c-basic devpkg-openssl
+    - swupd bundle-add --no-progress --quiet c-basic devpkg-openssl
     - export CC=/usr/bin/clang
   script: "./scripts/build_generic.sh"
