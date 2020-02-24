@@ -1,5 +1,6 @@
 ## CMake
 build/*
+custom_rpm_build/*
 CMakeCache.txt
 
 ## Developer Tools
