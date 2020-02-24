@@ -11,26 +11,15 @@ Primary Developer Image Format Support Priority
 1. [NEF](https://www.nikonusa.com/en/learn-and-explore/a/products-and-innovation/nikon-electronic-format-nef.html)
 
 ## Build Status
+
+CI builds: Debian, Ubuntu, Fedora, Mageia, Arch Linux, and Clean Linux
+
 [![pipeline status](https://gitlab.com/lptech1024/ImageCrypt/badges/master/pipeline.svg)](https://gitlab.com/lptech1024/ImageCrypt/commits/master)
 
 ## Setup
-* mkdir build
-* cd build
-* cmake ..
-* make
 
-## Dependencies
+Please review .gitlab-ci.yml for minimal configuration.
 
-### Building
-#### Required Tools
-* clang (recommended) or gcc
-* cmake
-* make
-
-#### Libraries
-* libm
-* libcrypto
-
-#### Recommended Developer Tools
+### Recommended Developer Tools
 * valgrind (debugging, profiling)
 * GDB (debugger)
