@@ -1,3 +1,7 @@
+stages:
+  - build
+  - deploy
+
 debian latest:
   image: debian:latest
   stage: build
@@ -36,7 +40,7 @@ centos latest:
     - export CC=/usr/bin/clang
   script: "./scripts/build_generic.sh"
 
-fedora latest:
+fedora latest build:
   image: fedora:latest
   stage: build
   before_script:
@@ -48,6 +52,19 @@ fedora latest:
     # Packaging
     - dnf install --assumeyes --quiet rpm-build rpmlint
   script: "./scripts/build_fedora_rpm.sh"
+  artifacts:
+    when: on_success
+    paths:
+      - custom_rmp_build/*.rpm
+
+fedora latest deploy:
+  image: fedora:latest
+  stage: deploy
+  needs:
+    - job: fedora latest build
+      artifacts: true
+  script:
+    - dnf install --assumeyes custom_rpm_build/*.rpm
 
 mageia 7:
   # "latest" points to 6
