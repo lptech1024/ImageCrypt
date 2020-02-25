@@ -55,7 +55,7 @@ fedora latest build:
   artifacts:
     when: on_success
     paths:
-      - custom_rmp_build/*.rpm
+      - custom_rpm_build/*.rpm
 
 fedora latest deploy:
   image: fedora:latest
