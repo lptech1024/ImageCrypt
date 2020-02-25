@@ -66,7 +66,7 @@ fedora latest deploy:
   before_script:
     - dnf update --assumeyes --quiet openssl dnf
   script:
-    - dnf install --assumeyes custom_rpm_build/*.rpm
+    - dnf install --assumeyes --verbose custom_rpm_build/*.rpm
 
 mageia 7:
   # "latest" points to 6
