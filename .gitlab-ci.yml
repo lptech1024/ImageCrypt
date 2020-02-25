@@ -64,7 +64,7 @@ fedora latest deploy:
     - job: fedora latest build
       artifacts: true
   before_script:
-    - dnf update --assumeyes --quiet openssl dnf
+    - dnf upgrade --assumeyes --quiet openssl dnf
   script:
     - dnf install --assumeyes --verbose custom_rpm_build/*.rpm
 
