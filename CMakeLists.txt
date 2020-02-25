@@ -75,7 +75,5 @@ set(CPACK_RPM_CHANGELOG_FILE "${CMAKE_CURRENT_SOURCE_DIR}/doc/rpm-changelog")
 set(CPACK_RPM_PACKAGE_RELOCATABLE "OFF")
 # TODO: Set per OS
 #set(CPACK_GENERATOR "RPM")
-#set(CPACK_RPM_GENERATE_USER_BINARY_SPECFILE "imagecrypt.spec")
-#set(CPACK_RPM_USER_BINARY_SPECFILE "${CMAKE_CURRENT_SOURCE_DIR}/imagecrypt.spec.in")
 #TODO: Include license and README in RPM files section
 include(CPack)
