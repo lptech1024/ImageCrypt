@@ -12,7 +12,7 @@ Primary Developer Image Format Support Priority
 
 ## Build Status
 
-CI builds: Debian, Ubuntu, Fedora, Mageia, Arch Linux, and Clear Linux
+CI builds: Debian, Ubuntu, Fedora, CentOS, Mageia, Arch Linux, and Clear Linux
 
 [![pipeline status](https://gitlab.com/lptech1024/ImageCrypt/badges/master/pipeline.svg)](https://gitlab.com/lptech1024/ImageCrypt/commits/master)
 
