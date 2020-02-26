@@ -17,7 +17,6 @@ mkdir -p custom_rpm_build
 cd custom_rpm_build
 # TODO: Set CPACK_GENERATOR in CMakeLists.txt
 cmake .. -D 'CPACK_RPM_USER_BINARY_SPECFILE=' -D 'CPACK_GENERATOR=RPM'
-make
 make package
 spec_folder=_CPack_Packages/Linux/RPM/SPECS
 spec_template=imagecrypt.spec.in
@@ -30,6 +29,5 @@ for spec_line in "${man_directories[@]}"; do
 done
 
 cmake .. -D "CPACK_RPM_USER_BINARY_SPECFILE=$spec_template"
-make
 make package
 rpmlint --info *.rpm
