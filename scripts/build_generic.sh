@@ -17,4 +17,4 @@ mkdir build
 cd build
 pwd
 cmake ..
-make
+make package
