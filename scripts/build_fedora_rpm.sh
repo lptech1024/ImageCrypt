@@ -15,6 +15,7 @@ set -e
 unset IFS
 mkdir -p custom_rpm_build
 cd custom_rpm_build
+# TODO: Set CPACK_GENERATOR in CMakeLists.txt
 cmake .. -D 'CPACK_RPM_USER_BINARY_SPECFILE=' -D 'CPACK_GENERATOR=RPM'
 make
 make package
@@ -28,8 +29,7 @@ for spec_line in "${man_directories[@]}"; do
 	sed --in-place "/%files/a %exclude $spec_line" $spec_template
 done
 
-# TODO: Set CPACK_GENERATOR in CMakeLists.txt
-cmake .. -D "CPACK_RPM_USER_BINARY_SPECFILE=$spec_template" -D 'CPACK_GENERATOR=RPM'
+cmake .. -D "CPACK_RPM_USER_BINARY_SPECFILE=$spec_template"
 make
 make package
 rpmlint --info *.rpm
