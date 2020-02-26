@@ -12,9 +12,7 @@
 set -e
 unset IFS
 
-pwd
 mkdir build
 cd build
-pwd
 cmake ..
 make package
