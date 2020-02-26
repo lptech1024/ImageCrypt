@@ -13,7 +13,7 @@
 # TODO: Check command outputs
 set -e
 unset IFS
-mkdir -p custom_rpm_build
+mkdir --parents custom_rpm_build
 cd custom_rpm_build
 # TODO: Set CPACK_GENERATOR in CMakeLists.txt
 cmake .. -D 'CPACK_RPM_USER_BINARY_SPECFILE=' -D 'CPACK_GENERATOR=RPM'
