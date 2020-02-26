@@ -18,7 +18,7 @@ CI builds: Debian, Ubuntu, Fedora, CentOS, Mageia, Arch Linux, and Clear Linux
 
 ## Setup
 
-Please review .gitlab-ci.yml for minimal configuration.
+Please review the [CI build config file](https://gitlab.com/lptech1024/ImageCrypt/-/blob/master/.gitlab-ci.yml) for minimal configuration.
 
 ### Recommended Developer Tools
 * valgrind (debugging, profiling)
