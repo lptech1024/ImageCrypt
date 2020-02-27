@@ -154,7 +154,7 @@ archlinux latest build:
   image: archlinux:latest
   stage: build
   before_script:
-    - pacman --quiet --sync --refresh --sysupgrade --needed --noprogressbar --noconfirm cmake make clang openssl
+    - pacman --quiet --sync --refresh --sysupgrade --needed --noprogressbar --noconfirm cmake make clang openssl bash
     - export CC=/usr/bin/clang
   script: "./scripts/build_generic.sh"
   artifacts:
