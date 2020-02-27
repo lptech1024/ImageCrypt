@@ -2,7 +2,7 @@ stages:
   - build
   - deploy
 
-debian latest:
+debian latest build:
   image: debian:latest
   stage: build
   before_script:
@@ -10,8 +10,23 @@ debian latest:
     - apt-get --assume-yes --quiet install cmake make clang clang-tidy libssl-dev
     - export CC=/usr/bin/clang
   script: "./scripts/build_generic.sh"
+  artifacts:
+    when: on_success
+    paths:
+      - build/*.sh
 
-ubuntu 19.10:
+debian latest deploy:
+  image: debian:latest
+  stage: deploy
+  needs:
+    - job: debian latest build
+      artifacts: true
+  before_script:
+    - apt-get update --quiet
+    - apt-get --assume-yes --quiet install openssl
+  script: "./build/*.sh --skip-license"
+
+ubuntu 19.10 build:
   image: ubuntu:19.10
   stage: build
   before_script:
@@ -19,8 +34,23 @@ ubuntu 19.10:
     - apt-get --assume-yes --quiet install cmake make clang clang-tidy libssl-dev
     - export CC=/usr/bin/clang
   script: "./scripts/build_generic.sh"
+  artifacts:
+    when: on_success
+    paths:
+      - build/*.sh
 
-ubuntu 20.04:
+ubuntu 19.10 deploy:
+  image: ubuntu:19.10
+  stage: deploy
+  needs:
+    - job: ubuntu 19.10 build
+      artifacts: true
+  before_script:
+    - apt-get update --quiet
+    - apt-get --assume-yes --quiet install openssl
+  script: "./build/*.sh --skip-license"
+
+ubuntu 20.04 build:
   image: ubuntu:20.04
   stage: build
   before_script:
@@ -28,8 +58,23 @@ ubuntu 20.04:
     - apt-get --assume-yes --quiet install cmake make clang clang-tidy libssl-dev
     - export CC=/usr/bin/clang
   script: "./scripts/build_generic.sh"
+  artifacts:
+    when: on_success
+    paths:
+      - build/*.sh
 
-centos latest:
+ubuntu 20.04 deploy:
+  image: ubuntu:20.04
+  stage: deploy
+  needs:
+    - job: ubuntu 20.04 build
+      artifacts: true
+  before_script:
+    - apt-get update --quiet
+    - apt-get --assume-yes --quiet install openssl
+  script: "./build/*.sh --skip-license"
+
+centos latest build:
   image: centos:latest
   stage: build
   before_script:
@@ -39,6 +84,20 @@ centos latest:
     - pip3 install --quiet cmake==3.13.3
     - export CC=/usr/bin/clang
   script: "./scripts/build_generic.sh"
+  artifacts:
+    when: on_success
+    paths:
+      - build/*.sh
+
+centos latest deploy:
+  image: centos:latest
+  stage: deploy
+  needs:
+    - job: centos latest build
+      artifacts: true
+  before_script:
+    - dnf install --assumeyes --quiet openssl
+  script: "./build/*.sh --skip-license"
 
 fedora latest build:
   image: fedora:latest
@@ -68,7 +127,7 @@ fedora latest deploy:
   script:
     - dnf install --assumeyes --verbose custom_rpm_build/*.rpm
 
-mageia 7:
+mageia 7 build:
   # "latest" points to 6
   image: mageia:7
   stage: build
@@ -76,19 +135,61 @@ mageia 7:
     - dnf install --assumeyes --quiet cmake make clang openssl-devel
     - export CC=/usr/bin/clang
   script: "./scripts/build_generic.sh"
+  artifacts:
+      when: on_success
+      paths:
+        - build/*.sh
 
-archlinux latest:
+mageia 7 deploy:
+  image: mageia:7
+  stage: deploy
+  needs:
+    - job: mageia 7 build
+      artifacts: true
+  before_script:
+    - dnf install --assumeyes --quiet openssl
+  script: "./build/*.sh --skip-license"
+
+archlinux latest build:
   image: archlinux:latest
   stage: build
   before_script:
     - pacman --quiet --sync --refresh --sysupgrade --needed --noprogressbar --noconfirm cmake make clang openssl
     - export CC=/usr/bin/clang
   script: "./scripts/build_generic.sh"
+  artifacts:
+    when: on_success
+    paths:
+      - build/*.sh
 
-clearlinux latest:
+archlinux latest deploy:
+  image: archlinux:latest
+  stage: deploy
+  needs:
+    - job: archlinux latest build
+      artifacts: true
+  before_script:
+    - pacman --quiet --sync --refresh --sysupgrade --needed --noprogressbar --noconfirm openssl
+  script: "./build/*.sh --skip-license"
+
+clearlinux latest build:
   image: clearlinux:latest
   stage: build
   before_script:
     - swupd bundle-add --no-progress --quiet c-basic devpkg-openssl
     - export CC=/usr/bin/clang
   script: "./scripts/build_generic.sh"
+  artifacts:
+    when: on_success
+    paths:
+      - build/*.sh
+
+clearlinux latest deploy:
+  image: clearlinux:latest
+  stage: deploy
+  needs:
+    - job: clearlinux latest build
+      artifacts: true
+  before_script:
+    - swupd bundle-add --no-progress --quiet openssl
+  script: "./build/*.sh --skip-license"
