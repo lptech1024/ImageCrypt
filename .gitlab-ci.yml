@@ -7,8 +7,13 @@ debian latest build:
   stage: build
   before_script:
     - apt-get update --quiet
-    - apt-get --assume-yes --quiet install cmake make clang clang-tidy libssl-dev
+    # CI-specific dependencies
+    - apt-get --assume-yes --quiet upgrade clang-tidy bash
+    # Build system dependencies
+    - apt-get --assume-yes --quiet upgrade cmake make clang
     - export CC=/usr/bin/clang
+    # Project dependency
+    - apt-get --assume-yes --quiet upgrade libssl-dev
   script: "./scripts/build_generic.sh"
   artifacts:
     when: on_success
@@ -23,7 +28,8 @@ debian latest deploy:
       artifacts: true
   before_script:
     - apt-get update --quiet
-    - apt-get --assume-yes --quiet install openssl
+    # Project dependency
+    - apt-get --assume-yes --quiet upgrade openssl
   script: "./build/*.sh --skip-license"
 
 ubuntu 19.10 build:
@@ -31,8 +37,13 @@ ubuntu 19.10 build:
   stage: build
   before_script:
     - apt-get update --quiet
-    - apt-get --assume-yes --quiet install cmake make clang clang-tidy libssl-dev
+    # CI-specifc dependencies
+    - apt-get --assume-yes --quiet upgrade clang-tidy bash
+    # Build system dependencies
+    - apt-get --assume-yes --quiet upgrade cmake make clang
     - export CC=/usr/bin/clang
+    # Project dependency
+    - apt-get --assume-yes --quiet upgrade libssl-dev
   script: "./scripts/build_generic.sh"
   artifacts:
     when: on_success
@@ -47,7 +58,8 @@ ubuntu 19.10 deploy:
       artifacts: true
   before_script:
     - apt-get update --quiet
-    - apt-get --assume-yes --quiet install openssl
+    # Project dependency
+    - apt-get --assume-yes --quiet upgrade openssl
   script: "./build/*.sh --skip-license"
 
 ubuntu 20.04 build:
@@ -55,8 +67,13 @@ ubuntu 20.04 build:
   stage: build
   before_script:
     - apt-get update --quiet
-    - apt-get --assume-yes --quiet install cmake make clang clang-tidy libssl-dev
+    # CI-specific dependencies
+    - apt-get --assume-yes --quiet upgrade clang-tidy bash
+    # Build system dependencies
+    - apt-get --assume-yes --quiet upgrade cmake make clang
     - export CC=/usr/bin/clang
+    # Project dependency
+    - apt-get --assume-yes --quiet upgrade libssl-dev
   script: "./scripts/build_generic.sh"
   artifacts:
     when: on_success
@@ -71,7 +88,8 @@ ubuntu 20.04 deploy:
       artifacts: true
   before_script:
     - apt-get update --quiet
-    - apt-get --assume-yes --quiet install openssl
+    # Project dependency
+    - apt-get --assume-yes --quiet upgrade openssl
   script: "./build/*.sh --skip-license"
 
 centos latest build:
@@ -103,20 +121,25 @@ centos latest deploy:
     - job: centos latest build
       artifacts: true
   before_script:
-    - dnf install --assumeyes --quiet openssl
+    # Project dependency
+    - dnf install --best --assumeyes --quiet openssl
   script: "./build/*.sh --skip-license"
 
 fedora latest build:
   image: fedora:latest
   stage: build
   before_script:
-    # Project
-    - dnf install --assumeyes --quiet openssl-devel
+    # CI-specific dependency
+    - dnf install --best --assumeyes --quiet bash
     # Build System
-    - dnf install --assumeyes --quiet cmake make clang
+    - dnf install --best --assumeyes --quiet cmake make clang
     - export CC=/usr/bin/clang
+    # Project
+    - dnf install --best --assumeyes --quiet openssl-devel
+    # CI-specific packaging dependencies
+    - dnf install --best --assumeyes --quiet rpmlint
     # Packaging
-    - dnf install --assumeyes --quiet rpm-build rpmlint
+    - dnf install --best --assumeyes --quiet rpm-build
   script: "./scripts/build_fedora_rpm.sh"
   artifacts:
     when: on_success
@@ -130,7 +153,8 @@ fedora latest deploy:
     - job: fedora latest build
       artifacts: true
   before_script:
-    - dnf upgrade --assumeyes --quiet openssl dnf
+    # Project dependencies
+    - dnf install --best --assumeyes --quiet openssl dnf
   script:
     - dnf install --assumeyes --verbose custom_rpm_build/*.rpm
 
@@ -139,8 +163,13 @@ mageia 7 build:
   image: mageia:7
   stage: build
   before_script:
-    - dnf install --assumeyes --quiet cmake make clang openssl-devel
+    # CI-specific dependency
+    - dnf upgrade --best --assumeyes --quiet bash
+    # Build system dependencies
+    - dnf install --best --assumeyes --quiet cmake make clang
     - export CC=/usr/bin/clang
+    # Project dependency
+    - dnf install --best --assumeyes --quiet openssl-devel
   script: "./scripts/build_generic.sh"
   artifacts:
       when: on_success
@@ -154,15 +183,21 @@ mageia 7 deploy:
     - job: mageia 7 build
       artifacts: true
   before_script:
-    - dnf install --assumeyes --quiet openssl
+    # Project dependency
+    - dnf install --best --assumeyes --quiet openssl
   script: "./build/*.sh --skip-license"
 
 archlinux latest build:
   image: archlinux:latest
   stage: build
   before_script:
-    - pacman --quiet --sync --refresh --sysupgrade --needed --noprogressbar --noconfirm cmake make clang openssl bash
+    # CI-specific dependencies
+    - pacman --quiet --sync --refresh --sysupgrade --needed --noprogressbar --noconfirm bash
+    # Build system dependencies
+    - pacman --quiet --sync --refresh --sysupgrade --needed --noprogressbar --noconfirm cmake make clang
     - export CC=/usr/bin/clang
+    # Project dependency
+    - pacman --quiet --sync --refresh --sysupgrade --needed --noprogressbar --noconfirm openssl
   script: "./scripts/build_generic.sh"
   artifacts:
     when: on_success
@@ -176,6 +211,7 @@ archlinux latest deploy:
     - job: archlinux latest build
       artifacts: true
   before_script:
+    # Project dependency
     - pacman --quiet --sync --refresh --sysupgrade --needed --noprogressbar --noconfirm openssl
   script: "./build/*.sh --skip-license"
 
@@ -183,8 +219,11 @@ clearlinux latest build:
   image: clearlinux:latest
   stage: build
   before_script:
-    - swupd bundle-add --no-progress --quiet c-basic devpkg-openssl
+    # Build system dependencies
+    - swupd bundle-add --no-progress --quiet c-basic
     - export CC=/usr/bin/clang
+    # Project dependency
+    - swupd bundle-add --no-progress --quiet devpkg-openssl
   script: "./scripts/build_generic.sh"
   artifacts:
     when: on_success
@@ -198,5 +237,6 @@ clearlinux latest deploy:
     - job: clearlinux latest build
       artifacts: true
   before_script:
+    # Project dependency
     - swupd bundle-add --no-progress --quiet openssl
   script: "./build/*.sh --skip-license"
