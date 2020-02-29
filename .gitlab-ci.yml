@@ -130,7 +130,7 @@ fedora latest build:
   stage: build
   before_script:
     # CI-specific dependency
-    - dnf install --best --assumeyes --quiet bash
+    - dnf install --best --assumeyes --quiet bash sed coreutils grep
     # Build System
     - dnf install --best --assumeyes --quiet cmake make clang
     - export CC=/usr/bin/clang
