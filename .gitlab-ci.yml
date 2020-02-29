@@ -78,11 +78,18 @@ centos latest build:
   image: centos:latest
   stage: build
   before_script:
-    - dnf install --assumeyes --quiet make clang openssl-devel
-    # Using to install compliant cmake version
-    - dnf install --assumeyes --quiet python3-pip
-    - pip3 install --quiet cmake==3.13.3
+    # CI-specific dependencies
+    - dnf install --best --assumeyes --quiet bash
+    # Build system dependencies
+    # Using Python to install latest version of pip
+    - dnf install --best --assumeyes --quiet python3
+    # Using pip to install latest version of cmake
+    - python3 -m pip install --upgrade pip
+    - pip install --quiet cmake
+    - dnf install --best --assumeyes --quiet make clang
     - export CC=/usr/bin/clang
+    # Project dependency
+    - dnf install --best --assumeyes --quiet openssl-devel
   script: "./scripts/build_generic.sh"
   artifacts:
     when: on_success
