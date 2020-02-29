@@ -164,7 +164,7 @@ mageia 7 build:
   stage: build
   before_script:
     # CI-specific dependency
-    - dnf upgrade --best --assumeyes --quiet bash
+    - dnf install --best --assumeyes --quiet bash
     # Build system dependencies
     - dnf install --best --assumeyes --quiet cmake make clang
     - export CC=/usr/bin/clang
