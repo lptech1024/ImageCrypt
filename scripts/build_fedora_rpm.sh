@@ -19,7 +19,7 @@ main()
 	cp $spec_folder/$spec_template $spec_template
 
 	IFS=$'\n'
-	man_directories=($(grep -h '%dir.*man' $spec_folder/imagecrypt.spec))
+	man_directories=($(grep -h '%dir.*/man' $spec_folder/imagecrypt.spec))
 	unset IFS
 
 	for spec_line in "${man_directories[@]}"; do
