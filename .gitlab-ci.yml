@@ -1,19 +1,13 @@
+# GitLab hosts a Container Registry, but these containers count towards the repository size limit.
+# With the number of distributions supported, we would be close to that limit.
+
 stages:
   - build
   - deploy
 
 debian latest build:
-  image: debian:latest
+  image: lptech1024/imagecrypt:build-debian_latest
   stage: build
-  before_script:
-    - apt-get update --quiet
-    # CI-specific dependencies
-    - apt-get --assume-yes --quiet upgrade clang-tidy bash
-    # Build system dependencies
-    - apt-get --assume-yes --quiet upgrade cmake make clang
-    - export CC=/usr/bin/clang
-    # Project dependency
-    - apt-get --assume-yes --quiet upgrade libssl-dev
   script: "./scripts/build_generic.sh"
   artifacts:
     when: on_success
@@ -21,29 +15,16 @@ debian latest build:
       - build/*.sh
 
 debian latest deploy:
-  image: debian:latest
+  image: lptech1024/imagecrypt:deploy-debian_latest
   stage: deploy
   needs:
     - job: debian latest build
       artifacts: true
-  before_script:
-    - apt-get update --quiet
-    # Project dependency
-    - apt-get --assume-yes --quiet upgrade openssl
   script: "./build/*.sh --skip-license"
 
 ubuntu 19.10 build:
-  image: ubuntu:19.10
+  image: lptech1024/imagecrypt:build-ubuntu_19_10
   stage: build
-  before_script:
-    - apt-get update --quiet
-    # CI-specifc dependencies
-    - apt-get --assume-yes --quiet upgrade clang-tidy bash
-    # Build system dependencies
-    - apt-get --assume-yes --quiet upgrade cmake make clang
-    - export CC=/usr/bin/clang
-    # Project dependency
-    - apt-get --assume-yes --quiet upgrade libssl-dev
   script: "./scripts/build_generic.sh"
   artifacts:
     when: on_success
@@ -51,29 +32,16 @@ ubuntu 19.10 build:
       - build/*.sh
 
 ubuntu 19.10 deploy:
-  image: ubuntu:19.10
+  image: lptech1024/imagecrypt:deploy-ubuntu_19_10
   stage: deploy
   needs:
     - job: ubuntu 19.10 build
       artifacts: true
-  before_script:
-    - apt-get update --quiet
-    # Project dependency
-    - apt-get --assume-yes --quiet upgrade openssl
   script: "./build/*.sh --skip-license"
 
 ubuntu 20.04 build:
-  image: ubuntu:20.04
+  image: lptech1024/imagecrypt:build-ubuntu_20_04
   stage: build
-  before_script:
-    - apt-get update --quiet
-    # CI-specific dependencies
-    - apt-get --assume-yes --quiet upgrade clang-tidy bash
-    # Build system dependencies
-    - apt-get --assume-yes --quiet upgrade cmake make clang
-    - export CC=/usr/bin/clang
-    # Project dependency
-    - apt-get --assume-yes --quiet upgrade libssl-dev
   script: "./scripts/build_generic.sh"
   artifacts:
     when: on_success
@@ -81,33 +49,16 @@ ubuntu 20.04 build:
       - build/*.sh
 
 ubuntu 20.04 deploy:
-  image: ubuntu:20.04
+  image: lptech1024/imagecrypt:deploy-ubuntu_20_04
   stage: deploy
   needs:
     - job: ubuntu 20.04 build
       artifacts: true
-  before_script:
-    - apt-get update --quiet
-    # Project dependency
-    - apt-get --assume-yes --quiet upgrade openssl
   script: "./build/*.sh --skip-license"
 
 centos latest build:
-  image: centos:latest
+  image: lptech1024/imagecrypt:build-centos_latest
   stage: build
-  before_script:
-    # CI-specific dependencies
-    - dnf install --best --assumeyes --quiet bash
-    # Build system dependencies
-    # Using Python to install latest version of pip
-    - dnf install --best --assumeyes --quiet python3
-    # Using pip to install latest version of cmake
-    - python3 -m pip install --upgrade pip
-    - pip install --quiet cmake
-    - dnf install --best --assumeyes --quiet make clang
-    - export CC=/usr/bin/clang
-    # Project dependency
-    - dnf install --best --assumeyes --quiet openssl-devel
   script: "./scripts/build_generic.sh"
   artifacts:
     when: on_success
@@ -115,31 +66,16 @@ centos latest build:
       - build/*.sh
 
 centos latest deploy:
-  image: centos:latest
+  image: lptech1024/imagecrypt:deploy-centos_latest
   stage: deploy
   needs:
     - job: centos latest build
       artifacts: true
-  before_script:
-    # Project dependency
-    - dnf install --best --assumeyes --quiet openssl
   script: "./build/*.sh --skip-license"
 
 fedora latest build:
-  image: fedora:latest
+  image: lptech1024/imagecrypt:build-fedora_latest
   stage: build
-  before_script:
-    # CI-specific dependency
-    - dnf install --best --assumeyes --quiet bash sed coreutils grep
-    # Build System
-    - dnf install --best --assumeyes --quiet cmake make clang
-    - export CC=/usr/bin/clang
-    # Project
-    - dnf install --best --assumeyes --quiet openssl-devel
-    # CI-specific packaging dependencies
-    - dnf install --best --assumeyes --quiet rpmlint
-    # Packaging
-    - dnf install --best --assumeyes --quiet rpm-build
   script: "./scripts/build_fedora_rpm.sh"
   artifacts:
     when: on_success
@@ -147,29 +83,16 @@ fedora latest build:
       - custom_rpm_build/*.rpm
 
 fedora latest deploy:
-  image: fedora:latest
+  image: lptech1024/imagecrypt:deploy-fedora_latest
   stage: deploy
   needs:
     - job: fedora latest build
       artifacts: true
-  before_script:
-    # Project dependencies
-    - dnf install --best --assumeyes --quiet openssl dnf
-  script:
-    - dnf install --assumeyes --verbose custom_rpm_build/*.rpm
+  script: "dnf install --assumeyes --verbose custom_rpm_build/*.rpm"
 
 mageia 7 build:
-  # "latest" points to 6
-  image: mageia:7
+  image: lptech1024/imagecrypt:build-mageia_7
   stage: build
-  before_script:
-    # CI-specific dependency
-    - dnf install --best --assumeyes --quiet bash
-    # Build system dependencies
-    - dnf install --best --assumeyes --quiet cmake make clang
-    - export CC=/usr/bin/clang
-    # Project dependency
-    - dnf install --best --assumeyes --quiet openssl-devel
   script: "./scripts/build_generic.sh"
   artifacts:
       when: on_success
@@ -177,27 +100,16 @@ mageia 7 build:
         - build/*.sh
 
 mageia 7 deploy:
-  image: mageia:7
+  image: lptech1024/imagecrypt:deploy-mageia_7
   stage: deploy
   needs:
     - job: mageia 7 build
       artifacts: true
-  before_script:
-    # Project dependency
-    - dnf install --best --assumeyes --quiet openssl
   script: "./build/*.sh --skip-license"
 
 archlinux latest build:
-  image: archlinux:latest
+  image: lptech1024/imagecrypt:build-archlinux_latest
   stage: build
-  before_script:
-    # CI-specific dependencies
-    - pacman --quiet --sync --refresh --sysupgrade --needed --noprogressbar --noconfirm bash
-    # Build system dependencies
-    - pacman --quiet --sync --refresh --sysupgrade --needed --noprogressbar --noconfirm cmake make clang
-    - export CC=/usr/bin/clang
-    # Project dependency
-    - pacman --quiet --sync --refresh --sysupgrade --needed --noprogressbar --noconfirm openssl
   script: "./scripts/build_generic.sh"
   artifacts:
     when: on_success
@@ -205,25 +117,16 @@ archlinux latest build:
       - build/*.sh
 
 archlinux latest deploy:
-  image: archlinux:latest
+  image: lptech1024/imagecrypt:deploy-archlinux_latest
   stage: deploy
   needs:
     - job: archlinux latest build
       artifacts: true
-  before_script:
-    # Project dependency
-    - pacman --quiet --sync --refresh --sysupgrade --needed --noprogressbar --noconfirm openssl
   script: "./build/*.sh --skip-license"
 
 clearlinux latest build:
-  image: clearlinux:latest
+  image: lptech1024/imagecrypt:build-clearlinux_latest
   stage: build
-  before_script:
-    # Build system dependencies
-    - swupd bundle-add --no-progress --quiet c-basic
-    - export CC=/usr/bin/clang
-    # Project dependency
-    - swupd bundle-add --no-progress --quiet devpkg-openssl
   script: "./scripts/build_generic.sh"
   artifacts:
     when: on_success
@@ -231,12 +134,9 @@ clearlinux latest build:
       - build/*.sh
 
 clearlinux latest deploy:
-  image: clearlinux:latest
+  image: lptech1024/imagecrypt:deploy-clearlinux_latest
   stage: deploy
   needs:
     - job: clearlinux latest build
       artifacts: true
-  before_script:
-    # Project dependency
-    - swupd bundle-add --no-progress --quiet openssl
   script: "./build/*.sh --skip-license"
