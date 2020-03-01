@@ -1,0 +1,5 @@
+FROM centos:latest
+
+# Project dependencies
+RUN dnf install --best --assumeyes openssl && \
+    dnf clean all

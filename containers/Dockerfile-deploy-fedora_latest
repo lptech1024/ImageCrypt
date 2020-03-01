@@ -1,0 +1,5 @@
+FROM fedora:latest
+
+# Project dependencies
+RUN dnf install --best --assumeyes openssl dnf && \
+    dnf clean all

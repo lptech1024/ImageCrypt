@@ -1,0 +1,6 @@
+FROM debian:latest
+
+# Project dependency
+RUN apt-get update && \
+    apt-get --assume-yes upgrade openssl && \
+    rm -rf /var/lib/apt/lists/*

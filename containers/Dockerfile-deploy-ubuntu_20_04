@@ -1,0 +1,8 @@
+FROM ubuntu:20.04
+
+ENV CC /usr/bin/clang
+
+# Project dependencies
+RUN apt-get update && \
+    apt-get --assume-yes upgrade openssl && \
+    rm -rf /var/lib/apt/lists/*

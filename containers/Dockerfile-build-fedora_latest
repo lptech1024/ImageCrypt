@@ -1,0 +1,16 @@
+FROM fedora:latest
+
+ENV CC /usr/bin/clang
+
+# CI-specific build dependencies
+# Build system dependencies
+# Project dependency
+# CI-specific packaging dependency
+# Packaging dependency
+RUN dnf install --best --assumeyes \
+      bash sed coreutils grep \
+      cmake make clang \
+      openssl-devel \
+      rpmlint \
+      rpm-build && \
+    dnf clean all

@@ -1,0 +1,6 @@
+FROM archlinux:latest
+
+# Project dependency
+RUN pacman --sync --refresh --sysupgrade --needed --noconfirm openssl
+
+# TODO: dump pacman cache

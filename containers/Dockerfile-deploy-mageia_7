@@ -1,0 +1,6 @@
+# Latest points to 6
+FROM mageia:7
+
+# Project dependency
+RUN dnf install --best --assumeyes openssl && \
+    dnf clean all

@@ -1,0 +1,10 @@
+FROM clearlinux:latest
+
+ENV CC /usr/bin/clang
+
+# Build system and project dependencies
+RUN swupd bundle-add \
+    c-basic \
+    devpkg-openssl
+
+# TODO: dump swupd cache

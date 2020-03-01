@@ -1,0 +1,6 @@
+FROM clearlinux:latest
+
+# Project dependency
+RUN swupd bundle-add openssl
+
+# TODO: dump swupd cache

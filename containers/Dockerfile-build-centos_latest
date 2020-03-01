@@ -1,0 +1,15 @@
+FROM centos:latest
+
+ENV CC /usr/bin/clang
+
+# CI-specific, bootstrap, build system, project dependencies
+RUN dnf install --best --assumeyes \
+      bash \
+      python3 \
+      make clang \
+      openssl-devel && \
+    dnf clean all
+
+# Out-of-band build system dependency
+RUN python3 -m pip install --upgrade pip && \
+    pip install cmake

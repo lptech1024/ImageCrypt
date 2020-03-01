@@ -1,0 +1,11 @@
+FROM archlinux:latest
+
+ENV CC /usr/bin/clang
+
+# CI-specific, build system, and project dependencies
+RUN pacman --sync --refresh --sysupgrade --needed --noconfirm \
+      bash \
+      cmake make clang \
+      openssl
+
+# TODO: dump pacman cache

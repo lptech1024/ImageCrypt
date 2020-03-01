@@ -1,0 +1,12 @@
+# Latest points to 6
+FROM mageia:7
+
+ENV CC /usr/bin/clang
+
+# CI-specific, build system, project dependencies
+RUN dnf install --best --assumeyes \
+      bash \
+      python3 \
+      cmake make clang \
+      openssl-devel && \
+    dnf clean all

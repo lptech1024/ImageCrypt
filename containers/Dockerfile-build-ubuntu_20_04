@@ -1,0 +1,11 @@
+FROM ubuntu:20.04
+
+ENV CC /usr/bin/clang
+
+# CI-specific, build system, project dependencies
+RUN apt-get update && \
+    apt-get --assume-yes upgrade \
+      clang-tidy bash \
+      cmake make clang \
+      libssl-dev && \
+    rm -rf /var/lib/apt/lists/*
