@@ -16,17 +16,17 @@ main()
 
 	local -r spec_folder='_CPack_Packages/Linux/RPM/SPECS'
 	local -r spec_template='imagecrypt.spec.in'
-	cp $spec_folder/$spec_template $spec_template
+	cp ${spec_folder}/${spec_template} ${spec_template}
 
 	IFS=$'\n'
-	man_directories=($(grep -h '%dir.*/man' $spec_folder/imagecrypt.spec))
+	man_directories=($(grep -h '%dir.*/man' ${spec_folder}/imagecrypt.spec))
 	unset IFS
 
 	for spec_line in "${man_directories[@]}"; do
-		sed --in-place "/%files/a %exclude $spec_line" $spec_template
+		sed --in-place "/%files/a %exclude ${spec_line}" ${spec_template}
 	done
 
-	cmake .. -D "CPACK_RPM_USER_BINARY_SPECFILE=$spec_template"
+	cmake .. -D "CPACK_RPM_USER_BINARY_SPECFILE=${spec_template}"
 	make package
 	rpmlint --info *.rpm
 }
